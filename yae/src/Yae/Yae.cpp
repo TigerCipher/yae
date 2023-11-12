@@ -24,12 +24,17 @@
 
 namespace yae
 {
-void init()
+void init(const std::string& game_name, const std::string& version)
 {
-    g_settings = new settings();
+    g_settings = new settings(game_name, version);
 }
 void shutdown()
 {
+    if(g_settings)
+    {
+        g_settings->save();
+    }
+
     delete g_settings;
 }
 

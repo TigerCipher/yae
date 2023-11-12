@@ -23,14 +23,61 @@
 
 #include "Settings.h"
 
+#include "Yae/Util/PathUtil.h"
+
+
+#include <filesystem>
+
+
 namespace yae
 {
-//void settings::set(const std::string& key, const std::string& value)
-//{
-//    m_map[key] = value;
-//}
-//void settings::set(const std::string& key, bool value)
-//{
-//    m_map[key] = value ? "true" : "false";
-//}
+settings::settings(const std::string& game_name, const std::string& version)
+{
+    std::filesystem::create_directories(utl::path::get_documents_directory() + "\\yae\\" + game_name);
+    const bool already_exists =
+        std::filesystem::exists(utl::path::get_documents_directory() + "\\yae\\" + game_name + "\\settings.ini");
+    m_file = new mINI::INIFile(utl::path::get_documents_directory() + "\\yae\\" + game_name + "\\settings.ini");
+
+    bool recreate = false;
+    if (already_exists)
+    {
+        load();
+        if (get<std::string>("general", "version") != version)
+        {
+            recreate = true;
+        }
+    }
+    if(!already_exists || recreate)
+    {
+        create_default_settings();
+        save(true);
+    }
+}
+
+settings::~settings()
+{
+    delete m_file;
+}
+
+void settings::load()
+{
+    m_file->read(m_ini);
+}
+
+void settings::save(bool regenerate)
+{
+    if (regenerate && !m_file->generate(m_ini, true))
+    {
+        // TODO: Log error
+    } else
+    {
+        m_file->write(m_ini);
+    }
+}
+
+void settings::create_default_settings()
+{
+    set("display", "vsync", true);
+}
+
 } // namespace yae

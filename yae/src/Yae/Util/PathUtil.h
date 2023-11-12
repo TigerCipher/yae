@@ -15,24 +15,24 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 //
-// File Name: Yae
+// File Name: PathUtil
 // Date File Created: 11/11/2023
 // Author: Matt
 //
 // ------------------------------------------------------------------------------
+
 #pragma once
 
-#include "Common.h"
-#include "Globals.h"
+#include "Yae/Types.h"
 
-// Core
-#include "Core/System.h"
 
-// Util
-#include "Util/PathUtil.h"
-
-namespace yae
+namespace yae::utl::path
 {
-void init(const std::string& game_name, const std::string& version);
-void shutdown();
-}
+std::string get_file_name(const std::string& path);
+std::string get_file_extension(const std::string& path);
+std::string get_file_name_without_extension(const std::string& path);
+std::string get_directory(const std::string& path);
+
+std::string get_documents_directory();
+
+} // namespace yae::utl::path
