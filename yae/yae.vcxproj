@@ -55,7 +55,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>src</AdditionalIncludeDirectories>
@@ -71,7 +71,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>src</AdditionalIncludeDirectories>
@@ -91,12 +91,14 @@
     <ClInclude Include="src\Yae\Core\System.h" />
     <ClInclude Include="src\Yae\Globals.h" />
     <ClInclude Include="src\Yae\Types.h" />
+    <ClInclude Include="src\Yae\Util\PathUtil.h" />
     <ClInclude Include="src\Yae\Yae.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Yae\Core\Input.cpp" />
     <ClCompile Include="src\Yae\Core\Settings.cpp" />
     <ClCompile Include="src\Yae\Core\System.cpp" />
+    <ClCompile Include="src\Yae\Util\PathUtil.cpp" />
     <ClCompile Include="src\Yae\Yae.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
