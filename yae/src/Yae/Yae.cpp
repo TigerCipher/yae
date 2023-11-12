@@ -24,9 +24,9 @@
 
 namespace yae
 {
-void init(const std::string& game_name)
+void init(const std::string& game_name, const std::string& version)
 {
-    g_settings = new settings(game_name);
+    g_settings = new settings(game_name, version);
 }
 void shutdown()
 {

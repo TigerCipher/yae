@@ -38,11 +38,11 @@ namespace yae
 class settings
 {
 public:
-    settings(const std::string& game_name);
+    settings(const std::string& game_name, const std::string& version);
     ~settings();
 
     void load();
-    void save();
+    void save(bool regenerate = false);
 
     //void set(const std::string& key, const std::string& value);
     //void set(const std::string& key, bool value);
@@ -74,6 +74,9 @@ public:
     }
 
 private:
+
+    void create_default_settings();
+
     mINI::INIFile* m_file;
     mINI::INIStructure m_ini;
 

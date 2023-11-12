@@ -29,7 +29,7 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    yae::init("sandbox");
+    yae::init("sandbox", "1.0.0");
     yae::g_settings->set("display", "fullscreen", false);
 
 

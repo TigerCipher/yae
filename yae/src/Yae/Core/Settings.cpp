@@ -31,18 +31,27 @@
 
 namespace yae
 {
-settings::settings(const std::string& game_name)
+settings::settings(const std::string& game_name, const std::string& version)
 {
     std::filesystem::create_directories(utl::path::get_documents_directory() + "\\yae\\" + game_name);
     const bool already_exists =
         std::filesystem::exists(utl::path::get_documents_directory() + "\\yae\\" + game_name + "\\settings.ini");
     m_file = new mINI::INIFile(utl::path::get_documents_directory() + "\\yae\\" + game_name + "\\settings.ini");
 
+    bool recreate = false;
     if (already_exists)
     {
         load();
+        if (get<std::string>("general", "version") != version)
+        {
+            recreate = true;
+        }
     }
-    // TODO: else, create default settings
+    if(!already_exists || recreate)
+    {
+        create_default_settings();
+        save(true);
+    }
 }
 
 settings::~settings()
@@ -55,13 +64,20 @@ void settings::load()
     m_file->read(m_ini);
 }
 
-void settings::save()
+void settings::save(bool regenerate)
 {
-    //m_file->write(m_ini);
-    if(!m_file->generate(m_ini, true))
+    if (regenerate && !m_file->generate(m_ini, true))
     {
         // TODO: Log error
+    } else
+    {
+        m_file->write(m_ini);
     }
+}
+
+void settings::create_default_settings()
+{
+    set("display", "vsync", true);
 }
 
 } // namespace yae

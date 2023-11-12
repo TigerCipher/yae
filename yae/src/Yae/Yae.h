@@ -33,6 +33,6 @@
 
 namespace yae
 {
-void init(const std::string& game_name);
+void init(const std::string& game_name, const std::string& version);
 void shutdown();
 }
