@@ -88,21 +88,21 @@ void init_windows(i32& width, i32& height)
         mode++;
     }
 
-    width = g_settings->get<i32>("fullscreen_width");
-    height = g_settings->get<i32>("fullscreen_height");
+    width = g_settings->get<i32>("display", "width");
+    height = g_settings->get<i32>("display", "height");
     if(width == 0 || height == 0){
         width  = resolutions.rbegin()->width;
         height = resolutions.rbegin()->height;
 
-        g_settings->set("fullscreen_width", width);
-        g_settings->set("fullscreen_height", height);
+        g_settings->set("display", "width", width);
+        g_settings->set("display", "height", height);
     }
 
 
     //width  = GetSystemMetrics(SM_CXSCREEN);
     //height = GetSystemMetrics(SM_CYSCREEN);
 
-    if (g_settings->get<bool>("fullscreen"))
+    if (g_settings->get<bool>("display", "fullscreen"))
     {
         memset(&dm_screen_settings, 0, sizeof(dm_screen_settings));
         dm_screen_settings.dmSize       = sizeof(dm_screen_settings);
@@ -116,15 +116,15 @@ void init_windows(i32& width, i32& height)
         pos_x = pos_y = 0;
     } else
     {
-        width  = g_settings->get<i32>("window_width");
-        height = g_settings->get<i32>("window_height");
+        width  = g_settings->get<i32>("window", "width");
+        height = g_settings->get<i32>("window", "height");
         if (width == 0 || height == 0)
         {
             width  = 1280;
             height = 720;
 
-            g_settings->set("window_width", width);
-            g_settings->set("window_height", height);
+            g_settings->set("window", "width", width);
+            g_settings->set("window", "height", height);
         }
 
         pos_x = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
@@ -144,7 +144,7 @@ void init_windows(i32& width, i32& height)
 void shutdown_windows()
 {
     ShowCursor(true);
-    if (g_settings->get<bool>("fullscreen"))
+    if (g_settings->get<bool>("display", "fullscreen"))
     {
         ChangeDisplaySettings(nullptr, 0);
     }

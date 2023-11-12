@@ -29,36 +29,20 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    yae::init();
-    yae::g_settings->set("fullscreen", false);
+    yae::init("sandbox");
+    yae::g_settings->set("display", "fullscreen", false);
 
-    i32 w = yae::g_settings->get<i32>("width");
 
     bool result = yae::system::init();
 
-    for (const auto [width, height] : yae::system::get_resolutions())
-    {
-        OutputDebugStringA("Width: ");
-        OutputDebugStringA(std::to_string(width).c_str());
-        OutputDebugStringA(", Height: ");
-        OutputDebugStringA(std::to_string(height).c_str());
-        OutputDebugStringA("\n");
-    }
-
-    std::string docs = yae::utl::path::get_documents_directory() + "\\yae\\sandbox\\test.txt";
-    std::filesystem::create_directories(yae::utl::path::get_documents_directory() + "\\yae\\sandbox");
-    std::ofstream file(docs);
-    if(file.is_open())
-    {
-        file << "Hello World!";
-        file.flush();
-        file.close();
-    }else
-    {
-        OutputDebugStringA("Failed to open file\n");
-        OutputDebugStringA(docs.c_str());
-        OutputDebugStringA("\n");
-    }
+    //for (const auto [width, height] : yae::system::get_resolutions())
+    //{
+    //    OutputDebugStringA("Width: ");
+    //    OutputDebugStringA(std::to_string(width).c_str());
+    //    OutputDebugStringA(", Height: ");
+    //    OutputDebugStringA(std::to_string(height).c_str());
+    //    OutputDebugStringA("\n");
+    //}
 
     if (result)
     {

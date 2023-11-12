@@ -23,14 +23,41 @@
 
 #include "Settings.h"
 
+#include "Yae/Util/PathUtil.h"
+
+
+#include <filesystem>
+
+
 namespace yae
 {
-//void settings::set(const std::string& key, const std::string& value)
-//{
-//    m_map[key] = value;
-//}
-//void settings::set(const std::string& key, bool value)
-//{
-//    m_map[key] = value ? "true" : "false";
-//}
+settings::settings(const std::string& game_name)
+{
+    std::filesystem::create_directories(utl::path::get_documents_directory() + "\\yae\\" + game_name);
+    const bool already_exists =
+        std::filesystem::exists(utl::path::get_documents_directory() + "\\yae\\" + game_name + "\\settings.ini");
+    m_file = new mINI::INIFile(utl::path::get_documents_directory() + "\\yae\\" + game_name + "\\settings.ini");
+
+    if (already_exists)
+    {
+        load();
+    }
+    // TODO: else, create default settings
+}
+
+settings::~settings()
+{
+    delete m_file;
+}
+
+void settings::load()
+{
+    m_file->read(m_ini);
+}
+
+void settings::save()
+{
+    m_file->write(m_ini);
+}
+
 } // namespace yae

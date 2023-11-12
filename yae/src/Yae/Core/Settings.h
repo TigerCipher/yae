@@ -31,54 +31,51 @@
 #include <string>
 #include <unordered_map>
 
+#include "mini/ini.h"
+
 namespace yae
 {
 class settings
 {
 public:
-    settings()  = default;
-    ~settings() = default;
+    settings(const std::string& game_name);
+    ~settings();
 
-    //void load();
-    //void save();
+    void load();
+    void save();
 
     //void set(const std::string& key, const std::string& value);
     //void set(const std::string& key, bool value);
 
     template<typename T>
-    void set(const std::string& key, const T& value)
+    void set(const std::string& category, const std::string& key, const T& value)
     {
         if constexpr (std::is_same_v<T, bool>)
         {
-            m_map[key] = value ? "true" : "false";
+            m_ini[category][key] = value ? "true" : "false";
         } else if constexpr (std::is_same_v<T, std::string>)
         {
-            m_map[key] = value;
+            m_ini[category][key] = value;
         } else
         {
-            m_map[key] = std::to_string(value);
+            m_ini[category][key] = std::to_string(value);
         }
     }
 
     template<typename T>
-    T get(const std::string& key)
+    T get(const std::string& category, const std::string& key)
     {
-        if (const auto it = m_map.find(key); it != m_map.end())
+        if (m_ini.has(category) && m_ini[category].has(key))
         {
-            return convert_to_type<T>(it->second);
+            return convert_to_type<T>(m_ini[category][key]);
         }
         // log warning/error
         return T{};
     }
 
-    //template<typename T>
-    //T operator[](const std::string& key)
-    //{
-    //    return get<T>(key);
-    //}
-
 private:
-    std::unordered_map<std::string, std::string> m_map;
+    mINI::INIFile* m_file;
+    mINI::INIStructure m_ini;
 
     template<typename T>
     T convert_to_type(const std::string& s)
