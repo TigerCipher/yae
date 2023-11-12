@@ -15,26 +15,46 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: MathUtil.h
-//  Date File Created: 11/11/2023
+//  File Name: Application.cpp
+//  Date File Created: 11/12/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
-
-#pragma once
-
-#include <DirectXMath.h>
+#include "Application.h"
 
 
-namespace yae::math
+#include "Yae/Graphics/D3D11Core.h"
+
+namespace yae
 {
+bool application::init(i32 width, i32 height, HWND hwnd)
+{
+    bool result = gfx::core::init(width, height, hwnd, g_settings->get<bool>("display", "fullscreen"), 1000.f, 0.1f);
+    if (!result)
+    {
+        MessageBox(hwnd, L"Failed to initialize DirectX", L"Error", MB_OK);
+        return false;
+    }
 
-constexpr f32 pi = DirectX::XM_PI;
+    return result;
+}
 
-using vec2   = DirectX::XMFLOAT2;
-using vec3   = DirectX::XMFLOAT3;
-using vec4   = DirectX::XMFLOAT4;
-using vector = DirectX::XMVECTOR;
-using mat4   = DirectX::XMFLOAT4X4;
-using matrix = DirectX::XMMATRIX;
-} // namespace yae::math
+void application::shutdown()
+{
+    gfx::core::shutdown();
+}
+
+bool application::frame()
+{
+    bool result = render();
+    return result;
+}
+
+bool application::render()
+{
+    gfx::core::begin_scene(0.5f, 0.1f, 0.1f, 1.f);
+
+    gfx::core::end_scene();
+    return true;
+}
+} // namespace yae

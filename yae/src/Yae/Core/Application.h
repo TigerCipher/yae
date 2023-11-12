@@ -25,6 +25,12 @@
 
 #include "Yae/Common.h"
 
+#define WIN32_LEAN_AND_MEAN
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif
+#include <Windows.h>
+
 namespace yae
 {
 class application
@@ -33,11 +39,11 @@ public:
     application()  = default;
     ~application() = default;
 
-    bool init(i32 width, i32 height, HWND hwnd) { return true; }
-    void shutdown(){}
-    bool frame() { return true; }
+    bool init(i32 width, i32 height, HWND hwnd);
+    void shutdown();
+    bool frame();
 
 private:
-    bool render() { return true; }
+    bool render();
 };
 } // namespace yae

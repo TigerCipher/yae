@@ -23,14 +23,20 @@
 
 #pragma once
 
-#include "Yae/Common.h"
-
-
-#include <d3d11.h>
-#include <DirectXMath.h>
+#include "D3D11Common.h"
 
 namespace yae::gfx::core
 {
+
+template<typename T>
+constexpr void release(T*& resource)
+{
+    if (resource)
+    {
+        resource->Release();
+        resource = nullptr;
+    }
+}
 
 bool init(i32 width, i32 height, HWND hwnd, bool fullscreen, f32 screen_depth, f32 screen_near);
 void shutdown();

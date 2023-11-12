@@ -90,6 +90,7 @@
     <ClInclude Include="src\Yae\Core\Settings.h" />
     <ClInclude Include="src\Yae\Core\System.h" />
     <ClInclude Include="src\Yae\Globals.h" />
+    <ClInclude Include="src\Yae\Graphics\D3D11Common.h" />
     <ClInclude Include="src\Yae\Graphics\D3D11Core.h" />
     <ClInclude Include="src\Yae\Types.h" />
     <ClInclude Include="src\Yae\Util\MathUtil.h" />
@@ -97,6 +98,7 @@
     <ClInclude Include="src\Yae\Yae.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Yae\Core\Application.cpp" />
     <ClCompile Include="src\Yae\Core\Input.cpp" />
     <ClCompile Include="src\Yae\Core\Settings.cpp" />
     <ClCompile Include="src\Yae\Core\System.cpp" />
