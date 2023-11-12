@@ -57,7 +57,11 @@ void settings::load()
 
 void settings::save()
 {
-    m_file->write(m_ini);
+    //m_file->write(m_ini);
+    if(!m_file->generate(m_ini, true))
+    {
+        // TODO: Log error
+    }
 }
 
 } // namespace yae
