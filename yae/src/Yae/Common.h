@@ -64,4 +64,6 @@
 
 #include "Types.h"
 
+#include "Util/MathUtil.h"
+
 #include "Globals.h"
