@@ -15,40 +15,47 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 //
-// File Name: Main
+// File Name: System
 // Date File Created: 11/11/2023
 // Author: Matt
 //
 // ------------------------------------------------------------------------------
+#pragma once
 
-#include <Yae/Yae.h>
-
+#define WIN32_LEAN_AND_MEAN
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif
 #include <Windows.h>
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+#include <set>
+
+#include "Yae/Common.h"
+
+namespace yae::system
 {
-    yae::init();
-    yae::g_settings->set("fullscreen", false);
 
-    i32 w = yae::g_settings->get<i32>("width");
+struct resolution
+{
+    i32 width;
+    i32 height;
 
-    bool result = yae::system::init();
-
-    for (const auto [width, height] : yae::system::get_resolutions())
+    bool operator<(const resolution& other) const
     {
-        OutputDebugStringA("Width: ");
-        OutputDebugStringA(std::to_string(width).c_str());
-        OutputDebugStringA(", Height: ");
-        OutputDebugStringA(std::to_string(height).c_str());
-        OutputDebugStringA("\n");
+        return (width < other.width) || (width == other.width && height < other.height);
     }
+};
 
-    if (result)
-    {
-        yae::system::run();
-    }
+bool init();
+void shutdown();
+void run();
 
-    yae::system::shutdown();
-    yae::shutdown();
-    return 0;
-}
+LRESULT CALLBACK message_handler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
+
+
+LRESULT CALLBACK window_proc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
+
+
+const std::set<resolution>& get_resolutions();
+
+} // namespace yae::system

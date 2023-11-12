@@ -15,22 +15,17 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Yae.cpp
+//  File Name: Globals.h
 //  Date File Created: 11/11/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
-#include "Yae.h"
+
+#pragma once
+
+#include "Core/Settings.h"
 
 namespace yae
 {
-void init()
-{
-    g_settings = new settings();
+inline settings* g_settings = nullptr;
 }
-void shutdown()
-{
-    delete g_settings;
-}
-
-} // namespace yae

@@ -15,22 +15,22 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Yae.cpp
+//  File Name: Settings.cpp
 //  Date File Created: 11/11/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
-#include "Yae.h"
+
+#include "Settings.h"
 
 namespace yae
 {
-void init()
-{
-    g_settings = new settings();
-}
-void shutdown()
-{
-    delete g_settings;
-}
-
+//void settings::set(const std::string& key, const std::string& value)
+//{
+//    m_map[key] = value;
+//}
+//void settings::set(const std::string& key, bool value)
+//{
+//    m_map[key] = value ? "true" : "false";
+//}
 } // namespace yae

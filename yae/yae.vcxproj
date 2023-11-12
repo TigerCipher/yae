@@ -58,6 +58,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -73,6 +74,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -82,9 +84,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Yae\Common.h" />
+    <ClInclude Include="src\Yae\Core\Application.h" />
+    <ClInclude Include="src\Yae\Core\Input.h" />
+    <ClInclude Include="src\Yae\Core\Settings.h" />
+    <ClInclude Include="src\Yae\Core\System.h" />
+    <ClInclude Include="src\Yae\Globals.h" />
+    <ClInclude Include="src\Yae\Types.h" />
     <ClInclude Include="src\Yae\Yae.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Yae\Core\Input.cpp" />
+    <ClCompile Include="src\Yae\Core\Settings.cpp" />
+    <ClCompile Include="src\Yae\Core\System.cpp" />
     <ClCompile Include="src\Yae\Yae.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

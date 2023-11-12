@@ -15,22 +15,28 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Yae.cpp
+//  File Name: Input.cpp
 //  Date File Created: 11/11/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
-#include "Yae.h"
+#include "Input.h"
 
-namespace yae
+namespace yae::input
 {
-void init()
+
+namespace
 {
-    g_settings = new settings();
-}
-void shutdown()
+bool keys[256]{};
+} // anonymous namespace
+
+void process_key(u32 key, bool pressed)
 {
-    delete g_settings;
+    keys[key] = pressed;
 }
 
-} // namespace yae
+bool is_key_down(u32 key)
+{
+    return keys[key];
+}
+}

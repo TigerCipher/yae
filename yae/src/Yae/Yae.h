@@ -22,7 +22,14 @@
 // ------------------------------------------------------------------------------
 #pragma once
 
+#include "Common.h"
+#include "Globals.h"
+
+// Core
+#include "Core/System.h"
+
 namespace yae
 {
-void test();
+void init();
+void shutdown();
 }

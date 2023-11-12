@@ -15,22 +15,29 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Yae.cpp
+//  File Name: Application.h
 //  Date File Created: 11/11/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
-#include "Yae.h"
+
+#pragma once
+
+#include "Yae/Common.h"
 
 namespace yae
 {
-void init()
+class application
 {
-    g_settings = new settings();
-}
-void shutdown()
-{
-    delete g_settings;
-}
+public:
+    application()  = default;
+    ~application() = default;
 
+    bool init(i32 width, i32 height, HWND hwnd) { return true; }
+    void shutdown(){}
+    bool frame() { return true; }
+
+private:
+    bool render() { return true; }
+};
 } // namespace yae
