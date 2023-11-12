@@ -15,43 +15,41 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: Model.h
+//  Date File Created: 11/12/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
 
 #pragma once
 
-#include "Yae/Common.h"
+#include "D3D11Common.h"
 
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
-
-#include "Yae/Graphics/Camera.h"
-#include "Yae/Graphics/Model.h"
-#include "Yae/Graphics/Shaders/ColorShader.h"
-
-namespace yae
+namespace yae::gfx
 {
-class application
+
+class model
 {
 public:
-    application()  = default;
-    ~application() = default;
+    model() = default;
+    ~model() = default;
 
-    bool init(i32 width, i32 height, HWND hwnd);
+    bool init();
     void shutdown();
-    bool frame();
+    void render();
 
+    constexpr u32 index_count() const { return m_index_count; }
 private:
-    bool render();
+    struct vertex
+    {
+        math::vec3 position{};
+        math::vec4 color{};
+    };
 
-    gfx::camera*       m_camera{};
-    gfx::model*        m_model{};
-    gfx::color_shader* m_color_shader{};
+    ID3D11Buffer* m_vertex_buffer{};
+    ID3D11Buffer* m_index_buffer{};
+    u32 m_vertex_count{};
+    u32 m_index_count{};
 };
-} // namespace yae
+
+}

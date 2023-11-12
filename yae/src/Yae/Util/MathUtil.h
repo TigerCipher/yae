@@ -31,6 +31,9 @@ namespace yae::math
 
 constexpr f32 pi = DirectX::XM_PI;
 
+constexpr f32 deg2rad_multiplier = pi / 180.0f;
+constexpr f32 rad2deg_multiplier = 180.0f / pi;
+
 using vec2   = DirectX::XMFLOAT2;
 using vec3   = DirectX::XMFLOAT3;
 using vec4   = DirectX::XMFLOAT4;

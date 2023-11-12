@@ -67,7 +67,7 @@ void init_windows(i32& width, i32& height)
     wcex.hInstance     = hinstance;
     wcex.hIcon         = LoadIcon(nullptr, IDI_WINLOGO);
     wcex.hCursor       = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH) GetStockObject(GRAY_BRUSH);
+    wcex.hbrBackground = (HBRUSH) GetStockObject(BLACK_BRUSH);
     wcex.lpszMenuName  = nullptr;
     wcex.lpszClassName = application_name;
     wcex.hIconSm       = wcex.hIcon;
@@ -251,6 +251,11 @@ LRESULT window_proc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 const std::set<resolution>& get_resolutions()
 {
     return resolutions;
+}
+
+HWND handle()
+{
+    return hwnd;
 }
 
 } // namespace yae::system

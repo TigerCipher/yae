@@ -15,49 +15,43 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 //
-// File Name: System
-// Date File Created: 11/11/2023
+// File Name: ColorShader
+// Date File Created: 11/12/2023
 // Author: Matt
 //
 // ------------------------------------------------------------------------------
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
+#include "../D3D11Common.h"
 
-#include <set>
-
-#include "Yae/Common.h"
-
-namespace yae::system
+namespace yae::gfx
 {
 
-struct resolution
+class color_shader
 {
-    i32 width;
-    i32 height;
+public:
+    color_shader()  = default;
+    ~color_shader() = default;
 
-    bool operator<(const resolution& other) const
+    bool init();
+    void shutdown();
+    bool render(i32 index_count, const math::matrix& view) const;
+
+private:
+
+    bool set_parameters(const math::matrix& view) const;
+
+    struct matrix_buffer
     {
-        return (width < other.width) || (width == other.width && height < other.height);
-    }
+        math::matrix world;
+        math::matrix view;
+        math::matrix projection;
+    };
+
+    ID3D11VertexShader* m_vertex_shader{};
+    ID3D11PixelShader*  m_pixel_shader{};
+    ID3D11InputLayout*  m_layout{};
+    ID3D11Buffer*       m_matrix_buffer{};
 };
 
-bool init();
-void shutdown();
-void run();
-
-LRESULT CALLBACK message_handler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
-
-
-LRESULT CALLBACK window_proc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
-
-
-const std::set<resolution>& get_resolutions();
-
-HWND handle();
-
-} // namespace yae::system
+} // namespace yae::gfx

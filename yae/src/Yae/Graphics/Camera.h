@@ -15,8 +15,8 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: Camera.h
+//  Date File Created: 11/12/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
@@ -25,33 +25,33 @@
 
 #include "Yae/Common.h"
 
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
-
-#include "Yae/Graphics/Camera.h"
-#include "Yae/Graphics/Model.h"
-#include "Yae/Graphics/Shaders/ColorShader.h"
-
-namespace yae
+namespace yae::gfx
 {
-class application
+
+class camera
 {
 public:
-    application()  = default;
-    ~application() = default;
+    camera()  = default;
+    ~camera() = default;
 
-    bool init(i32 width, i32 height, HWND hwnd);
-    void shutdown();
-    bool frame();
+    void render();
+
+    void set_position(f32 x, f32 y, f32 z) { m_position = { x, y, z }; }
+
+    void set_position(const math::vec3& pos) { m_position = pos; }
+
+    void set_rotation(f32 x, f32 y, f32 z) { m_rotation = { x, y, z }; }
+
+    void set_rotation(const math::vec3& rot) { m_rotation = rot; }
+
+    constexpr math::vec3   position() const { return m_position; }
+    constexpr math::vec3   rotation() const { return m_rotation; }
+    constexpr math::matrix view() const { return m_view; }
 
 private:
-    bool render();
-
-    gfx::camera*       m_camera{};
-    gfx::model*        m_model{};
-    gfx::color_shader* m_color_shader{};
+    math::vec3   m_position{};
+    math::vec3   m_rotation{};
+    math::matrix m_view{};
 };
-} // namespace yae
+
+} // namespace yae::gfx

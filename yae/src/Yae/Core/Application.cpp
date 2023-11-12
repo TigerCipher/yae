@@ -29,18 +29,41 @@ namespace yae
 {
 bool application::init(i32 width, i32 height, HWND hwnd)
 {
-    bool result = gfx::core::init(width, height, hwnd, g_settings->get<bool>("display", "fullscreen"), 1000.f, 0.1f);
-    if (!result)
+    if (!gfx::core::init(width, height, hwnd, g_settings->get<bool>("display", "fullscreen"), 1000.f, 0.3f))
     {
         MessageBox(hwnd, L"Failed to initialize DirectX", L"Error", MB_OK);
         return false;
     }
 
-    return result;
+    m_camera = new gfx::camera{};
+    m_camera->set_position(0.f, 0.f, -5.f);
+
+    m_model = new gfx::model{};
+
+    if(!m_model->init())
+    {
+        MessageBox(hwnd, L"Failed to initialize the model", L"Error", MB_OK);
+        return false;
+    }
+
+    m_color_shader = new gfx::color_shader{};
+    if(!m_color_shader->init())
+    {
+        MessageBox(hwnd, L"Failed to initialize the shader", L"Error", MB_OK);
+        return false;
+    }
+
+    return true;
 }
 
 void application::shutdown()
 {
+
+    gfx::core::shutdown(m_color_shader);
+    gfx::core::shutdown(m_model);
+
+    SAFE_DELETE(m_camera);
+
     gfx::core::shutdown();
 }
 
@@ -52,7 +75,15 @@ bool application::frame()
 
 bool application::render()
 {
-    gfx::core::begin_scene(0.5f, 0.1f, 0.1f, 1.f);
+    gfx::core::begin_scene(0.f, 0.f, 0.f, 1.f);
+
+    m_camera->render();
+    m_model->render();
+
+    if(!m_color_shader->render(m_model->index_count(), m_camera->view()))
+    {
+        return false;
+    }
 
     gfx::core::end_scene();
     return true;

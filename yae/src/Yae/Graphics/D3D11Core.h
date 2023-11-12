@@ -38,6 +38,17 @@ constexpr void release(T*& resource)
     }
 }
 
+template<typename T>
+constexpr void shutdown(T*& resource)
+{
+    if (resource)
+    {
+        resource->shutdown();
+        delete resource;
+        resource = nullptr;
+    }
+}
+
 bool init(i32 width, i32 height, HWND hwnd, bool fullscreen, f32 screen_depth, f32 screen_near);
 void shutdown();
 
