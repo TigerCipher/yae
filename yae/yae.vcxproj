@@ -95,6 +95,9 @@
     <ClInclude Include="src\Yae\Graphics\D3D11Core.h" />
     <ClInclude Include="src\Yae\Graphics\Model.h" />
     <ClInclude Include="src\Yae\Graphics\Shaders\ColorShader.h" />
+    <ClInclude Include="src\Yae\Graphics\Shaders\Shader.h" />
+    <ClInclude Include="src\Yae\Graphics\Texture.h" />
+    <ClInclude Include="src\Yae\Graphics\Vertex.h" />
     <ClInclude Include="src\Yae\Types.h" />
     <ClInclude Include="src\Yae\Util\MathUtil.h" />
     <ClInclude Include="src\Yae\Util\PathUtil.h" />
@@ -109,6 +112,8 @@
     <ClCompile Include="src\Yae\Graphics\D3D11Core.cpp" />
     <ClCompile Include="src\Yae\Graphics\Model.cpp" />
     <ClCompile Include="src\Yae\Graphics\Shaders\ColorShader.cpp" />
+    <ClCompile Include="src\Yae\Graphics\Shaders\Shader.cpp" />
+    <ClCompile Include="src\Yae\Graphics\Texture.cpp" />
     <ClCompile Include="src\Yae\Util\PathUtil.cpp" />
     <ClCompile Include="src\Yae\Yae.cpp" />
   </ItemGroup>

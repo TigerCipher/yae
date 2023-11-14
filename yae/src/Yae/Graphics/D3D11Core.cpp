@@ -113,6 +113,7 @@ bool init(i32 width, i32 height, HWND hwnd, bool fullscreen, f32 screen_depth, f
     u32               denominator{};
     DXGI_ADAPTER_DESC adapter_desc{};
 
+
     DX_CALL(CreateDXGIFactory(IID_PPV_ARGS(&factory)));
     DX_CALL(factory->EnumAdapters(0, &adapter));
     DX_CALL(adapter->EnumOutputs(0, &adapter_output));

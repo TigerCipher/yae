@@ -101,4 +101,21 @@ void model::render()
     core::get_device_context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
+
+void test_model::shutdown()
+{
+    core::release(m_index_buffer);
+    core::release(m_vertex_buffer);
+}
+
+
+void test_model::render()
+{
+    constexpr u32 offset = 0;
+
+    core::get_device_context()->IASetVertexBuffers(0, 1, &m_vertex_buffer, &m_stride, &offset);
+    core::get_device_context()->IASetIndexBuffer(m_index_buffer, DXGI_FORMAT_R32_UINT, 0);
+    core::get_device_context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
 } // namespace yae::gfx

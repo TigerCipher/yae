@@ -62,7 +62,6 @@ void output_error_message(ID3D10Blob* err_msg, const wchar_t* filename)
 
 bool color_shader::init()
 {
-    bool    result{};
     wchar_t vs_filename[128];
     wchar_t ps_filename[128];
 
