@@ -38,21 +38,6 @@ bool application::init(i32 width, i32 height, HWND hwnd)
     m_camera = new gfx::camera{};
     m_camera->set_position(0.f, 0.f, -5.f);
 
-    m_model = new gfx::model{};
-
-    if (!m_model->init())
-    {
-        MessageBox(hwnd, L"Failed to initialize the model", L"Error", MB_OK);
-        return false;
-    }
-
-    m_color_shader = new gfx::color_shader{};
-    if (!m_color_shader->init())
-    {
-        MessageBox(hwnd, L"Failed to initialize the shader", L"Error", MB_OK);
-        return false;
-    }
-
     m_test_color_shader = new gfx::shader{};
     {
         gfx::shader_layout layout{};
@@ -79,7 +64,7 @@ bool application::init(i32 width, i32 height, HWND hwnd)
         }
     }
 
-    m_test_model = new gfx::test_model{};
+    m_model = new gfx::model{};
     std::vector<gfx::vertex_position_texture> verts{ 3 };
     std::vector<u32>                          indices(3);
 
@@ -98,7 +83,7 @@ bool application::init(i32 width, i32 height, HWND hwnd)
     indices[0] = 0; // Bottom left
     indices[1] = 1; // Top middle
     indices[2] = 2; // Bottom right
-    if (!m_test_model->init(verts, indices))
+    if (!m_model->init(verts, indices))
     {
         MessageBox(hwnd, L"Failed to initialize the test model", L"Error", MB_OK);
         return false;
@@ -111,42 +96,14 @@ bool application::init(i32 width, i32 height, HWND hwnd)
         return false;
     }
 
-    m_test_color_model = new gfx::test_model{};
-    std::vector<gfx::vertex_position_color> verts2{ 3 };
-    std::vector<u32>                        indices2(3);
-    // bottom left
-    verts2[0].position = { -1.f, -1.f, 0.f };
-    verts2[0].color    = { 0.f, 1.f, 0.f, 1.f };
-
-    // top middle
-    verts2[1].position = { 0.f, 1.f, 0.f };
-    verts2[1].color    = { 1.f, 0.f, 0.f, 1.f };
-
-    // bottom right
-    verts2[2].position = { 1.f, -1.f, 0.f };
-    verts2[2].color    = { 0.f, 0.f, 1.f, 1.f };
-
-    indices2[0] = 0; // Bottom left
-    indices2[1] = 1; // Top middle
-    indices2[2] = 2; // Bottom right
-
-    if (!m_test_color_model->init(verts2, indices2))
-    {
-        MessageBox(hwnd, L"Failed to initialize the test model", L"Error", MB_OK);
-        return false;
-    }
-
     return true;
 }
 
 void application::shutdown()
 {
-    gfx::core::shutdown(m_test_color_model);
     gfx::core::shutdown(m_bricks_texture);
-    gfx::core::shutdown(m_test_model);
     gfx::core::shutdown(m_test_texture_shader);
     gfx::core::shutdown(m_test_color_shader);
-    gfx::core::shutdown(m_color_shader);
     gfx::core::shutdown(m_model);
 
     SAFE_DELETE(m_camera);
@@ -154,36 +111,25 @@ void application::shutdown()
     gfx::core::shutdown();
 }
 
-bool application::frame()
+bool application::frame() const
 {
-    bool result = render();
+    const bool result = render();
     return result;
 }
 
-bool application::render()
+bool application::render() const
 {
     gfx::core::begin_scene(0.f, 0.f, 0.f, 1.f);
 
     m_camera->render();
-    //m_test_color_model->render();
-    m_test_model->render();
-    //m_model->render();
+    m_model->render();
 
-    //if(!m_color_shader->render(m_model->index_count(), m_camera->view()))
-    //{
-    //    return false;
-    //}
 
-    //m_test_color_shader->set_parameters({ [] { gfx::shader::test_param(56); } });
     m_test_texture_shader->set_parameters({ [&] { gfx::shader::set_texture(m_bricks_texture->texture_view()); } });
-    if (!m_test_texture_shader->render(m_test_model->index_count(), m_camera->view()))
+    if (!m_test_texture_shader->render(m_model->index_count(), m_camera->view()))
     {
         return false;
     }
-    //if(!m_test_color_shader->render(m_model->index_count(), m_camera->view()))
-    //{
-    //    return false;
-    //}
 
 
     gfx::core::end_scene();

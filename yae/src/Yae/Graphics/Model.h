@@ -37,33 +37,8 @@ namespace yae::gfx
 class model
 {
 public:
-    model()  = default;
-    ~model() = default;
-
-    bool init();
-    void shutdown();
-    void render();
-
-    constexpr u32 index_count() const { return m_index_count; }
-
-private:
-    struct vertex
-    {
-        math::vec3 position{};
-        math::vec4 color{};
-    };
-
-    ID3D11Buffer* m_vertex_buffer{};
-    ID3D11Buffer* m_index_buffer{};
-    u32           m_vertex_count{};
-    u32           m_index_count{};
-};
-
-class test_model
-{
-public:
-    test_model()          = default;
-    virtual ~test_model() = default;
+    model()          = default;
+    virtual ~model() = default;
 
     template<vertex_type VertexType>
     bool init(const std::vector<VertexType>& vertices, const std::vector<u32> indices)
@@ -108,7 +83,7 @@ public:
     }
 
     void shutdown();
-    void render();
+    void render() const;
 
     constexpr u32 index_count() const { return m_index_count; }
 

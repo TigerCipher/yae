@@ -34,7 +34,6 @@
 #include "Yae/Graphics/Camera.h"
 #include "Yae/Graphics/Model.h"
 #include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/Shaders/ColorShader.h"
 #include "Yae/Graphics/Shaders/Shader.h"
 
 namespace yae
@@ -54,11 +53,8 @@ private:
 
     gfx::camera*       m_camera{};
     gfx::model*        m_model{};
-    gfx::color_shader* m_color_shader{};
     gfx::shader*       m_test_color_shader{};
     gfx::shader*       m_test_texture_shader{};
-    gfx::test_model*   m_test_model{};
-    gfx::test_model*   m_test_color_model{};
     gfx::texture*      m_bricks_texture{};
 };
 } // namespace yae

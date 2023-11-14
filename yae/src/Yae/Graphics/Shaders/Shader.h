@@ -32,7 +32,7 @@ namespace yae::gfx
 
 
 template<typename T>
-constexpr DXGI_FORMAT resolve_shader_type() // by default returns uint
+constexpr DXGI_FORMAT resolve_shader_type() // by default, returns uint
 {
     if constexpr (std::is_same_v<T, f32>)
     {
@@ -85,9 +85,9 @@ public:
         }
     }
 
-    const D3D11_INPUT_ELEMENT_DESC* data() const { return m_elements.data(); }
+    constexpr const D3D11_INPUT_ELEMENT_DESC* data() const { return m_elements.data(); }
 
-    u32 size() const { return m_elements.size(); }
+    constexpr u32 size() const { return m_elements.size(); }
 
 private:
     std::vector<D3D11_INPUT_ELEMENT_DESC> m_elements{};
@@ -106,10 +106,7 @@ public:
     virtual void shutdown();
     bool         render(u32 index_count, const math::matrix& view) const;
 
-    void set_parameters(const std::initializer_list<parameter> params)
-    {
-        m_parameters = params;
-    }
+    void set_parameters(const std::initializer_list<parameter> params) { m_parameters = params; }
 
     static void set_texture(ID3D11ShaderResourceView* texture);
 
