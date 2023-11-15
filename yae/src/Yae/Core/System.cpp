@@ -67,7 +67,7 @@ void init_windows(i32& width, i32& height)
     wcex.hInstance     = hinstance;
     wcex.hIcon         = LoadIcon(nullptr, IDI_WINLOGO);
     wcex.hCursor       = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH) GetStockObject(GRAY_BRUSH);
+    wcex.hbrBackground = (HBRUSH) GetStockObject(BLACK_BRUSH);
     wcex.lpszMenuName  = nullptr;
     wcex.lpszClassName = application_name;
     wcex.hIconSm       = wcex.hIcon;
@@ -158,7 +158,7 @@ void shutdown_windows()
 
 } // anonymous namespace
 
-bool init()
+bool init(game* game)
 {
     i32  screen_width  = 0;
     i32  screen_height = 0;
@@ -166,7 +166,7 @@ bool init()
 
     init_windows(screen_width, screen_height);
 
-    app = new application{};
+    app = new application{game};
 
     result = app->init(screen_width, screen_height, hwnd);
 
@@ -251,6 +251,11 @@ LRESULT window_proc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 const std::set<resolution>& get_resolutions()
 {
     return resolutions;
+}
+
+HWND handle()
+{
+    return hwnd;
 }
 
 } // namespace yae::system

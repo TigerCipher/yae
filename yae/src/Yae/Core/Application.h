@@ -25,19 +25,34 @@
 
 #include "Yae/Common.h"
 
+#define WIN32_LEAN_AND_MEAN
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif
+#include <Windows.h>
+
+#include "Yae/Graphics/Camera.h"
+#include "Yae/Graphics/Model.h"
+#include "Yae/Graphics/Texture.h"
+#include "Yae/Graphics/Shaders/Shader.h"
+#include "Game.h"
+
 namespace yae
 {
 class application
 {
 public:
-    application()  = default;
+    application(game* game) : m_game{game} {}
     ~application() = default;
 
-    bool init(i32 width, i32 height, HWND hwnd) { return true; }
-    void shutdown(){}
-    bool frame() { return true; }
+    bool init(i32 width, i32 height, HWND hwnd);
+    void shutdown();
+    bool frame() const;
 
 private:
-    bool render() { return true; }
+    bool render() const;
+
+    game* m_game{};
+    gfx::camera*       m_camera{};
 };
 } // namespace yae

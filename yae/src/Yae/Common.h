@@ -55,6 +55,11 @@
         DISABLE_MOVE(T)
 
 #endif
+#include <type_traits>
+
+
+template<typename Derived, typename Base>
+concept is_subclass = std::is_base_of_v<Base, Derived>;
 
 #include <cstdint>
 #include <memory>
@@ -63,5 +68,7 @@
 #include <unordered_map>
 
 #include "Types.h"
+
+#include "Util/MathUtil.h"
 
 #include "Globals.h"

@@ -27,6 +27,8 @@
 
 // Core
 #include "Core/System.h"
+#include "Core/Application.h"
+#include "Core/Game.h"
 
 // Util
 #include "Util/PathUtil.h"
