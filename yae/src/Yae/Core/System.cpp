@@ -50,6 +50,7 @@ bool frame()
 }
 void init_windows(i32& width, i32& height)
 {
+    LOG_INFO("Creating window");
     WNDCLASSEX wcex;
     DEVMODE    dm_screen_settings;
     i32        pos_x;
@@ -88,9 +89,10 @@ void init_windows(i32& width, i32& height)
         mode++;
     }
 
-    width = g_settings->get<i32>("display", "width");
+    width  = g_settings->get<i32>("display", "width");
     height = g_settings->get<i32>("display", "height");
-    if(width == 0 || height == 0){
+    if (width == 0 || height == 0)
+    {
         width  = resolutions.rbegin()->width;
         height = resolutions.rbegin()->height;
 
@@ -131,6 +133,9 @@ void init_windows(i32& width, i32& height)
         pos_y = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
     }
 
+    LOG_INFO("Determined window size to create: ({}, {}). Fullscreen: {}. Position: ({}, {})", width, height,
+             g_settings->get<bool>("display", "fullscreen"), pos_x, pos_y);
+
     hwnd = CreateWindowEx(WS_EX_APPWINDOW, application_name, application_name, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
                           pos_x, pos_y, width, height, nullptr, nullptr, hinstance, nullptr);
 
@@ -139,10 +144,13 @@ void init_windows(i32& width, i32& height)
     SetFocus(hwnd);
 
     ShowCursor(false);
+
+    LOG_INFO("Window created and initialized");
 }
 
 void shutdown_windows()
 {
+    LOG_INFO("Destroying window");
     ShowCursor(true);
     if (g_settings->get<bool>("display", "fullscreen"))
     {
@@ -160,21 +168,30 @@ void shutdown_windows()
 
 bool init(game* game)
 {
+    LOG_INFO("Initializing YAE system");
     i32  screen_width  = 0;
     i32  screen_height = 0;
     bool result{};
 
     init_windows(screen_width, screen_height);
 
-    app = new application{game};
+    LOG_INFO("Creating application");
+    app = new application{ game };
 
     result = app->init(screen_width, screen_height, hwnd);
 
+#ifdef _DEBUG
+    if (result)
+    {
+        LOG_INFO("YAE system initialized");
+    }
+#endif
     return result;
 }
 
 void shutdown()
 {
+    LOG_INFO("Shutting down YAE system");
     if (app)
     {
         app->shutdown();
@@ -183,6 +200,8 @@ void shutdown()
     }
 
     shutdown_windows();
+
+    LOG_INFO("YAE system shutdown");
 }
 
 void run()
@@ -193,6 +212,7 @@ void run()
 
     ZeroMemory(&msg, sizeof(MSG));
 
+    LOG_TRACE("Entering run loop");
     while (!done)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))

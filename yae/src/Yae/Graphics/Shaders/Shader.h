@@ -137,6 +137,7 @@ concept shader_type = is_subclass<T, shader>;
 template<shader_type T>
 T* create_shader(const std::string& name, const shader_layout& layout)
 {
+    LOG_INFO("Loading {} shader", name);
     const std::string vs_func = std::format("{}VertexShader", name);
     const std::string  ps_func = std::format("{}PixelShader", name);
     const std::wstring vs_file = std::format(L"../Shaders/{}.vs", std::wstring{name.begin(), name.end()});
@@ -148,6 +149,7 @@ T* create_shader(const std::string& name, const shader_layout& layout)
         return nullptr;
     }
 
+    LOG_INFO("Done.");
     return ret;
 }
 

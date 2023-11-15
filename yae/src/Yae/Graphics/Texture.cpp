@@ -76,6 +76,7 @@ void texture::shutdown()
 
 bool texture::load_targa_32bit(const char* filename)
 {
+    LOG_INFO("Loading texture from {}", filename);
     FILE* fptr;
     i32   error = fopen_s(&fptr, filename, "rb");
     if (error)
@@ -100,7 +101,7 @@ bool texture::load_targa_32bit(const char* filename)
         return false;
     }
 
-    i32 image_size = m_width * m_height * 4;
+    const i32 image_size = m_width * m_height * 4;
 
     std::vector<u8> image(image_size);
 
@@ -135,6 +136,8 @@ bool texture::load_targa_32bit(const char* filename)
 
         k -= m_width * 8;
     }
+
+    LOG_INFO("Done.");
 
     return true;
 }

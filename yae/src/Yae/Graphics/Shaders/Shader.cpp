@@ -70,6 +70,7 @@ bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const 
     u32               num_elements{};
     D3D11_BUFFER_DESC matrix_buffer_desc{};
 
+    LOG_INFO("Compiling vertex shader");
     if (FAILED(D3DCompileFromFile(vs_filename, nullptr, nullptr, vs_func_name, "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
                                   &vs_buffer, &err_msg)))
     {
@@ -82,7 +83,9 @@ bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const 
         }
         return false;
     }
+    LOG_INFO("Done.");
 
+    LOG_INFO("Compiling pixel shader");
     if (FAILED(D3DCompileFromFile(ps_filename, nullptr, nullptr, ps_func_name, "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
                                   &ps_buffer, &err_msg)))
     {
@@ -95,6 +98,7 @@ bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const 
         }
         return false;
     }
+    LOG_INFO("Done.");
 
     DX_CALL(core::get_device()->CreateVertexShader(vs_buffer->GetBufferPointer(), vs_buffer->GetBufferSize(), nullptr,
                                                    &m_vertex_shader));

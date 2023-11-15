@@ -29,6 +29,7 @@ namespace yae
 {
 bool application::init(i32 width, i32 height, HWND hwnd)
 {
+    LOG_INFO("Initializing application");
     if (!gfx::core::init(width, height, hwnd, g_settings->get<bool>("display", "fullscreen"), 1000.f, 0.3f))
     {
         popup::show("Failed to initialize DirectX", "Error", popup::style::error);
@@ -39,26 +40,31 @@ bool application::init(i32 width, i32 height, HWND hwnd)
     m_camera->set_position(0.f, 0.f, -5.f);
 
     m_game->set_camera(m_camera);
-    return m_game->init();
+
+    LOG_INFO("Initializing game");
+    if(!m_game->init())
+    {
+        return false;
+    }
+    LOG_INFO("Game initialized");
+
+    LOG_INFO("Application initialized");
+    return true;
 }
 
 void application::shutdown()
 {
+    LOG_INFO("Shutting down application");
+
+    LOG_INFO("Shutting down game");
     m_game->shutdown();
     SAFE_DELETE(m_game);
+    LOG_INFO("Game shutdown");
 
     SAFE_DELETE(m_camera);
 
     gfx::core::shutdown();
-
-    const popup::selection sel = popup::show("Did the YAE engine make you happy?", "Thanks!", popup::style::question, popup::buttons::yes_no);
-    if(sel == popup::selection::yes)
-    {
-        popup::show("Glad you liked it!", "Thanks for the feedback");
-    }else
-    {
-        popup::show("Sorry it disappointed you", "Thanks for the feedback");
-    }
+    LOG_INFO("Application shutdown");
 }
 
 bool application::frame() const
