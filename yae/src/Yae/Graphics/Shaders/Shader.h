@@ -23,7 +23,6 @@
 
 #pragma once
 #include "../D3D11Common.h"
-#include "../Light.h"
 
 #include <functional>
 #include <format>
@@ -94,7 +93,6 @@ private:
     std::vector<D3D11_INPUT_ELEMENT_DESC> m_elements{};
 };
 
-
 class shader
 {
 public:
@@ -106,12 +104,12 @@ public:
     virtual bool init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
                       const shader_layout& layout);
     virtual void shutdown();
-    bool render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture, const directional_light& light) const;
+    bool         render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture) const;
 
-    void set_parameters(const std::initializer_list<parameter> params) { m_parameters = params; }
+    //void set_parameters(const std::initializer_list<parameter> params) { m_parameters = params; }
 
 protected:
-    bool set_parameters(const math::matrix& view, ID3D11ShaderResourceView* texture, const directional_light& light) const;
+    bool set_parameters(const math::matrix& view, ID3D11ShaderResourceView* texture) const;
 
     struct matrix_buffer
     {
@@ -119,14 +117,6 @@ protected:
         math::matrix view;
         math::matrix projection;
     };
-    struct light_buffer
-    {
-        math::vec4 diffuse_color;
-        math::vec3 direction;
-        f32        padding{};
-    };
-
-    ID3D11Buffer* m_light_buffer{};
 
     ID3D11VertexShader* m_vertex_shader{};
     ID3D11PixelShader*  m_pixel_shader{};
@@ -149,7 +139,8 @@ T* create_shader(const std::string& name, const shader_layout& layout)
     const std::string  ps_func = std::format("{}PixelShader", name);
     const std::wstring vs_file = std::format(L"../Shaders/{}.vs", std::wstring{ name.begin(), name.end() });
     const std::wstring ps_file = std::format(L"../Shaders/{}.ps", std::wstring{ name.begin(), name.end() });
-    T*                 ret     = new T;
+
+    T* ret = new T;
     if (!ret->init(vs_file.c_str(), ps_file.c_str(), vs_func.c_str(), ps_func.c_str(), layout))
     {
         delete ret;

@@ -130,34 +130,23 @@ bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const 
     sampler_desc.AddressU       = D3D11_TEXTURE_ADDRESS_WRAP;
     sampler_desc.AddressV       = D3D11_TEXTURE_ADDRESS_WRAP;
     sampler_desc.AddressW       = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampler_desc.MipLODBias     = 0.0f;
+    sampler_desc.MipLODBias     = 0.f;
     sampler_desc.MaxAnisotropy  = 1;
     sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-    sampler_desc.BorderColor[0] = 0;
-    sampler_desc.BorderColor[1] = 0;
-    sampler_desc.BorderColor[2] = 0;
-    sampler_desc.BorderColor[3] = 0;
-    sampler_desc.MinLOD         = 0;
+    sampler_desc.BorderColor[0] = 0.f;
+    sampler_desc.BorderColor[1] = 0.f;
+    sampler_desc.BorderColor[2] = 0.f;
+    sampler_desc.BorderColor[3] = 0.f;
+    sampler_desc.MinLOD         = 0.f;
     sampler_desc.MaxLOD         = D3D11_FLOAT32_MAX;
 
     DX_CALL(core::get_device()->CreateSamplerState(&sampler_desc, &m_sampler_state));
-
-    D3D11_BUFFER_DESC desc{};
-    desc.Usage               = D3D11_USAGE_DYNAMIC;
-    desc.ByteWidth           = sizeof(light_buffer);
-    desc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
-    desc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
-    desc.MiscFlags           = 0;
-    desc.StructureByteStride = 0;
-
-    DX_CALL(core::get_device()->CreateBuffer(&desc, nullptr, &m_light_buffer));
 
     return true;
 }
 
 void shader::shutdown()
 {
-    core::release(m_light_buffer);
     core::release(m_sampler_state);
     core::release(m_matrix_buffer);
     core::release(m_layout);
@@ -165,10 +154,9 @@ void shader::shutdown()
     core::release(m_vertex_shader);
 }
 
-bool shader::render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture,
-                    const directional_light& light) const
+bool shader::render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture) const
 {
-    if (!set_parameters(view, texture, light))
+    if (!set_parameters(view, texture))
     {
         return false;
     }
@@ -183,12 +171,13 @@ bool shader::render(u32 index_count, const math::matrix& view, ID3D11ShaderResou
     return true;
 }
 
-bool shader::set_parameters(const math::matrix& view_, ID3D11ShaderResourceView* texture, const directional_light& light) const
+// TODO find a better way to make shaders more abstracted, HUD/UI shaders won't need lighting for instance
+bool shader::set_parameters(const math::matrix& view_, ID3D11ShaderResourceView* texture) const
 {
     D3D11_MAPPED_SUBRESOURCE mapped_res{};
     matrix_buffer*           data_ptr{};
     u32                      buffer_num{};
-
+    core::get_device_context()->PSSetShaderResources(0, 1, &texture);
     const auto world = XMMatrixTranspose(core::get_world_matrix());
     const auto view  = XMMatrixTranspose(view_);
     const auto proj  = XMMatrixTranspose(core::get_projection_matrix());
@@ -204,21 +193,13 @@ bool shader::set_parameters(const math::matrix& view_, ID3D11ShaderResourceView*
     buffer_num = 0;
     core::get_device_context()->VSSetConstantBuffers(buffer_num, 1, &m_matrix_buffer);
 
-    core::get_device_context()->PSSetShaderResources(0, 1, &texture);
+    
+
+    // TODO: Base shader to end here? as basic texture shader?
     //for (auto p : m_parameters)
     //{
     //    p();
     //}
-
-    DX_CALL(core::get_device_context()->Map(m_light_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res));
-
-    light_buffer* light_ptr = (light_buffer*)mapped_res.pData;
-    light_ptr->diffuse_color = light.diffuse_color;
-    light_ptr->direction     = light.direction;
-    core::get_device_context()->Unmap(m_light_buffer, 0);
-
-    buffer_num = 0;
-    core::get_device_context()->PSSetConstantBuffers(buffer_num, 1, &m_light_buffer);
 
     return true;
 }

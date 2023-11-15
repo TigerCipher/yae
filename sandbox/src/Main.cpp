@@ -33,7 +33,7 @@ class sandbox : public game
 {
 private:
     gfx::model*            m_model{};
-    gfx::shader*           m_lights_shader{};
+    gfx::light_shader*     m_lights_shader{};
     gfx::texture*          m_bricks_texture{};
     gfx::directional_light m_light{};
 
@@ -46,7 +46,7 @@ public:
             layout.add<math::vec3>("POSITION");
             layout.add<math::vec2>("TEXCOORD");
             layout.add<math::vec3>("NORMAL");
-            m_lights_shader = gfx::create_shader<gfx::shader>("Light", layout);
+            m_lights_shader = gfx::create_shader<gfx::light_shader>("Light", layout);
             if (!m_lights_shader)
             {
                 popup::show("Failed to initialize the test shader", "Error", popup::style::error);
@@ -99,7 +99,7 @@ public:
     {
         static f32 rotation{};
         rotation -= math::deg2rad_multiplier * 0.5f;
-        if(rotation < 0.f)
+        if (rotation < 0.f)
         {
             rotation += 360.f;
         }

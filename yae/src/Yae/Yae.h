@@ -40,6 +40,7 @@
 #include "Graphics/Model.h"
 #include "Graphics/Vertex.h"
 #include "Graphics/Shaders/Shader.h"
+#include "Graphics/Shaders/LightShader.h"
 
 namespace yae
 {
