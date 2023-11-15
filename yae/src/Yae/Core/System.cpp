@@ -158,7 +158,7 @@ void shutdown_windows()
 
 } // anonymous namespace
 
-bool init()
+bool init(game* game)
 {
     i32  screen_width  = 0;
     i32  screen_height = 0;
@@ -166,7 +166,7 @@ bool init()
 
     init_windows(screen_width, screen_height);
 
-    app = new application{};
+    app = new application{game};
 
     result = app->init(screen_width, screen_height, hwnd);
 

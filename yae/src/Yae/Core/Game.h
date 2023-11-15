@@ -15,8 +15,8 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: Game.h
+//  Date File Created: 11/14/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
@@ -24,35 +24,23 @@
 #pragma once
 
 #include "Yae/Common.h"
-
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
-
 #include "Yae/Graphics/Camera.h"
-#include "Yae/Graphics/Model.h"
-#include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/Shaders/Shader.h"
-#include "Game.h"
 
 namespace yae
 {
-class application
+class game
 {
 public:
-    application(game* game) : m_game{game} {}
-    ~application() = default;
+    game()          = default;
+    virtual ~game() = default;
 
-    bool init(i32 width, i32 height, HWND hwnd);
-    void shutdown();
-    bool frame() const;
+    virtual bool init()     = 0;
+    virtual bool render()   = 0;
+    virtual void shutdown() = 0;
 
-private:
-    bool render() const;
+    void set_camera(gfx::camera* cam) { m_camera = cam; }
 
-    game* m_game{};
-    gfx::camera*       m_camera{};
+protected:
+    gfx::camera* m_camera{};
 };
 } // namespace yae

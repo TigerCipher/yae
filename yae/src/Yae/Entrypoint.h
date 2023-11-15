@@ -15,44 +15,37 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: Entrypoint.h
+//  Date File Created: 11/14/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
 
 #pragma once
 
-#include "Yae/Common.h"
+#pragma message("This file should only be included once, in your 'Main.cpp'")
+#include "Yae.h"
 
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
 
-#include "Yae/Graphics/Camera.h"
-#include "Yae/Graphics/Model.h"
-#include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/Shaders/Shader.h"
-#include "Game.h"
+extern yae::game* create_game();
+extern void pre_init();
+extern const char* game_name;
+extern const char* game_version;
 
-namespace yae
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-class application
-{
-public:
-    application(game* game) : m_game{game} {}
-    ~application() = default;
+    yae::init(game_name, game_version);
+    
+    pre_init();
 
-    bool init(i32 width, i32 height, HWND hwnd);
-    void shutdown();
-    bool frame() const;
+    bool result = yae::system::init(create_game());
 
-private:
-    bool render() const;
+    if (result)
+    {
+        yae::system::run();
+    }
 
-    game* m_game{};
-    gfx::camera*       m_camera{};
-};
-} // namespace yae
+    yae::system::shutdown();
+    yae::shutdown();
+    return 0;
+}

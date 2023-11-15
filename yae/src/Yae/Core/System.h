@@ -31,6 +31,7 @@
 #include <set>
 
 #include "Yae/Common.h"
+#include "Game.h"
 
 namespace yae::system
 {
@@ -46,7 +47,7 @@ struct resolution
     }
 };
 
-bool init();
+bool init(game* game);
 void shutdown();
 void run();
 

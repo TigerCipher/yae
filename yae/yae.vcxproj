@@ -86,9 +86,11 @@
   <ItemGroup>
     <ClInclude Include="src\Yae\Common.h" />
     <ClInclude Include="src\Yae\Core\Application.h" />
+    <ClInclude Include="src\Yae\Core\Game.h" />
     <ClInclude Include="src\Yae\Core\Input.h" />
     <ClInclude Include="src\Yae\Core\Settings.h" />
     <ClInclude Include="src\Yae\Core\System.h" />
+    <ClInclude Include="src\Yae\Entrypoint.h" />
     <ClInclude Include="src\Yae\Globals.h" />
     <ClInclude Include="src\Yae\Graphics\Camera.h" />
     <ClInclude Include="src\Yae\Graphics\D3D11Common.h" />
