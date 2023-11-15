@@ -46,10 +46,10 @@ public:
 
     bool init(i32 width, i32 height, HWND hwnd);
     void shutdown();
-    bool frame();
+    bool frame() const;
 
 private:
-    bool render();
+    bool render() const;
 
     gfx::camera*       m_camera{};
     gfx::model*        m_model{};

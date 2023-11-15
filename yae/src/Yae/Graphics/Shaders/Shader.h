@@ -26,6 +26,7 @@
 
 
 #include <functional>
+#include <format>
 
 namespace yae::gfx
 {
@@ -128,5 +129,26 @@ protected:
 
     std::vector<parameter> m_parameters{};
 };
+
+
+template<typename T>
+concept shader_type = is_subclass<T, shader>;
+
+template<shader_type T>
+T* create_shader(const std::string& name, const shader_layout& layout)
+{
+    const std::string vs_func = std::format("{}VertexShader", name);
+    const std::string  ps_func = std::format("{}PixelShader", name);
+    const std::wstring vs_file = std::format(L"../Shaders/{}.vs", std::wstring{name.begin(), name.end()});
+    const std::wstring ps_file = std::format(L"../Shaders/{}.ps", std::wstring{ name.begin(), name.end() });
+    T* ret = new T;
+    if(!ret->init(vs_file.c_str(), ps_file.c_str(), vs_func.c_str(), ps_func.c_str(), layout))
+    {
+        delete ret;
+        return nullptr;
+    }
+
+    return ret;
+}
 
 } // namespace yae::gfx

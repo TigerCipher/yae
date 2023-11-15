@@ -38,26 +38,24 @@ bool application::init(i32 width, i32 height, HWND hwnd)
     m_camera = new gfx::camera{};
     m_camera->set_position(0.f, 0.f, -5.f);
 
-    m_test_color_shader = new gfx::shader{};
     {
         gfx::shader_layout layout{};
         layout.add<math::vec3>("POSITION");
         layout.add<math::vec4>("COLOR");
-        if (!m_test_color_shader->init(L"../Shaders/Color.vs", L"../Shaders/Color.ps", "ColorVertexShader", "ColorPixelShader",
-                                       layout))
+        m_test_color_shader = gfx::create_shader<gfx::shader>("Color", layout);
+        if (!m_test_color_shader)
         {
             MessageBox(hwnd, L"Failed to initialize the test shader", L"Error", MB_OK);
             return false;
         }
     }
 
-    m_test_texture_shader = new gfx::shader{};
     {
         gfx::shader_layout layout{};
         layout.add<math::vec3>("POSITION");
         layout.add<math::vec2>("TEXCOORD");
-        if (!m_test_texture_shader->init(L"../Shaders/Texture.vs", L"../Shaders/Texture.ps", "TextureVertexShader",
-                                         "TexturePixelShader", layout))
+        m_test_texture_shader = gfx::create_shader<gfx::shader>("Texture", layout);
+        if (!m_test_texture_shader)
         {
             MessageBox(hwnd, L"Failed to initialize the test texture shader", L"Error", MB_OK);
             return false;
