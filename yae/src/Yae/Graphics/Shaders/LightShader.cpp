@@ -51,7 +51,7 @@ void light_shader::shutdown()
     shader::shutdown();
 }
 bool light_shader::render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture,
-                          const directional_light& light)
+                          const base_light& light)
 {
     D3D11_MAPPED_SUBRESOURCE mapped_res{};
     DX_CALL(core::get_device_context()->Map(m_light_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res));

@@ -23,12 +23,18 @@
 
 #pragma once
 
-#include "D3D11Common.h"
+#include "Yae/Util/MathUtil.h"
 
 namespace yae::gfx
 {
 
-struct directional_light
+/**
+ * \brief Basic light struct. It handles:\n\n
+ * ambient lighting\n
+ * directional lighting\n
+ * specular lighting
+ */
+struct base_light
 {
     math::vec4 ambient_color{};
     math::vec4 diffuse_color{};

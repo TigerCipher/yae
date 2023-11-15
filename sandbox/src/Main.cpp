@@ -35,7 +35,7 @@ private:
     gfx::model*            m_model{};
     gfx::light_shader*     m_lights_shader{};
     gfx::texture*          m_bricks_texture{};
-    gfx::directional_light m_light{};
+    gfx::base_light m_light{};
 
 public:
     ~sandbox() override = default;
