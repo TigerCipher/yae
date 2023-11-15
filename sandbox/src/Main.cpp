@@ -55,32 +55,37 @@ public:
         }
 
         m_model = new gfx::model{};
-        std::vector<gfx::vertex_position_texture_normal> verts{ 3 };
-        std::vector<u32>                                 indices(3);
-
-        // bottom left
-        verts[0].position = { -1.f, -1.f, 0.f };
-        verts[0].texture  = { 0.f, 1.f };
-        verts[0].normal   = { 0.f, 0.f, -1.f };
-
-        // top middle
-        verts[1].position = { 0.f, 1.f, 0.f };
-        verts[1].texture  = { 0.5f, 0.f };
-        verts[1].normal   = { 0.f, 0.f, -1.f };
-
-        // bottom right
-        verts[2].position = { 1.f, -1.f, 0.f };
-        verts[2].texture  = { 1.f, 1.f };
-        verts[2].normal   = { 0.f, 0.f, -1.f };
-
-        indices[0] = 0; // Bottom left
-        indices[1] = 1; // Top middle
-        indices[2] = 2; // Bottom right
-        if (!m_model->init(verts, indices))
+        if(!m_model->init("./assets/models/cube.txt"))
         {
             popup::show("Failed to initialize the test model", "Error", popup::style::error);
             return false;
         }
+        //std::vector<gfx::vertex_position_texture_normal> verts{ 3 };
+        //std::vector<u32>                                 indices(3);
+
+        //// bottom left
+        //verts[0].position = { -1.f, -1.f, 0.f };
+        //verts[0].texture  = { 0.f, 1.f };
+        //verts[0].normal   = { 0.f, 0.f, -1.f };
+
+        //// top middle
+        //verts[1].position = { 0.f, 1.f, 0.f };
+        //verts[1].texture  = { 0.5f, 0.f };
+        //verts[1].normal   = { 0.f, 0.f, -1.f };
+
+        //// bottom right
+        //verts[2].position = { 1.f, -1.f, 0.f };
+        //verts[2].texture  = { 1.f, 1.f };
+        //verts[2].normal   = { 0.f, 0.f, -1.f };
+
+        //indices[0] = 0; // Bottom left
+        //indices[1] = 1; // Top middle
+        //indices[2] = 2; // Bottom right
+        //if (!m_model->init(verts, indices))
+        //{
+        //    popup::show("Failed to initialize the test model", "Error", popup::style::error);
+        //    return false;
+        //}
 
         m_bricks_texture = new gfx::texture{};
         if (!m_bricks_texture->init("./assets/textures/bricks.tga"))
@@ -98,7 +103,7 @@ public:
     bool render() override
     {
         static f32 rotation{};
-        rotation -= math::deg2rad_multiplier * 0.5f;
+        rotation -= math::deg2rad_multiplier * 0.1f;
         if (rotation < 0.f)
         {
             rotation += 360.f;

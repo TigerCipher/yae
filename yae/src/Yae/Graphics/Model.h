@@ -82,6 +82,8 @@ public:
         return true;
     }
 
+    bool init(const std::string_view filename);
+
     void shutdown();
     void render() const;
 
