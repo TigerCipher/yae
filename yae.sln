@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{CB43
 	ProjectSection(SolutionItems) = preProject
 		Shaders\Color.ps = Shaders\Color.ps
 		Shaders\Color.vs = Shaders\Color.vs
+		Shaders\Light.ps = Shaders\Light.ps
+		Shaders\Light.vs = Shaders\Light.vs
 		Shaders\Texture.ps = Shaders\Texture.ps
 		Shaders\Texture.vs = Shaders\Texture.vs
 	EndProjectSection

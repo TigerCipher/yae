@@ -23,7 +23,7 @@
 
 #pragma once
 #include "../D3D11Common.h"
-
+#include "../Light.h"
 
 #include <functional>
 #include <format>
@@ -88,11 +88,12 @@ public:
 
     constexpr const D3D11_INPUT_ELEMENT_DESC* data() const { return m_elements.data(); }
 
-    constexpr u32 size() const { return (u32)m_elements.size(); }
+    constexpr u32 size() const { return (u32) m_elements.size(); }
 
 private:
     std::vector<D3D11_INPUT_ELEMENT_DESC> m_elements{};
 };
+
 
 class shader
 {
@@ -105,14 +106,12 @@ public:
     virtual bool init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
                       const shader_layout& layout);
     virtual void shutdown();
-    bool         render(u32 index_count, const math::matrix& view) const;
+    bool render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture, const directional_light& light) const;
 
     void set_parameters(const std::initializer_list<parameter> params) { m_parameters = params; }
 
-    static void set_texture(ID3D11ShaderResourceView* texture);
-
 protected:
-    bool set_parameters(const math::matrix& view) const;
+    bool set_parameters(const math::matrix& view, ID3D11ShaderResourceView* texture, const directional_light& light) const;
 
     struct matrix_buffer
     {
@@ -120,6 +119,14 @@ protected:
         math::matrix view;
         math::matrix projection;
     };
+    struct light_buffer
+    {
+        math::vec4 diffuse_color;
+        math::vec3 direction;
+        f32        padding{};
+    };
+
+    ID3D11Buffer* m_light_buffer{};
 
     ID3D11VertexShader* m_vertex_shader{};
     ID3D11PixelShader*  m_pixel_shader{};
@@ -138,12 +145,12 @@ template<shader_type T>
 T* create_shader(const std::string& name, const shader_layout& layout)
 {
     LOG_INFO("Loading {} shader", name);
-    const std::string vs_func = std::format("{}VertexShader", name);
+    const std::string  vs_func = std::format("{}VertexShader", name);
     const std::string  ps_func = std::format("{}PixelShader", name);
-    const std::wstring vs_file = std::format(L"../Shaders/{}.vs", std::wstring{name.begin(), name.end()});
+    const std::wstring vs_file = std::format(L"../Shaders/{}.vs", std::wstring{ name.begin(), name.end() });
     const std::wstring ps_file = std::format(L"../Shaders/{}.ps", std::wstring{ name.begin(), name.end() });
-    T* ret = new T;
-    if(!ret->init(vs_file.c_str(), ps_file.c_str(), vs_func.c_str(), ps_func.c_str(), layout))
+    T*                 ret     = new T;
+    if (!ret->init(vs_file.c_str(), ps_file.c_str(), vs_func.c_str(), ps_func.c_str(), layout))
     {
         delete ret;
         return nullptr;

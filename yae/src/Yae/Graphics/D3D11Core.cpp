@@ -300,6 +300,11 @@ math::matrix get_orthographic_matrix()
     return ortho_matrix;
 }
 
+void set_world_matrix(const math::matrix& mat)
+{
+    world_matrix = mat;
+}
+
 void get_video_card_info(char* card_name, i32& memory)
 {
     strcpy_s(card_name, 128, gpu_info.description);

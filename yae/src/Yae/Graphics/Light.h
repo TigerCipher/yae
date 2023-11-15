@@ -15,8 +15,8 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Vertex.h
-//  Date File Created: 11/13/2023
+//  File Name: Light.h
+//  Date File Created: 11/14/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
@@ -28,24 +28,10 @@
 namespace yae::gfx
 {
 
-struct vertex
+struct directional_light
 {
-    math::vec3 position{};
+    math::vec4 diffuse_color{};
+    math::vec3 direction{};
 };
 
-struct vertex_position_color : vertex
-{
-    math::vec4 color{};
-};
-
-struct vertex_position_texture : vertex
-{
-    math::vec2 texture{};
-};
-
-struct vertex_position_texture_normal : vertex_position_texture
-{
-    math::vec3 normal{};
-};
-
-} // namespace yae::gfx
+}
