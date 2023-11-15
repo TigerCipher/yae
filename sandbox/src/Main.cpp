@@ -40,6 +40,7 @@ public:
     ~sandbox() override = default;
     bool init() override
     {
+        // TODO Create a built-in shader library
         {
             gfx::shader_layout layout{};
             layout.add<math::vec3>("POSITION");
