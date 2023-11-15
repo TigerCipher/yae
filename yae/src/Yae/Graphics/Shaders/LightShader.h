@@ -40,6 +40,7 @@ public:
 protected:
     struct light_buffer
     {
+        math::vec4 ambient_color;
         math::vec4 diffuse_color;
         math::vec3 direction;
         f32        padding{};

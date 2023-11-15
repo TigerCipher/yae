@@ -57,6 +57,7 @@ bool light_shader::render(u32 index_count, const math::matrix& view, ID3D11Shade
     DX_CALL(core::get_device_context()->Map(m_light_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res));
 
     auto* light_ptr          = (light_buffer*) mapped_res.pData;
+    light_ptr->ambient_color = light.ambient_color;
     light_ptr->diffuse_color = light.diffuse_color;
     light_ptr->direction     = light.direction;
     core::get_device_context()->Unmap(m_light_buffer, 0);

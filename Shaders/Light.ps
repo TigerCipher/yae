@@ -4,6 +4,7 @@ SamplerState SampleType : register(s0);
 
 cbuffer LightBuffer
 {
+    float4 ambientColor;
     float4 diffuseColor;
     float3 lightDirection;
     float padding;
@@ -22,10 +23,17 @@ struct PixelInputType
 float4 LightPixelShader(PixelInputType input) : SV_TARGET
 {
     float4 textureColor = shaderTexture.Sample(SampleType, input.tex);
+
+    float4 color = ambientColor;
     float3 lightDir = -lightDirection;
     float lightIntensity = saturate(dot(input.normal, lightDir));
 
-    float4 color = saturate(diffuseColor * lightIntensity);
+    if(lightIntensity > 0.0f)
+    {
+        color += diffuseColor * lightIntensity;
+    }
+
+    color = saturate(color);
 
     color = color * textureColor;
 

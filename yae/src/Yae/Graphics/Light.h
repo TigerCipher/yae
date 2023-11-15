@@ -30,6 +30,7 @@ namespace yae::gfx
 
 struct directional_light
 {
+    math::vec4 ambient_color{};
     math::vec4 diffuse_color{};
     math::vec3 direction{};
 };

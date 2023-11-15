@@ -41,6 +41,7 @@ public:
     ~sandbox() override = default;
     bool init() override
     {
+        m_camera->set_position(0.f, 0.f, -10.f);
         {
             gfx::shader_layout layout{};
             layout.add<math::vec3>("POSITION");
@@ -55,7 +56,7 @@ public:
         }
 
         m_model = new gfx::model{};
-        if(!m_model->init("./assets/models/cube.txt"))
+        if (!m_model->init("./assets/models/cube.txt"))
         {
             popup::show("Failed to initialize the test model", "Error", popup::style::error);
             return false;
@@ -94,7 +95,7 @@ public:
             return false;
         }
 
-
+        m_light.ambient_color = { 0.15f, 0.15f, 0.15f, 1.f };
         m_light.diffuse_color = { 1.f, 1.f, 1.f, 1.f };
         m_light.direction     = { 0.f, 0.f, 1.f };
 
@@ -108,15 +109,28 @@ public:
         {
             rotation += 360.f;
         }
-        gfx::core::set_world_matrix(XMMatrixRotationY(rotation));
+
+        math::matrix rotate    = XMMatrixRotationY(rotation);
+        math::matrix translate = XMMatrixTranslation(-2.f, 0.f, 0.f);
+        gfx::core::set_world_matrix(XMMatrixMultiply(rotate, translate));
+
         m_model->render();
-
-
-        //m_test_texture_shader->set_parameters({ [&] { gfx::shader::set_texture(m_bricks_texture->texture_view()); } });
         if (!m_lights_shader->render(m_model->index_count(), m_camera->view(), m_bricks_texture->texture_view(), m_light))
         {
             return false;
         }
+
+        math::matrix scale = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+        rotate = XMMatrixRotationX(rotation);
+        translate = XMMatrixTranslation(2.f, 0.f, 0.f);
+        gfx::core::set_world_matrix(XMMatrixMultiply(XMMatrixMultiply(scale, rotate), translate));
+
+        m_model->render();
+        if (!m_lights_shader->render(m_model->index_count(), m_camera->view(), m_bricks_texture->texture_view(), m_light))
+        {
+            return false;
+        }
+
         return true;
     }
 
