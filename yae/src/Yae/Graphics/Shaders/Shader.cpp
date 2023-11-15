@@ -78,7 +78,7 @@ bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const 
             output_error_message(err_msg, vs_filename);
         } else
         {
-            MessageBox(system::handle(), vs_filename, L"Missing shader file", MB_OK);
+            popup::show(vs_filename, L"Missing shader file", popup::style::error);
         }
         return false;
     }
@@ -91,7 +91,7 @@ bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const 
             output_error_message(err_msg, ps_filename);
         } else
         {
-            MessageBox(system::handle(), ps_filename, L"Missing shader file", MB_OK);
+            popup::show(ps_filename, L"Missing shader file", popup::style::error);
         }
         return false;
     }

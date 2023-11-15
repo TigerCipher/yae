@@ -88,7 +88,7 @@ public:
 
     constexpr const D3D11_INPUT_ELEMENT_DESC* data() const { return m_elements.data(); }
 
-    constexpr u32 size() const { return m_elements.size(); }
+    constexpr u32 size() const { return (u32)m_elements.size(); }
 
 private:
     std::vector<D3D11_INPUT_ELEMENT_DESC> m_elements{};

@@ -31,7 +31,7 @@ bool application::init(i32 width, i32 height, HWND hwnd)
 {
     if (!gfx::core::init(width, height, hwnd, g_settings->get<bool>("display", "fullscreen"), 1000.f, 0.3f))
     {
-        MessageBox(hwnd, L"Failed to initialize DirectX", L"Error", MB_OK);
+        popup::show("Failed to initialize DirectX", "Error", popup::style::error);
         return false;
     }
 
@@ -50,6 +50,15 @@ void application::shutdown()
     SAFE_DELETE(m_camera);
 
     gfx::core::shutdown();
+
+    const popup::selection sel = popup::show("Did the YAE engine make you happy?", "Thanks!", popup::style::question, popup::buttons::yes_no);
+    if(sel == popup::selection::yes)
+    {
+        popup::show("Glad you liked it!", "Thanks for the feedback");
+    }else
+    {
+        popup::show("Sorry it disappointed you", "Thanks for the feedback");
+    }
 }
 
 bool application::frame() const

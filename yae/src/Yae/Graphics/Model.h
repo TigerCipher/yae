@@ -44,8 +44,8 @@ public:
     bool init(const std::vector<VertexType>& vertices, const std::vector<u32> indices)
     {
         m_stride       = sizeof(VertexType);
-        m_vertex_count = vertices.size();
-        m_index_count  = indices.size();
+        m_vertex_count = (u32)vertices.size();
+        m_index_count  = (u32)indices.size();
 
         D3D11_BUFFER_DESC      vertex_buffer_desc{};
         D3D11_BUFFER_DESC      index_buffer_desc{};

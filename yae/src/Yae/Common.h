@@ -68,7 +68,7 @@ concept is_subclass = std::is_base_of_v<Base, Derived>;
 #include <unordered_map>
 
 #include "Types.h"
-
+#include "Util/Logger.h"
 #include "Util/MathUtil.h"
-
+#include "Util/Popup.h"
 #include "Globals.h"

@@ -96,7 +96,7 @@ bool texture::load_targa_32bit(const char* filename)
 
     if (bpp != 32)
     {
-        MessageBox(system::handle(), L"Texture file must be 32bit", L"Unsupported bit format", MB_OK);
+        popup::show("Texture file must be 32bit", "Unsupported bit format", popup::style::error);
         return false;
     }
 

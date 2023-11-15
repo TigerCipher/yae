@@ -100,8 +100,10 @@
     <ClInclude Include="src\Yae\Graphics\Texture.h" />
     <ClInclude Include="src\Yae\Graphics\Vertex.h" />
     <ClInclude Include="src\Yae\Types.h" />
+    <ClInclude Include="src\Yae\Util\Logger.h" />
     <ClInclude Include="src\Yae\Util\MathUtil.h" />
     <ClInclude Include="src\Yae\Util\PathUtil.h" />
+    <ClInclude Include="src\Yae\Util\Popup.h" />
     <ClInclude Include="src\Yae\Yae.h" />
   </ItemGroup>
   <ItemGroup>
@@ -114,7 +116,9 @@
     <ClCompile Include="src\Yae\Graphics\Model.cpp" />
     <ClCompile Include="src\Yae\Graphics\Shaders\Shader.cpp" />
     <ClCompile Include="src\Yae\Graphics\Texture.cpp" />
+    <ClCompile Include="src\Yae\Util\Logger.cpp" />
     <ClCompile Include="src\Yae\Util\PathUtil.cpp" />
+    <ClCompile Include="src\Yae\Util\Popup.cpp" />
     <ClCompile Include="src\Yae\Yae.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
