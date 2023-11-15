@@ -34,9 +34,11 @@ namespace
 
 std::vector<vertex_position_texture_normal> load_model(const char* filename)
 {
+    LOG_INFO("Loading model from {}", filename);
     std::ifstream fin{ filename };
     if (fin.fail())
     {
+        LOG_ERROR("Failed to open model file");
         return {};
     }
 
@@ -70,6 +72,7 @@ std::vector<vertex_position_texture_normal> load_model(const char* filename)
 
     fin.close();
 
+    LOG_INFO("Done.");
     return model;
 }
 
@@ -77,7 +80,6 @@ std::vector<vertex_position_texture_normal> load_model(const char* filename)
 
 bool model::init(const std::string_view filename)
 {
-    LOG_INFO("Loading model from {}", filename);
     m_stride = sizeof(vertex_position_texture_normal);
 
     const std::vector<vertex_position_texture_normal> vertices = load_model(filename.data());
