@@ -60,6 +60,16 @@ void output_error_message(ID3D10Blob* err_msg, const wchar_t* filename)
 }
 } // anonymous namespace
 
+void constant_buffer::vs(ID3D11Buffer* const* buffers, u32 num)
+{
+    core::get_device_context()->VSSetConstantBuffers(m_vs_num++, num, buffers);
+}
+
+void constant_buffer::ps(ID3D11Buffer* const* buffers, u32 num)
+{
+    core::get_device_context()->PSSetConstantBuffers(m_ps_num++, num, buffers);
+}
+
 bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
                   const shader_layout& layout)
 {
@@ -154,7 +164,7 @@ void shader::shutdown()
     core::release(m_vertex_shader);
 }
 
-bool shader::render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture) const
+bool shader::render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture)
 {
     if (!set_parameters(view, texture))
     {
@@ -172,11 +182,10 @@ bool shader::render(u32 index_count, const math::matrix& view, ID3D11ShaderResou
 }
 
 // TODO find a better way to make shaders more abstracted, HUD/UI shaders won't need lighting for instance
-bool shader::set_parameters(const math::matrix& view_, ID3D11ShaderResourceView* texture) const
+bool shader::set_parameters(const math::matrix& view_, ID3D11ShaderResourceView* texture)
 {
     D3D11_MAPPED_SUBRESOURCE mapped_res{};
     matrix_buffer*           data_ptr{};
-    u32                      buffer_num{};
     core::get_device_context()->PSSetShaderResources(0, 1, &texture);
     const auto world = XMMatrixTranspose(core::get_world_matrix());
     const auto view  = XMMatrixTranspose(view_);
@@ -190,8 +199,9 @@ bool shader::set_parameters(const math::matrix& view_, ID3D11ShaderResourceView*
 
     core::get_device_context()->Unmap(m_matrix_buffer, 0);
 
-    buffer_num = 0;
-    core::get_device_context()->VSSetConstantBuffers(buffer_num, 1, &m_matrix_buffer);
+    m_buffer.vs(&m_matrix_buffer);
+    //m_buffer
+    //core::get_device_context()->VSSetConstantBuffers(buffer_num, 1, &m_matrix_buffer);
 
     
 
@@ -201,6 +211,7 @@ bool shader::set_parameters(const math::matrix& view_, ID3D11ShaderResourceView*
     //    p();
     //}
 
+    m_buffer.reset();
     return true;
 }
 } // namespace yae::gfx

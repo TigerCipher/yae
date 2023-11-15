@@ -93,6 +93,25 @@ private:
     std::vector<D3D11_INPUT_ELEMENT_DESC> m_elements{};
 };
 
+class constant_buffer
+{
+public:
+    constant_buffer()  = default;
+    ~constant_buffer() = default;
+
+    void vs(ID3D11Buffer* const* buffers, u32 num = 1);
+    void ps(ID3D11Buffer* const* buffers, u32 num = 1);
+
+    void reset()
+    {
+        m_vs_num = m_ps_num = 0;
+    }
+
+private:
+    u32 m_vs_num{};
+    u32 m_ps_num{};
+};
+
 class shader
 {
 public:
@@ -104,12 +123,12 @@ public:
     virtual bool init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
                       const shader_layout& layout);
     virtual void shutdown();
-    bool         render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture) const;
+    bool         render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture);
 
     //void set_parameters(const std::initializer_list<parameter> params) { m_parameters = params; }
 
 protected:
-    bool set_parameters(const math::matrix& view, ID3D11ShaderResourceView* texture) const;
+    bool set_parameters(const math::matrix& view, ID3D11ShaderResourceView* texture);
 
     struct matrix_buffer
     {
@@ -124,6 +143,7 @@ protected:
     ID3D11Buffer*       m_matrix_buffer{};
     ID3D11SamplerState* m_sampler_state{};
 
+    constant_buffer        m_buffer{};
     std::vector<parameter> m_parameters{};
 };
 
