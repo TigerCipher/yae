@@ -24,6 +24,8 @@
 #pragma once
 #include "../D3D11Common.h"
 
+#include "../Camera.h"
+
 #include <functional>
 #include <format>
 
@@ -104,11 +106,12 @@ public:
 
     void reset()
     {
-        m_vs_num = m_ps_num = 0;
+        m_vs_num = 1; // matrix buffer handled separately as 0
+        m_ps_num = 0;
     }
 
 private:
-    u32 m_vs_num{};
+    u32 m_vs_num{1};
     u32 m_ps_num{};
 };
 
@@ -123,12 +126,12 @@ public:
     virtual bool init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
                       const shader_layout& layout);
     virtual void shutdown();
-    bool         render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture);
+    bool         render(u32 index_count, const camera* cam, ID3D11ShaderResourceView* texture);
 
     //void set_parameters(const std::initializer_list<parameter> params) { m_parameters = params; }
 
 protected:
-    bool set_parameters(const math::matrix& view, ID3D11ShaderResourceView* texture);
+    bool set_parameters(const camera* cam, ID3D11ShaderResourceView* texture);
 
     struct matrix_buffer
     {

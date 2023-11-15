@@ -33,49 +33,56 @@ bool light_shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, 
         return false;
     }
 
-    D3D11_BUFFER_DESC desc{};
-    desc.Usage               = D3D11_USAGE_DYNAMIC;
-    desc.ByteWidth           = sizeof(light_buffer);
-    desc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
-    desc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
-    desc.MiscFlags           = 0;
-    desc.StructureByteStride = 0;
+    D3D11_BUFFER_DESC light_desc{};
+    light_desc.Usage               = D3D11_USAGE_DYNAMIC;
+    light_desc.ByteWidth           = sizeof(light_buffer);
+    light_desc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
+    light_desc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
+    light_desc.MiscFlags           = 0;
+    light_desc.StructureByteStride = 0;
 
-    DX_CALL(core::get_device()->CreateBuffer(&desc, nullptr, &m_light_buffer));
+    DX_CALL(core::get_device()->CreateBuffer(&light_desc, nullptr, &m_light_buffer));
+
+    D3D11_BUFFER_DESC camera_desc{};
+    camera_desc.Usage               = D3D11_USAGE_DYNAMIC;
+    camera_desc.ByteWidth           = sizeof(camera_buffer);
+    camera_desc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
+    camera_desc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
+    camera_desc.MiscFlags           = 0;
+    camera_desc.StructureByteStride = 0;
+
+    DX_CALL(core::get_device()->CreateBuffer(&camera_desc, nullptr, &m_camera_buffer));
 
     return true;
 }
 void light_shader::shutdown()
 {
+    core::release(m_camera_buffer);
     core::release(m_light_buffer);
     shader::shutdown();
 }
-bool light_shader::render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture,
-                          const base_light& light)
+
+bool light_shader::render(u32 index_count, const camera* cam, ID3D11ShaderResourceView* texture, const base_light& light)
 {
     D3D11_MAPPED_SUBRESOURCE mapped_res{};
+
+    DX_CALL(core::get_device_context()->Map(m_camera_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res));
+    auto* cam_ptr     = (camera_buffer*) mapped_res.pData;
+    cam_ptr->position = cam->position();
+    core::get_device_context()->Unmap(m_camera_buffer, 0);
+    m_buffer.vs(&m_camera_buffer);
+
     DX_CALL(core::get_device_context()->Map(m_light_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res));
-
-    auto* light_ptr          = (light_buffer*) mapped_res.pData;
-    light_ptr->ambient_color = light.ambient_color;
-    light_ptr->diffuse_color = light.diffuse_color;
-    light_ptr->direction     = light.direction;
+    auto* light_ptr           = (light_buffer*) mapped_res.pData;
+    light_ptr->ambient_color  = light.ambient_color;
+    light_ptr->diffuse_color  = light.diffuse_color;
+    light_ptr->direction      = light.direction;
+    light_ptr->specular_power = light.specular_power;
+    light_ptr->specular_color = light.specular_color;
     core::get_device_context()->Unmap(m_light_buffer, 0);
-
-    constexpr u32 buffer_num = 0; // maybe a shader_parameter struct or class to keep track of VS/PS buffer nums?
-    /*
-     *class shader_parameter{
-     *public:
-     *void vs(u32 num, ID3D11Buffer* const* buffers) { core::get_device_context()->VSSetConstantBuffers(m_vs_buffer_num++, num, buffers); }
-     *void ps(u32 num, ID3D11Buffer* const* buffers) { core::get_device_context()->PSSetConstantBuffers(m_ps_buffer_num++, num, buffers); }
-     *};
-     *
-     *m_shader_param.ps(1, &m_light_buffer);
-     */
     m_buffer.ps(&m_light_buffer);
-    //core::get_device_context()->PSSetConstantBuffers(buffer_num, 1, &m_light_buffer);
 
-    return shader::render(index_count, view, texture);
+    return shader::render(index_count, cam, texture);
 }
 
 } // namespace yae::gfx

@@ -164,9 +164,9 @@ void shader::shutdown()
     core::release(m_vertex_shader);
 }
 
-bool shader::render(u32 index_count, const math::matrix& view, ID3D11ShaderResourceView* texture)
+bool shader::render(u32 index_count, const camera* cam, ID3D11ShaderResourceView* texture)
 {
-    if (!set_parameters(view, texture))
+    if (!set_parameters(cam, texture))
     {
         return false;
     }
@@ -182,13 +182,13 @@ bool shader::render(u32 index_count, const math::matrix& view, ID3D11ShaderResou
 }
 
 // TODO find a better way to make shaders more abstracted, HUD/UI shaders won't need lighting for instance
-bool shader::set_parameters(const math::matrix& view_, ID3D11ShaderResourceView* texture)
+bool shader::set_parameters(const camera* cam, ID3D11ShaderResourceView* texture)
 {
     D3D11_MAPPED_SUBRESOURCE mapped_res{};
     matrix_buffer*           data_ptr{};
     core::get_device_context()->PSSetShaderResources(0, 1, &texture);
     const auto world = XMMatrixTranspose(core::get_world_matrix());
-    const auto view  = XMMatrixTranspose(view_);
+    const auto view  = XMMatrixTranspose(cam->view());
     const auto proj  = XMMatrixTranspose(core::get_projection_matrix());
 
     DX_CALL(core::get_device_context()->Map(m_matrix_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res));
@@ -199,9 +199,8 @@ bool shader::set_parameters(const math::matrix& view_, ID3D11ShaderResourceView*
 
     core::get_device_context()->Unmap(m_matrix_buffer, 0);
 
-    m_buffer.vs(&m_matrix_buffer);
-    //m_buffer
-    //core::get_device_context()->VSSetConstantBuffers(buffer_num, 1, &m_matrix_buffer);
+    //m_buffer.vs(&m_matrix_buffer);
+    core::get_device_context()->VSSetConstantBuffers(0, 1, &m_matrix_buffer);
 
     
 

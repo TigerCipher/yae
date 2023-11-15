@@ -39,6 +39,8 @@ struct base_light
     math::vec4 ambient_color{};
     math::vec4 diffuse_color{};
     math::vec3 direction{};
+    f32        specular_power{};
+    math::vec4 specular_color{};
 };
 
-}
+} // namespace yae::gfx

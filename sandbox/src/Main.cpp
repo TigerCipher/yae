@@ -32,10 +32,10 @@ using namespace DirectX;
 class sandbox : public game
 {
 private:
-    gfx::model*            m_model{};
-    gfx::light_shader*     m_lights_shader{};
-    gfx::texture*          m_bricks_texture{};
-    gfx::base_light m_light{};
+    gfx::model*        m_model{};
+    gfx::light_shader* m_lights_shader{};
+    gfx::texture*      m_bricks_texture{};
+    gfx::base_light    m_light{};
 
 public:
     ~sandbox() override = default;
@@ -56,7 +56,7 @@ public:
         }
 
         m_model = new gfx::model{};
-        if (!m_model->init("./assets/models/cube.txt"))
+        if (!m_model->init("./assets/models/sphere.txt"))
         {
             popup::show("Failed to initialize the test model", "Error", popup::style::error);
             return false;
@@ -95,9 +95,11 @@ public:
             return false;
         }
 
-        m_light.ambient_color = { 0.15f, 0.15f, 0.15f, 1.f };
-        m_light.diffuse_color = { 1.f, 1.f, 1.f, 1.f };
-        m_light.direction     = { 0.f, 0.f, 1.f };
+        m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
+        m_light.diffuse_color  = { 1.f, 1.f, 1.f, 1.f };
+        m_light.direction      = { 1.f, 0.f, 1.f };
+        m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
+        m_light.specular_power = 32.f;
 
         return true;
     }
@@ -115,18 +117,18 @@ public:
         gfx::core::set_world_matrix(XMMatrixMultiply(rotate, translate));
 
         m_model->render();
-        if (!m_lights_shader->render(m_model->index_count(), m_camera->view(), m_bricks_texture->texture_view(), m_light))
+        if (!m_lights_shader->render(m_model->index_count(), m_camera, m_bricks_texture->texture_view(), m_light))
         {
             return false;
         }
 
         math::matrix scale = XMMatrixScaling(0.5f, 0.5f, 0.5f);
-        rotate = XMMatrixRotationX(rotation);
-        translate = XMMatrixTranslation(2.f, 0.f, 0.f);
+        rotate             = XMMatrixRotationX(rotation);
+        translate          = XMMatrixTranslation(2.f, 0.f, 0.f);
         gfx::core::set_world_matrix(XMMatrixMultiply(XMMatrixMultiply(scale, rotate), translate));
 
         m_model->render();
-        if (!m_lights_shader->render(m_model->index_count(), m_camera->view(), m_bricks_texture->texture_view(), m_light))
+        if (!m_lights_shader->render(m_model->index_count(), m_camera, m_bricks_texture->texture_view(), m_light))
         {
             return false;
         }
