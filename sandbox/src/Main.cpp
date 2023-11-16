@@ -106,7 +106,7 @@ public:
         m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
         m_light.specular_power = 32.f;
 
-        m_lights_shader->set_camera(m_camera);
+        //m_lights_shader->set_camera(m_camera); // by default, shader will now set the camera initially when init is called
         m_lights_shader->set_light(&m_light);
         return true;
     }
@@ -163,4 +163,6 @@ game* create_game()
 void pre_init()
 {
     g_settings->set("display", "fullscreen", false);
+    g_settings->set("window", "width", 1920);
+    g_settings->set("window", "height", 1080);
 }
