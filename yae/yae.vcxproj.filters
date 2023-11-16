@@ -84,6 +84,9 @@
     <ClInclude Include="src\Yae\Graphics\Shaders\LightShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Yae\Graphics\Shaders\ConstantBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Yae\Yae.cpp">

@@ -33,56 +33,52 @@ bool light_shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, 
         return false;
     }
 
-    D3D11_BUFFER_DESC light_desc{};
-    light_desc.Usage               = D3D11_USAGE_DYNAMIC;
-    light_desc.ByteWidth           = sizeof(light_buffer);
-    light_desc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
-    light_desc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
-    light_desc.MiscFlags           = 0;
-    light_desc.StructureByteStride = 0;
+    if (!m_light_buffer.init())
+    {
+        LOG_ERROR("Failed to initialize light constant buffer");
+        return false;
+    }
 
-    DX_CALL(core::get_device()->CreateBuffer(&light_desc, nullptr, &m_light_buffer));
-
-    D3D11_BUFFER_DESC camera_desc{};
-    camera_desc.Usage               = D3D11_USAGE_DYNAMIC;
-    camera_desc.ByteWidth           = sizeof(camera_buffer);
-    camera_desc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
-    camera_desc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
-    camera_desc.MiscFlags           = 0;
-    camera_desc.StructureByteStride = 0;
-
-    DX_CALL(core::get_device()->CreateBuffer(&camera_desc, nullptr, &m_camera_buffer));
+    if (!m_camera_buffer.init())
+    {
+        LOG_ERROR("Failed to initialize camera constant buffer");
+        return false;
+    }
 
     return true;
 }
 void light_shader::shutdown()
 {
-    core::release(m_camera_buffer);
-    core::release(m_light_buffer);
+    m_camera_buffer.release();
+    m_light_buffer.release();
     shader::shutdown();
 }
-
-bool light_shader::render(u32 index_count, const camera* cam, ID3D11ShaderResourceView* texture, const base_light& light)
+bool light_shader::set_parameters()
 {
-    D3D11_MAPPED_SUBRESOURCE mapped_res{};
+    m_camera_buffer.data().position = m_camera->position();
 
-    DX_CALL(core::get_device_context()->Map(m_camera_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res));
-    auto* cam_ptr     = (camera_buffer*) mapped_res.pData;
-    cam_ptr->position = cam->position();
-    core::get_device_context()->Unmap(m_camera_buffer, 0);
-    m_buffer.vs(&m_camera_buffer);
+    if(!m_light)
+    {
+        LOG_ERROR("light_shader::set_light must be called before render");
+        return false;
+    }
+    m_light_buffer.data().ambient_color  = m_light->ambient_color;
+    m_light_buffer.data().diffuse_color  = m_light->diffuse_color;
+    m_light_buffer.data().direction      = m_light->direction;
+    m_light_buffer.data().specular_power = m_light->specular_power;
+    m_light_buffer.data().specular_color = m_light->specular_color;
 
-    DX_CALL(core::get_device_context()->Map(m_light_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res));
-    auto* light_ptr           = (light_buffer*) mapped_res.pData;
-    light_ptr->ambient_color  = light.ambient_color;
-    light_ptr->diffuse_color  = light.diffuse_color;
-    light_ptr->direction      = light.direction;
-    light_ptr->specular_power = light.specular_power;
-    light_ptr->specular_color = light.specular_color;
-    core::get_device_context()->Unmap(m_light_buffer, 0);
-    m_buffer.ps(&m_light_buffer);
 
-    return shader::render(index_count, cam, texture);
+    if(!m_camera_buffer.apply())
+    {
+        return false;
+    }
+
+    if(!m_light_buffer.apply())
+    {
+        return false;
+    }
+    return shader::set_parameters();
 }
 
 } // namespace yae::gfx

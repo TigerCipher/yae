@@ -25,6 +25,7 @@
 #include "../D3D11Common.h"
 
 #include "../Camera.h"
+#include "ConstantBuffer.h"
 
 #include <functional>
 #include <format>
@@ -95,66 +96,38 @@ private:
     std::vector<D3D11_INPUT_ELEMENT_DESC> m_elements{};
 };
 
-class constant_buffer
-{
-public:
-    constant_buffer()  = default;
-    ~constant_buffer() = default;
-
-    void vs(ID3D11Buffer* const* buffers, u32 num = 1);
-    void ps(ID3D11Buffer* const* buffers, u32 num = 1);
-
-    void reset()
-    {
-        m_vs_num = 1; // matrix buffer handled separately as 0
-        m_ps_num = 0;
-    }
-
-private:
-    u32 m_vs_num{1};
-    u32 m_ps_num{};
-};
-
 class shader
 {
 public:
-    using parameter = std::function<void()>;
-
     shader()          = default;
     virtual ~shader() = default;
 
     virtual bool init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
                       const shader_layout& layout);
     virtual void shutdown();
-    bool         render(u32 index_count, const camera* cam, ID3D11ShaderResourceView* texture);
+    bool         render(u32 index_count);
 
-    //void set_parameters(const std::initializer_list<parameter> params) { m_parameters = params; }
+    void set_texture(ID3D11ShaderResourceView* texture) { m_texture_view = texture; }
+
+    void set_camera(const camera* cam) { m_camera = cam; }
 
 protected:
-    bool set_parameters(const camera* cam, ID3D11ShaderResourceView* texture);
+    virtual bool              set_parameters();
+    const camera*             m_camera{};
+    ID3D11ShaderResourceView* m_texture_view{};
+    ID3D11VertexShader*       m_vertex_shader{};
+    ID3D11PixelShader*        m_pixel_shader{};
+    ID3D11InputLayout*        m_layout{};
+    ID3D11SamplerState*       m_sampler_state{};
 
-    struct matrix_buffer
-    {
-        math::matrix world;
-        math::matrix view;
-        math::matrix projection;
-    };
-
-    ID3D11VertexShader* m_vertex_shader{};
-    ID3D11PixelShader*  m_pixel_shader{};
-    ID3D11InputLayout*  m_layout{};
-    ID3D11Buffer*       m_matrix_buffer{};
-    ID3D11SamplerState* m_sampler_state{};
-
-    constant_buffer        m_buffer{};
-    std::vector<parameter> m_parameters{};
+    constant_buffer<cb::matrix_buffer, shader_vertex> m_matrix_buffer{ 0 };
 };
 
 
 template<typename T>
-concept shader_type = is_subclass<T, shader>;
+concept shader_t = is_subclass<T, shader>;
 
-template<shader_type T>
+template<shader_t T>
 T* create_shader(const std::string& name, const shader_layout& layout)
 {
     LOG_INFO("Loading {} shader", name);

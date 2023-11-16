@@ -117,7 +117,11 @@ public:
         gfx::core::set_world_matrix(XMMatrixMultiply(rotate, translate));
 
         m_model->render();
-        if (!m_lights_shader->render(m_model->index_count(), m_camera, m_bricks_texture->texture_view(), m_light))
+
+        m_lights_shader->set_texture(m_bricks_texture->texture_view());
+        m_lights_shader->set_camera(m_camera);
+        m_lights_shader->set_light(&m_light);
+        if (!m_lights_shader->render(m_model->index_count()))
         {
             return false;
         }
@@ -128,7 +132,7 @@ public:
         gfx::core::set_world_matrix(XMMatrixMultiply(XMMatrixMultiply(scale, rotate), translate));
 
         m_model->render();
-        if (!m_lights_shader->render(m_model->index_count(), m_camera, m_bricks_texture->texture_view(), m_light))
+        if (!m_lights_shader->render(m_model->index_count()))
         {
             return false;
         }

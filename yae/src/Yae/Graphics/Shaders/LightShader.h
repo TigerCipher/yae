@@ -35,26 +35,15 @@ public:
     bool init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
               const shader_layout& layout) override;
     void shutdown() override;
-    bool render(u32 index_count, const camera* cam, ID3D11ShaderResourceView* texture, const base_light& light);
+
+    void set_light(base_light* light) { m_light = light; }
 
 protected:
-    struct light_buffer
-    {
-        math::vec4 ambient_color;
-        math::vec4 diffuse_color;
-        math::vec3 direction;
-        f32        specular_power;
-        math::vec4 specular_color;
-    };
+    bool set_parameters() override;
 
-    struct camera_buffer
-    {
-        math::vec3 position;
-        f32 padding{};
-    };
-
-    ID3D11Buffer* m_light_buffer{};
-    ID3D11Buffer* m_camera_buffer{};
+    base_light*                                       m_light{};
+    constant_buffer<cb::light_buffer, shader_pixel>   m_light_buffer{ 0 };
+    constant_buffer<cb::camera_buffer, shader_vertex> m_camera_buffer{ 1 };
 };
 
 } // namespace yae::gfx
