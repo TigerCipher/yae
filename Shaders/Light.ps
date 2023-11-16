@@ -38,6 +38,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 
         float3 reflection = normalize(2.0f * lightIntensity * input.normal - lightDir);
         specular = pow(saturate(dot(reflection, input.viewDirection)), specularPower);
+        specular *= specularColor;
     }
 
     color = color * textureColor;

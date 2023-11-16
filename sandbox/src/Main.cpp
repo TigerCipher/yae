@@ -109,6 +109,8 @@ public:
         m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
         m_light.specular_power = 32.f;
 
+        m_lights_shader->set_camera(m_camera);
+        m_lights_shader->set_light(&m_light);
         return true;
     }
     bool render() override
@@ -125,10 +127,9 @@ public:
         gfx::core::set_world_matrix(XMMatrixMultiply(rotate, translate));
 
 
-
         m_lights_shader->set_texture(m_bricks_texture->texture_view());
-        m_lights_shader->set_camera(m_camera);
-        m_lights_shader->set_light(&m_light);
+        m_light.specular_power = 32.f;
+        m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
         if (!m_model->render(m_lights_shader))
         {
             return false;
@@ -139,8 +140,10 @@ public:
         translate          = XMMatrixTranslation(2.f, 0.f, 0.f);
         gfx::core::set_world_matrix(XMMatrixMultiply(XMMatrixMultiply(scale, rotate), translate));
 
+        m_light.specular_power = 20.f;
+        m_light.specular_color = { 0.8f, 0.2f, 0.2f, 1.f };
         m_lights_shader->set_texture(m_default_texture->texture_view());
-        if(!m_model->render(m_lights_shader))
+        if (!m_model->render(m_lights_shader))
         {
             return false;
         }
