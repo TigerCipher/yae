@@ -23,6 +23,7 @@
 
 #include "Settings.h"
 
+#include "Yae/Util/Logger.h"
 #include "Yae/Util/PathUtil.h"
 
 
@@ -68,7 +69,7 @@ void settings::save(bool regenerate)
 {
     if (regenerate && !m_file->generate(m_ini, true))
     {
-        // TODO: Log error
+        LOG_ERROR("Failed to regenerate settings file");
     } else
     {
         m_file->write(m_ini);

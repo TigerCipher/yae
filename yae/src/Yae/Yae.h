@@ -29,6 +29,7 @@
 #include "Core/System.h"
 #include "Core/Application.h"
 #include "Core/Game.h"
+#include "Core/Input.h"
 
 // Util
 #include "Util/PathUtil.h"

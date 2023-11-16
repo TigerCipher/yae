@@ -77,6 +77,7 @@ bool application::init(i32 width, i32 height, HWND hwnd)
     LOG_INFO("Game initialized");
 
     LOG_INFO("Application initialized");
+    m_timer.start();
     return true;
 }
 
@@ -95,9 +96,10 @@ void application::shutdown()
     LOG_INFO("Application shutdown");
 }
 
-bool application::frame() const
+bool application::frame()
 {
-    m_game->update(0.f);
+    m_timer.frame();
+    m_game->update(m_timer.frame_time());
     return render();
 }
 

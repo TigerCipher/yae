@@ -84,8 +84,12 @@ public:
 
     void update(f32 delta) override
     {
+        if(input::is_key_down('B'))
+        {
+            LOG_DEBUG("Frame time: {}", delta);
+        }
         static f32 rotation{};
-        rotation -= math::deg2rad_multiplier * 0.1f;
+        rotation -= math::deg2rad_multiplier * 15.f * delta;
         if (rotation < 0.f)
         {
             rotation += 360.f;
@@ -135,4 +139,5 @@ void pre_init()
     g_settings->set("display", "fullscreen", false);
     g_settings->set("window", "width", 1920);
     g_settings->set("window", "height", 1080);
+    g_settings->set("display", "vsync", false);
 }

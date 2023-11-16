@@ -15,8 +15,8 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: Timer.h
+//  Date File Created: 11/16/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
@@ -25,43 +25,23 @@
 
 #include "Yae/Common.h"
 
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
-
-#include "Yae/Graphics/Camera.h"
-#include "Yae/Graphics/Model.h"
-#include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/Shaders/Shader.h"
-#include "Game.h"
-#include "Timer.h"
-
 namespace yae
 {
 
-namespace app
-{
-void  set(game* game);
-game* instance();
-} // namespace app
-
-class application
+class timer
 {
 public:
-    application(game* game) : m_game{ game } {}
-    ~application() = default;
+    timer() = default;
+    ~timer() = default;
 
-    bool init(i32 width, i32 height, HWND hwnd);
-    void shutdown();
-    bool frame();
+    bool start();
+    void frame();
 
+    constexpr f32 frame_time() const { return m_frame_time; }
 private:
-    bool render() const;
-
-    game*        m_game{};
-    gfx::camera* m_camera{};
-    timer        m_timer{};
+    f32 m_frequency{};
+    i64 m_start{};
+    f32 m_frame_time{};
 };
-} // namespace yae
+
+}

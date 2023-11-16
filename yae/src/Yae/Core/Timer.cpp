@@ -15,53 +15,41 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: Timer.cpp
+//  Date File Created: 11/16/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
-
-#pragma once
-
-#include "Yae/Common.h"
+#include "Timer.h"
 
 #define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
 #include <Windows.h>
-
-#include "Yae/Graphics/Camera.h"
-#include "Yae/Graphics/Model.h"
-#include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/Shaders/Shader.h"
-#include "Game.h"
-#include "Timer.h"
 
 namespace yae
 {
-
-namespace app
+bool timer::start()
 {
-void  set(game* game);
-game* instance();
-} // namespace app
+    i64 freq;
+    QueryPerformanceFrequency((LARGE_INTEGER*) &freq);
+    if (!freq)
+    {
+        return false;
+    }
 
-class application
+    m_frequency = (f32) freq;
+    QueryPerformanceCounter((LARGE_INTEGER*) &m_start);
+
+    return true;
+}
+
+void timer::frame()
 {
-public:
-    application(game* game) : m_game{ game } {}
-    ~application() = default;
+    i64 cur;
+    QueryPerformanceCounter((LARGE_INTEGER*) &cur);
 
-    bool init(i32 width, i32 height, HWND hwnd);
-    void shutdown();
-    bool frame();
+    i64 elapsed = cur - m_start;
 
-private:
-    bool render() const;
-
-    game*        m_game{};
-    gfx::camera* m_camera{};
-    timer        m_timer{};
-};
+    m_frame_time = (f32)elapsed / m_frequency;
+    m_start = cur;
+}
 } // namespace yae
