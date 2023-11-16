@@ -40,7 +40,9 @@ public:
     game_object* add(game_component* component);
     void         remove(game_component* component);
     game_object* add(game_object* child);
+    game_object* add(game_object& child);
     void         remove(game_object* child);
+    //void         remove_unmanged(game_object* child);
 
     bool render(gfx::shader* shader);
     void update(f32 delta);
@@ -73,6 +75,7 @@ private:
     };
 
     std::vector<game_object*>    m_children{};
+    std::vector<game_object*>    m_children_unmanaged{};
     std::vector<game_component*> m_components{};
     math::matrix                 m_transform{};
     math::vec3                   m_position{};

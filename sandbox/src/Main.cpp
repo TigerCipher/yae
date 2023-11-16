@@ -36,6 +36,7 @@ private:
     gfx::base_light    m_light{};
     game_object        ball{};
     game_object        ball2{};
+    game_object        box{};
 
 public:
     ~sandbox() override = default;
@@ -55,11 +56,11 @@ public:
             }
         }
 
-        auto* box = DBG_NEW game_object{};
-        box->add(DBG_NEW texture_component{"./assets/textures/bricks.tga"})->add(DBG_NEW model_component{"./assets/models/cube.txt"});
-        box->set_position(2.f, 1.f, 0.f);
-        box->set_scale(0.3f);
-        box->set_rotation(math::deg2rad_multiplier * 15.f, axis::x);
+        box.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
+            ->add(DBG_NEW model_component{ "./assets/models/cube.txt" });
+        box.set_position(2.f, 1.f, 0.f);
+        box.set_scale(0.3f);
+        box.set_rotation(math::deg2rad_multiplier * 15.f, axis::x);
         ball.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
             ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
         ball.add(box);
@@ -90,6 +91,7 @@ public:
         }
 
         ball.set_rotation(rotation, axis::y);
+        box.set_rotation(rotation, axis::x);
 
         m_light.specular_power = 32.f;
         m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };

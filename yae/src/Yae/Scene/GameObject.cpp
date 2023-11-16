@@ -45,6 +45,11 @@ game_object::~game_object()
         delete child;
         child = nullptr;
     }
+
+    //while (!m_children_unmanaged.empty())
+    //{
+    //    remove(m_children_unmanaged.back());
+    //}
 }
 
 game_object* game_object::add(game_component* component)
@@ -67,6 +72,13 @@ game_object* game_object::add(game_object* child)
     return this;
 }
 
+game_object* game_object::add(game_object& child)
+{
+    m_children_unmanaged.push_back(&child);
+    child.set_parent(this);
+    return this;
+}
+
 void game_object::remove(game_object* child)
 {
     if (const auto it = std::ranges::find(m_children, child); it != m_children.end())
@@ -74,6 +86,13 @@ void game_object::remove(game_object* child)
         m_children.erase(it);
     }
 }
+//void game_object::remove_unmanged(game_object* child)
+//{
+//    if (const auto it = std::ranges::find(m_children_unmanaged, child); it != m_children_unmanaged.end())
+//    {
+//        m_children_unmanaged.erase(it);
+//    }
+//}
 
 bool game_object::render(gfx::shader* shader)
 {
@@ -87,6 +106,14 @@ bool game_object::render(gfx::shader* shader)
     }
 
     for (const auto child : m_children)
+    {
+        if (!child->render(shader))
+        {
+            return false;
+        }
+    }
+
+    for (const auto child : m_children_unmanaged)
     {
         if (!child->render(shader))
         {
@@ -109,6 +136,12 @@ void game_object::update(f32 delta)
     {
         child->update(delta);
     }
+
+    for (const auto child : m_children_unmanaged)
+    {
+        child->update(delta);
+    }
+
     calculate_world_transformation();
 }
 
