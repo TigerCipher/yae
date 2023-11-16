@@ -39,7 +39,10 @@ class model
 {
 public:
     model()          = default;
-    virtual ~model() = default;
+    virtual ~model()
+    {
+        shutdown();
+    }
 
     template<vertex_type VertexType>
     bool init(const std::vector<VertexType>& vertices, const std::vector<u32> indices)

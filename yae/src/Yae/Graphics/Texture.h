@@ -32,7 +32,10 @@ class texture
 {
 public:
     texture()  = default;
-    ~texture() = default;
+    ~texture()
+    {
+        shutdown();
+    }
 
     bool init(const char* filename);
     void shutdown();
