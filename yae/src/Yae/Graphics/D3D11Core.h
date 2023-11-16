@@ -62,6 +62,8 @@ math::matrix get_projection_matrix();
 math::matrix get_world_matrix();
 math::matrix get_orthographic_matrix();
 
+void set_world_matrix(const math::matrix& mat);
+
 void get_video_card_info(char* card_name, i32& memory);
 
 void set_back_buffer_render_target();

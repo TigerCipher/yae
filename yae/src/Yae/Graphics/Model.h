@@ -33,6 +33,7 @@ concept vertex_type = is_subclass<T, yae::gfx::vertex>;
 
 namespace yae::gfx
 {
+class shader;
 
 class model
 {
@@ -44,8 +45,8 @@ public:
     bool init(const std::vector<VertexType>& vertices, const std::vector<u32> indices)
     {
         m_stride       = sizeof(VertexType);
-        m_vertex_count = (u32)vertices.size();
-        m_index_count  = (u32)indices.size();
+        m_vertex_count = (u32) vertices.size();
+        m_index_count  = (u32) indices.size();
 
         D3D11_BUFFER_DESC      vertex_buffer_desc{};
         D3D11_BUFFER_DESC      index_buffer_desc{};
@@ -82,8 +83,10 @@ public:
         return true;
     }
 
+    bool init(const std::string_view filename);
+
     void shutdown();
-    void render() const;
+    bool render(shader* shader) const;
 
     constexpr u32 index_count() const { return m_index_count; }
 

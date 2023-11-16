@@ -15,27 +15,32 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Yae.cpp
-//  Date File Created: 11/11/2023
+//  File Name: Light.h
+//  Date File Created: 11/14/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
-#include "Yae.h"
 
-namespace yae
-{
-void init(const std::string& game_name, const std::string& version)
-{
-    g_settings = DBG_NEW settings(game_name, version);
-}
-void shutdown()
-{
-    if(g_settings)
-    {
-        g_settings->save();
-    }
+#pragma once
 
-    delete g_settings;
-}
+#include "Yae/Util/MathUtil.h"
 
-} // namespace yae
+namespace yae::gfx
+{
+
+/**
+ * \brief Basic light struct. It handles:\n\n
+ * ambient lighting\n
+ * directional lighting\n
+ * specular lighting
+ */
+struct base_light
+{
+    math::vec4 ambient_color{};
+    math::vec4 diffuse_color{};
+    math::vec3 direction{};
+    f32        specular_power{};
+    math::vec4 specular_color{};
+};
+
+} // namespace yae::gfx

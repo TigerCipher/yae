@@ -176,7 +176,7 @@ bool init(game* game)
     init_windows(screen_width, screen_height);
 
     LOG_INFO("Creating application");
-    app = new application{ game };
+    app = DBG_NEW application{ game };
 
     result = app->init(screen_width, screen_height, hwnd);
 

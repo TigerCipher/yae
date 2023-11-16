@@ -115,29 +115,25 @@ bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const 
     core::release(vs_buffer);
     core::release(ps_buffer);
 
-    // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
-    matrix_buffer_desc.Usage               = D3D11_USAGE_DYNAMIC;
-    matrix_buffer_desc.ByteWidth           = sizeof(matrix_buffer);
-    matrix_buffer_desc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
-    matrix_buffer_desc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
-    matrix_buffer_desc.MiscFlags           = 0;
-    matrix_buffer_desc.StructureByteStride = 0;
-
-    DX_CALL(core::get_device()->CreateBuffer(&matrix_buffer_desc, nullptr, &m_matrix_buffer));
+    if (!m_matrix_buffer.init())
+    {
+        LOG_ERROR("Failed to create matrix constant buffer");
+        return false;
+    }
 
     D3D11_SAMPLER_DESC sampler_desc;
     sampler_desc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
     sampler_desc.AddressU       = D3D11_TEXTURE_ADDRESS_WRAP;
     sampler_desc.AddressV       = D3D11_TEXTURE_ADDRESS_WRAP;
     sampler_desc.AddressW       = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampler_desc.MipLODBias     = 0.0f;
+    sampler_desc.MipLODBias     = 0.f;
     sampler_desc.MaxAnisotropy  = 1;
     sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-    sampler_desc.BorderColor[0] = 0;
-    sampler_desc.BorderColor[1] = 0;
-    sampler_desc.BorderColor[2] = 0;
-    sampler_desc.BorderColor[3] = 0;
-    sampler_desc.MinLOD         = 0;
+    sampler_desc.BorderColor[0] = 0.f;
+    sampler_desc.BorderColor[1] = 0.f;
+    sampler_desc.BorderColor[2] = 0.f;
+    sampler_desc.BorderColor[3] = 0.f;
+    sampler_desc.MinLOD         = 0.f;
     sampler_desc.MaxLOD         = D3D11_FLOAT32_MAX;
 
     DX_CALL(core::get_device()->CreateSamplerState(&sampler_desc, &m_sampler_state));
@@ -147,24 +143,20 @@ bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const 
 
 void shader::shutdown()
 {
+    m_matrix_buffer.release();
     core::release(m_sampler_state);
-    core::release(m_matrix_buffer);
     core::release(m_layout);
     core::release(m_pixel_shader);
     core::release(m_vertex_shader);
 }
 
-bool shader::render(u32 index_count, const math::matrix& view) const
+bool shader::render(u32 index_count)
 {
-    if (!set_parameters(view))
+    if (!set_parameters())
     {
         return false;
     }
 
-    for(auto p : m_parameters)
-    {
-        p();
-    }
 
     core::get_device_context()->IASetInputLayout(m_layout);
     core::get_device_context()->VSSetShader(m_vertex_shader, nullptr, 0);
@@ -175,31 +167,29 @@ bool shader::render(u32 index_count, const math::matrix& view) const
     return true;
 }
 
-void shader::set_texture(ID3D11ShaderResourceView* texture)
+bool shader::set_parameters()
 {
-    core::get_device_context()->PSSetShaderResources(0, 1, &texture);
-}
-
-bool shader::set_parameters(const math::matrix& view_) const
-{
-    D3D11_MAPPED_SUBRESOURCE mapped_res{};
-    matrix_buffer*           data_ptr{};
-    u32                      buffer_num{};
-
+    if (m_texture_view)
+    {
+        core::get_device_context()->PSSetShaderResources(0, 1, &m_texture_view);
+    }
     const auto world = XMMatrixTranspose(core::get_world_matrix());
-    const auto view  = XMMatrixTranspose(view_);
+    if(!m_camera)
+    {
+        LOG_ERROR("<shader>.set_camera must be called before rendering with the shader");
+        return false;
+    }
+    const auto view  = XMMatrixTranspose(m_camera->view());
     const auto proj  = XMMatrixTranspose(core::get_projection_matrix());
 
-    DX_CALL(core::get_device_context()->Map(m_matrix_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res));
-    data_ptr             = (matrix_buffer*) mapped_res.pData;
-    data_ptr->world      = world;
-    data_ptr->view       = view;
-    data_ptr->projection = proj;
+    m_matrix_buffer.data().world      = world;
+    m_matrix_buffer.data().view       = view;
+    m_matrix_buffer.data().projection = proj;
 
-    core::get_device_context()->Unmap(m_matrix_buffer, 0);
-
-    core::get_device_context()->VSSetConstantBuffers(buffer_num, 1, &m_matrix_buffer);
-
+    if(!m_matrix_buffer.apply())
+    {
+        return false;
+    }
     return true;
 }
 } // namespace yae::gfx

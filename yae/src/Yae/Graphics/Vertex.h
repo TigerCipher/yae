@@ -43,4 +43,9 @@ struct vertex_position_texture : vertex
     math::vec2 texture{};
 };
 
+struct vertex_position_texture_normal : vertex_position_texture
+{
+    math::vec3 normal{};
+};
+
 } // namespace yae::gfx

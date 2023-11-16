@@ -33,6 +33,15 @@
 // Util
 #include "Util/PathUtil.h"
 
+// Graphics
+#include "Graphics/D3D11Common.h"
+#include "Graphics/D3D11Core.h"
+#include "Graphics/Light.h"
+#include "Graphics/Model.h"
+#include "Graphics/Vertex.h"
+#include "Graphics/Shaders/Shader.h"
+#include "Graphics/Shaders/LightShader.h"
+
 namespace yae
 {
 void init(const std::string& game_name, const std::string& version);

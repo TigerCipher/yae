@@ -95,7 +95,10 @@
     <ClInclude Include="src\Yae\Graphics\Camera.h" />
     <ClInclude Include="src\Yae\Graphics\D3D11Common.h" />
     <ClInclude Include="src\Yae\Graphics\D3D11Core.h" />
+    <ClInclude Include="src\Yae\Graphics\Light.h" />
     <ClInclude Include="src\Yae\Graphics\Model.h" />
+    <ClInclude Include="src\Yae\Graphics\Shaders\ConstantBuffer.h" />
+    <ClInclude Include="src\Yae\Graphics\Shaders\LightShader.h" />
     <ClInclude Include="src\Yae\Graphics\Shaders\Shader.h" />
     <ClInclude Include="src\Yae\Graphics\Texture.h" />
     <ClInclude Include="src\Yae\Graphics\Vertex.h" />
@@ -114,6 +117,7 @@
     <ClCompile Include="src\Yae\Graphics\Camera.cpp" />
     <ClCompile Include="src\Yae\Graphics\D3D11Core.cpp" />
     <ClCompile Include="src\Yae\Graphics\Model.cpp" />
+    <ClCompile Include="src\Yae\Graphics\Shaders\LightShader.cpp" />
     <ClCompile Include="src\Yae\Graphics\Shaders\Shader.cpp" />
     <ClCompile Include="src\Yae\Graphics\Texture.cpp" />
     <ClCompile Include="src\Yae\Util\Logger.cpp" />

@@ -15,27 +15,35 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Yae.cpp
-//  Date File Created: 11/11/2023
+//  File Name: LightShader.h
+//  Date File Created: 11/15/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
-#include "Yae.h"
 
-namespace yae
-{
-void init(const std::string& game_name, const std::string& version)
-{
-    g_settings = DBG_NEW settings(game_name, version);
-}
-void shutdown()
-{
-    if(g_settings)
-    {
-        g_settings->save();
-    }
+#pragma once
+#include "Shader.h"
+#include "../Light.h"
 
-    delete g_settings;
-}
+namespace yae::gfx
+{
 
-} // namespace yae
+class light_shader : public shader
+{
+public:
+    ~light_shader() override = default;
+    bool init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
+              const shader_layout& layout) override;
+    void shutdown() override;
+
+    void set_light(base_light* light) { m_light = light; }
+
+protected:
+    bool set_parameters() override;
+
+    base_light*                                       m_light{};
+    constant_buffer<cb::light_buffer, shader_pixel>   m_light_buffer{ 0 };
+    constant_buffer<cb::camera_buffer, shader_vertex> m_camera_buffer{ 1 };
+};
+
+} // namespace yae::gfx

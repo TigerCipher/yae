@@ -24,6 +24,8 @@
 #pragma once
 #include "../D3D11Common.h"
 
+#include "../Camera.h"
+#include "ConstantBuffer.h"
 
 #include <functional>
 #include <format>
@@ -88,7 +90,7 @@ public:
 
     constexpr const D3D11_INPUT_ELEMENT_DESC* data() const { return m_elements.data(); }
 
-    constexpr u32 size() const { return (u32)m_elements.size(); }
+    constexpr u32 size() const { return (u32) m_elements.size(); }
 
 private:
     std::vector<D3D11_INPUT_ELEMENT_DESC> m_elements{};
@@ -97,53 +99,45 @@ private:
 class shader
 {
 public:
-    using parameter = std::function<void()>;
-
     shader()          = default;
     virtual ~shader() = default;
 
     virtual bool init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
                       const shader_layout& layout);
     virtual void shutdown();
-    bool         render(u32 index_count, const math::matrix& view) const;
+    bool         render(u32 index_count);
 
-    void set_parameters(const std::initializer_list<parameter> params) { m_parameters = params; }
+    void set_texture(ID3D11ShaderResourceView* texture) { m_texture_view = texture; }
 
-    static void set_texture(ID3D11ShaderResourceView* texture);
+    void set_camera(const camera* cam) { m_camera = cam; }
 
 protected:
-    bool set_parameters(const math::matrix& view) const;
+    virtual bool              set_parameters();
+    const camera*             m_camera{};
+    ID3D11ShaderResourceView* m_texture_view{};
+    ID3D11VertexShader*       m_vertex_shader{};
+    ID3D11PixelShader*        m_pixel_shader{};
+    ID3D11InputLayout*        m_layout{};
+    ID3D11SamplerState*       m_sampler_state{};
 
-    struct matrix_buffer
-    {
-        math::matrix world;
-        math::matrix view;
-        math::matrix projection;
-    };
-
-    ID3D11VertexShader* m_vertex_shader{};
-    ID3D11PixelShader*  m_pixel_shader{};
-    ID3D11InputLayout*  m_layout{};
-    ID3D11Buffer*       m_matrix_buffer{};
-    ID3D11SamplerState* m_sampler_state{};
-
-    std::vector<parameter> m_parameters{};
+    constant_buffer<cb::matrix_buffer, shader_vertex> m_matrix_buffer{ 0 };
 };
 
 
 template<typename T>
-concept shader_type = is_subclass<T, shader>;
+concept shader_t = is_subclass<T, shader>;
 
-template<shader_type T>
+template<shader_t T>
 T* create_shader(const std::string& name, const shader_layout& layout)
 {
     LOG_INFO("Loading {} shader", name);
-    const std::string vs_func = std::format("{}VertexShader", name);
+    const std::string  vs_func = std::format("{}VertexShader", name);
     const std::string  ps_func = std::format("{}PixelShader", name);
-    const std::wstring vs_file = std::format(L"../Shaders/{}.vs", std::wstring{name.begin(), name.end()});
+    const std::wstring vs_file = std::format(L"../Shaders/{}.vs", std::wstring{ name.begin(), name.end() });
     const std::wstring ps_file = std::format(L"../Shaders/{}.ps", std::wstring{ name.begin(), name.end() });
+
     T* ret = new T;
-    if(!ret->init(vs_file.c_str(), ps_file.c_str(), vs_func.c_str(), ps_func.c_str(), layout))
+    if (!ret->init(vs_file.c_str(), ps_file.c_str(), vs_func.c_str(), ps_func.c_str(), layout))
     {
         delete ret;
         return nullptr;
