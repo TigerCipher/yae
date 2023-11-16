@@ -218,7 +218,7 @@ void game_object::calculate_world_transformation()
     } else
     {
         m_transform = XMMatrixMultiply(XMMatrixMultiply(scale, rotate), translate);
-        m_transform = XMMatrixMultiply(m_parent->transform(), m_transform);
+        m_transform = XMMatrixMultiply(m_transform, m_parent->transform());
     }
 }
 } // namespace yae

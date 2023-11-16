@@ -64,8 +64,9 @@ public:
         ball.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
             ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
         ball.add(box);
+        ball.set_position(-4.f, 0.f, 0.f);
+        ball.set_scale(1.5f);
 
-        ball.set_position(-2.f, 0.f, 0.f);
         ball2.add(DBG_NEW texture_component{ "./assets/textures/default.tga" })
             ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
         ball2.set_position(2.f, 0.f, 0.f);
