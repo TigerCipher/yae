@@ -97,8 +97,8 @@ void application::shutdown()
 
 bool application::frame() const
 {
-    const bool result = render();
-    return result;
+    m_game->update(0.f);
+    return render();
 }
 
 bool application::render() const

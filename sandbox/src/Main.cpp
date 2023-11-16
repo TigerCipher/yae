@@ -81,7 +81,8 @@ public:
         m_lights_shader->set_light(&m_light);
         return true;
     }
-    bool render() override // TODO need sep. update function as well
+
+    void update(f32 delta) override
     {
         static f32 rotation{};
         rotation -= math::deg2rad_multiplier * 0.1f;
@@ -92,22 +93,26 @@ public:
 
         ball.set_rotation(rotation, axis::y);
         box.set_rotation(rotation, axis::x);
+        ball2.set_rotation(rotation, axis::x);
 
+        ball.update(delta);
+        ball2.update(delta);
+    }
+
+    bool render() override
+    {
         m_light.specular_power = 32.f;
         m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
 
-        ball.update(0.f);
         if (!ball.render(m_lights_shader))
         {
             return false;
         }
 
-        ball2.set_rotation(rotation, axis::x);
 
         m_light.specular_power = 20.f;
         m_light.specular_color = { 0.8f, 0.2f, 0.2f, 1.f };
 
-        ball2.update(0.f);
         if (!ball2.render(m_lights_shader))
         {
             return false;

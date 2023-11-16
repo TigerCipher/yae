@@ -34,9 +34,10 @@ public:
     game()          = default;
     virtual ~game() = default;
 
-    virtual bool init()     = 0;
-    virtual bool render()   = 0;
-    virtual void shutdown() = 0;
+    virtual bool init()            = 0;
+    virtual void update(f32 delta) = 0;
+    virtual bool render()          = 0;
+    virtual void shutdown()        = 0;
 
     void set_camera(gfx::camera* cam) { m_camera = cam; }
 
