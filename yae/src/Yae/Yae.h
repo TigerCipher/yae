@@ -42,6 +42,10 @@
 #include "Graphics/Shaders/Shader.h"
 #include "Graphics/Shaders/LightShader.h"
 
+// Scene
+#include "Scene/GameObject.h"
+#include "Scene/GameComponent.h"
+
 namespace yae
 {
 void init(const std::string& game_name, const std::string& version);

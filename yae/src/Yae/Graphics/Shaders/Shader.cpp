@@ -169,26 +169,34 @@ bool shader::render(u32 index_count)
     return true;
 }
 
+void shader::set_world(const math::matrix& world)
+{
+    if (!math::are_matrices_equal(m_world, world))
+    {
+        m_world = XMMatrixTranspose(world);
+    }
+}
+
 bool shader::set_parameters()
 {
     if (m_texture_view)
     {
         core::get_device_context()->PSSetShaderResources(0, 1, &m_texture_view);
     }
-    const auto world = XMMatrixTranspose(core::get_world_matrix());
-    if(!m_camera)
+    const auto world = m_world;
+    if (!m_camera)
     {
         LOG_ERROR("<shader>.set_camera must be called before rendering with the shader");
         return false;
     }
-    const auto view  = XMMatrixTranspose(m_camera->view());
-    const auto proj  = XMMatrixTranspose(core::get_projection_matrix());
+    const auto view = XMMatrixTranspose(m_camera->view());
+    const auto proj = XMMatrixTranspose(core::get_projection_matrix()); // TODO: don't think this needs to always get recalculated
 
     m_matrix_buffer.data().world      = world;
     m_matrix_buffer.data().view       = view;
     m_matrix_buffer.data().projection = proj;
 
-    if(!m_matrix_buffer.apply())
+    if (!m_matrix_buffer.apply())
     {
         return false;
     }

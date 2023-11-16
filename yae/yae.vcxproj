@@ -102,6 +102,8 @@
     <ClInclude Include="src\Yae\Graphics\Shaders\Shader.h" />
     <ClInclude Include="src\Yae\Graphics\Texture.h" />
     <ClInclude Include="src\Yae\Graphics\Vertex.h" />
+    <ClInclude Include="src\Yae\Scene\GameComponent.h" />
+    <ClInclude Include="src\Yae\Scene\GameObject.h" />
     <ClInclude Include="src\Yae\Types.h" />
     <ClInclude Include="src\Yae\Util\Logger.h" />
     <ClInclude Include="src\Yae\Util\MathUtil.h" />
@@ -120,6 +122,8 @@
     <ClCompile Include="src\Yae\Graphics\Shaders\LightShader.cpp" />
     <ClCompile Include="src\Yae\Graphics\Shaders\Shader.cpp" />
     <ClCompile Include="src\Yae\Graphics\Texture.cpp" />
+    <ClCompile Include="src\Yae\Scene\GameComponent.cpp" />
+    <ClCompile Include="src\Yae\Scene\GameObject.cpp" />
     <ClCompile Include="src\Yae\Util\Logger.cpp" />
     <ClCompile Include="src\Yae\Util\PathUtil.cpp" />
     <ClCompile Include="src\Yae\Util\Popup.cpp" />

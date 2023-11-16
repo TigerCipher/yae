@@ -87,6 +87,12 @@
     <ClInclude Include="src\Yae\Graphics\Shaders\ConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Yae\Scene\GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Scene\GameComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Yae\Yae.cpp">
@@ -129,6 +135,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Yae\Graphics\Shaders\LightShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Yae\Scene\GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Yae\Scene\GameComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

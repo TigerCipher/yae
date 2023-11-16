@@ -32,11 +32,10 @@ using namespace DirectX;
 class sandbox : public game
 {
 private:
-    gfx::model         m_model{};
     gfx::light_shader* m_lights_shader{};
-    gfx::texture       m_bricks_texture{};
-    gfx::texture       m_default_texture{};
     gfx::base_light    m_light{};
+    game_object        ball{};
+    game_object        ball2{};
 
 public:
     ~sandbox() override = default;
@@ -56,49 +55,20 @@ public:
             }
         }
 
-        if (!m_model.init("./assets/models/sphere.txt"))
-        {
-            popup::show("Failed to initialize the test model", "Error", popup::style::error);
-            return false;
-        }
-        //std::vector<gfx::vertex_position_texture_normal> verts{ 3 };
-        //std::vector<u32>                                 indices(3);
+        auto* box = DBG_NEW game_object{};
+        box->add(DBG_NEW texture_component{"./assets/textures/bricks.tga"})->add(DBG_NEW model_component{"./assets/models/cube.txt"});
+        box->set_position(2.f, 1.f, 0.f);
+        box->set_scale(0.3f);
+        box->set_rotation(math::deg2rad_multiplier * 15.f, axis::x);
+        ball.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
+            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
+        ball.add(box);
 
-        //// bottom left
-        //verts[0].position = { -1.f, -1.f, 0.f };
-        //verts[0].texture  = { 0.f, 1.f };
-        //verts[0].normal   = { 0.f, 0.f, -1.f };
-
-        //// top middle
-        //verts[1].position = { 0.f, 1.f, 0.f };
-        //verts[1].texture  = { 0.5f, 0.f };
-        //verts[1].normal   = { 0.f, 0.f, -1.f };
-
-        //// bottom right
-        //verts[2].position = { 1.f, -1.f, 0.f };
-        //verts[2].texture  = { 1.f, 1.f };
-        //verts[2].normal   = { 0.f, 0.f, -1.f };
-
-        //indices[0] = 0; // Bottom left
-        //indices[1] = 1; // Top middle
-        //indices[2] = 2; // Bottom right
-        //if (!m_model->init(verts, indices))
-        //{
-        //    popup::show("Failed to initialize the test model", "Error", popup::style::error);
-        //    return false;
-        //}
-
-        if (!m_bricks_texture.init("./assets/textures/bricks.tga"))
-        {
-            popup::show("Failed to initialize the test texture", "Error", popup::style::error);
-            return false;
-        }
-
-        if (!m_default_texture.init("./assets/textures/default.tga"))
-        {
-            popup::show("Failed to initialize the default texture", "Error", popup::style::error);
-            return false;
-        }
+        ball.set_position(-2.f, 0.f, 0.f);
+        ball2.add(DBG_NEW texture_component{ "./assets/textures/default.tga" })
+            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
+        ball2.set_position(2.f, 0.f, 0.f);
+        ball2.set_scale(0.75f);
 
         m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
         m_light.diffuse_color  = { 1.f, 1.f, 1.f, 1.f };
@@ -110,7 +80,7 @@ public:
         m_lights_shader->set_light(&m_light);
         return true;
     }
-    bool render() override
+    bool render() override // TODO need sep. update function as well
     {
         static f32 rotation{};
         rotation -= math::deg2rad_multiplier * 0.1f;
@@ -119,28 +89,24 @@ public:
             rotation += 360.f;
         }
 
-        math::matrix rotate    = XMMatrixRotationY(rotation);
-        math::matrix translate = XMMatrixTranslation(-2.f, 0.f, 0.f);
-        gfx::core::set_world_matrix(XMMatrixMultiply(rotate, translate));
+        ball.set_rotation(rotation, axis::y);
 
-
-        m_lights_shader->set_texture(m_bricks_texture.texture_view());
         m_light.specular_power = 32.f;
         m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
-        if (!m_model.render(m_lights_shader))
+
+        ball.update(0.f);
+        if (!ball.render(m_lights_shader))
         {
             return false;
         }
 
-        math::matrix scale = XMMatrixScaling(0.75f, 0.75f, 0.75f);
-        rotate             = XMMatrixRotationX(rotation);
-        translate          = XMMatrixTranslation(2.f, 0.f, 0.f);
-        gfx::core::set_world_matrix(XMMatrixMultiply(XMMatrixMultiply(scale, rotate), translate));
+        ball2.set_rotation(rotation, axis::x);
 
         m_light.specular_power = 20.f;
         m_light.specular_color = { 0.8f, 0.2f, 0.2f, 1.f };
-        m_lights_shader->set_texture(m_default_texture.texture_view());
-        if (!m_model.render(m_lights_shader))
+
+        ball2.update(0.f);
+        if (!ball2.render(m_lights_shader))
         {
             return false;
         }
@@ -148,10 +114,7 @@ public:
         return true;
     }
 
-    void shutdown() override
-    {
-        gfx::core::shutdown(m_lights_shader);
-    }
+    void shutdown() override { gfx::core::shutdown(m_lights_shader); }
 };
 
 
