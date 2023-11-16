@@ -23,11 +23,13 @@
 
 #pragma once
 
+#include "Yae/Types.h"
 #include <DirectXMath.h>
 
 
 namespace yae::math
 {
+constexpr f32 epsilon = 1e-5f;
 
 constexpr f32 pi = DirectX::XM_PI;
 
@@ -40,4 +42,49 @@ using vec4   = DirectX::XMFLOAT4;
 using vector = DirectX::XMVECTOR;
 using mat4   = DirectX::XMFLOAT4X4;
 using matrix = DirectX::XMMATRIX;
+
+
+template<primitive_type T>
+constexpr T abs(T x)
+{
+    return x < 0 ? -x : x;
+}
+
+constexpr bool near_equal(f32 x, f32 y, f32 tolerance = epsilon)
+{
+    return abs(x - y) <= tolerance;
+}
+
+constexpr bool near_zero(f32 x, f32 tolerance = epsilon)
+{
+    return abs(x) <= tolerance;
+}
+
+inline bool are_matrices_equal(const matrix& matrix1, const matrix& matrix2)
+{
+    for (int row = 0; row < 4; ++row)
+    {
+        for (int col = 0; col < 4; ++col)
+        {
+            if (!near_equal(matrix1.r[row].m128_f32[col], matrix2.r[row].m128_f32[col]))
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 } // namespace yae::math
+
+namespace yae
+{
+
+enum class axis
+{
+    x,
+    y,
+    z
+};
+
+}

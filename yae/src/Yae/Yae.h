@@ -29,6 +29,7 @@
 #include "Core/System.h"
 #include "Core/Application.h"
 #include "Core/Game.h"
+#include "Core/Input.h"
 
 // Util
 #include "Util/PathUtil.h"
@@ -41,6 +42,10 @@
 #include "Graphics/Vertex.h"
 #include "Graphics/Shaders/Shader.h"
 #include "Graphics/Shaders/LightShader.h"
+
+// Scene
+#include "Scene/GameObject.h"
+#include "Scene/GameComponent.h"
 
 namespace yae
 {

@@ -15,8 +15,8 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: GameComponent.h
+//  Date File Created: 11/16/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
@@ -24,44 +24,49 @@
 #pragma once
 
 #include "Yae/Common.h"
-
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
-
-#include "Yae/Graphics/Camera.h"
+#include "Yae/Graphics/Shaders/Shader.h"
+#include "GameObject.h"
 #include "Yae/Graphics/Model.h"
 #include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/Shaders/Shader.h"
-#include "Game.h"
-#include "Timer.h"
 
 namespace yae
 {
 
-namespace app
-{
-void  set(game* game);
-game* instance();
-} // namespace app
-
-class application
+class game_component
 {
 public:
-    application(game* game) : m_game{ game } {}
-    ~application() = default;
+    game_component()          = default;
+    virtual ~game_component() = default;
 
-    bool init(i32 width, i32 height, HWND hwnd);
-    void shutdown();
-    bool frame();
+    void set_owner(game_object* owner) { m_owner = owner; }
+
+    virtual void update(f32 delta) {}
+    virtual bool render(gfx::shader* shader) { return true; }
 
 private:
-    bool render() const;
-
-    game*        m_game{};
-    gfx::camera* m_camera{};
-    timer        m_timer{};
+    game_object* m_owner{};
 };
+
+class model_component : public game_component
+{
+public:
+    model_component(const std::string_view filename);
+    ~model_component() override = default;
+    bool render(gfx::shader* shader) override;
+
+private:
+    gfx::model m_model{};
+};
+
+class texture_component : public game_component
+{
+public:
+    texture_component(const char* filename);
+    ~texture_component() override = default;
+
+    bool render(gfx::shader* shader) override;
+private:
+    gfx::texture m_texture{};
+};
+
 } // namespace yae

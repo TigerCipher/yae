@@ -15,53 +15,43 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: GameComponent.cpp
+//  Date File Created: 11/16/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
 
-#pragma once
-
-#include "Yae/Common.h"
-
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
-
-#include "Yae/Graphics/Camera.h"
-#include "Yae/Graphics/Model.h"
-#include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/Shaders/Shader.h"
-#include "Game.h"
-#include "Timer.h"
+#include "GameComponent.h"
 
 namespace yae
 {
-
-namespace app
+model_component::model_component(const std::string_view filename)
 {
-void  set(game* game);
-game* instance();
-} // namespace app
+    if (!m_model.init(filename))
+    {
+        LOG_ERROR("Failed to load model file {} from component", filename);
+        // TODO: Throw exception?
+    }
+}
 
-class application
+bool model_component::render(gfx::shader* shader)
 {
-public:
-    application(game* game) : m_game{ game } {}
-    ~application() = default;
+    return m_model.render(shader);
+}
 
-    bool init(i32 width, i32 height, HWND hwnd);
-    void shutdown();
-    bool frame();
 
-private:
-    bool render() const;
+texture_component::texture_component(const char* filename)
+{
+    if (!m_texture.init(filename))
+    {
+        LOG_ERROR("Failed to load texture file {} from component", filename);
+    }
+}
 
-    game*        m_game{};
-    gfx::camera* m_camera{};
-    timer        m_timer{};
-};
+bool texture_component::render(gfx::shader* shader)
+{
+    shader->set_texture(m_texture.texture_view());
+    return true;
+}
+
 } // namespace yae

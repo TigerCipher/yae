@@ -118,15 +118,17 @@ public:
 
     void set_camera(const camera* cam) { m_camera = cam; }
 
-protected:
-    virtual bool              set_parameters();
-    const camera*             m_camera{};
-    ID3D11ShaderResourceView* m_texture_view{};
-    ID3D11VertexShader*       m_vertex_shader{};
-    ID3D11PixelShader*        m_pixel_shader{};
-    ID3D11InputLayout*        m_layout{};
-    ID3D11SamplerState*       m_sampler_state{};
+    void set_world(const math::matrix& world);
 
+protected:
+    virtual bool                                      set_parameters();
+    const camera*                                     m_camera{};
+    ID3D11ShaderResourceView*                         m_texture_view{};
+    ID3D11VertexShader*                               m_vertex_shader{};
+    ID3D11PixelShader*                                m_pixel_shader{};
+    ID3D11InputLayout*                                m_layout{};
+    ID3D11SamplerState*                               m_sampler_state{};
+    math::matrix                                      m_world{};
     constant_buffer<cb::matrix_buffer, shader_vertex> m_matrix_buffer{ 0 };
 };
 
