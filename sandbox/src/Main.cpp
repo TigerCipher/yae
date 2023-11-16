@@ -32,10 +32,10 @@ using namespace DirectX;
 class sandbox : public game
 {
 private:
-    gfx::model*        m_model{};
+    gfx::model         m_model{};
     gfx::light_shader* m_lights_shader{};
-    gfx::texture*      m_bricks_texture{};
-    gfx::texture*      m_default_texture{};
+    gfx::texture       m_bricks_texture{};
+    gfx::texture       m_default_texture{};
     gfx::base_light    m_light{};
 
 public:
@@ -56,8 +56,7 @@ public:
             }
         }
 
-        m_model = DBG_NEW gfx::model{};
-        if (!m_model->init("./assets/models/sphere.txt"))
+        if (!m_model.init("./assets/models/sphere.txt"))
         {
             popup::show("Failed to initialize the test model", "Error", popup::style::error);
             return false;
@@ -89,15 +88,13 @@ public:
         //    return false;
         //}
 
-        m_bricks_texture = DBG_NEW gfx::texture{};
-        if (!m_bricks_texture->init("./assets/textures/bricks.tga"))
+        if (!m_bricks_texture.init("./assets/textures/bricks.tga"))
         {
             popup::show("Failed to initialize the test texture", "Error", popup::style::error);
             return false;
         }
 
-        m_default_texture = DBG_NEW gfx::texture{};
-        if (!m_default_texture->init("./assets/textures/default.tga"))
+        if (!m_default_texture.init("./assets/textures/default.tga"))
         {
             popup::show("Failed to initialize the default texture", "Error", popup::style::error);
             return false;
@@ -109,7 +106,7 @@ public:
         m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
         m_light.specular_power = 32.f;
 
-        m_lights_shader->set_camera(m_camera);
+        //m_lights_shader->set_camera(m_camera); // by default, shader will now set the camera initially when init is called
         m_lights_shader->set_light(&m_light);
         return true;
     }
@@ -127,10 +124,10 @@ public:
         gfx::core::set_world_matrix(XMMatrixMultiply(rotate, translate));
 
 
-        m_lights_shader->set_texture(m_bricks_texture->texture_view());
+        m_lights_shader->set_texture(m_bricks_texture.texture_view());
         m_light.specular_power = 32.f;
         m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
-        if (!m_model->render(m_lights_shader))
+        if (!m_model.render(m_lights_shader))
         {
             return false;
         }
@@ -142,8 +139,8 @@ public:
 
         m_light.specular_power = 20.f;
         m_light.specular_color = { 0.8f, 0.2f, 0.2f, 1.f };
-        m_lights_shader->set_texture(m_default_texture->texture_view());
-        if (!m_model->render(m_lights_shader))
+        m_lights_shader->set_texture(m_default_texture.texture_view());
+        if (!m_model.render(m_lights_shader))
         {
             return false;
         }
@@ -153,19 +150,19 @@ public:
 
     void shutdown() override
     {
-        gfx::core::shutdown(m_bricks_texture);
         gfx::core::shutdown(m_lights_shader);
-        gfx::core::shutdown(m_model);
     }
 };
 
 
 game* create_game()
 {
-    return new sandbox{};
+    return DBG_NEW sandbox{};
 }
 
 void pre_init()
 {
     g_settings->set("display", "fullscreen", false);
+    g_settings->set("window", "width", 1920);
+    g_settings->set("window", "height", 1080);
 }

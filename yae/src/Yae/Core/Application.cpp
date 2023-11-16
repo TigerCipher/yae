@@ -27,6 +27,33 @@
 
 namespace yae
 {
+
+namespace app
+{
+namespace
+{
+game* game_instance;
+bool  game_initialized{};
+} // anonymous namespace
+
+void set(game* game)
+{
+    if (game_initialized)
+    {
+        LOG_WARN("Game instance is already initialized");
+        return;
+    }
+
+    game_instance = game;
+}
+game* instance()
+{
+    return game_instance;
+}
+
+} // namespace app
+
+
 bool application::init(i32 width, i32 height, HWND hwnd)
 {
     LOG_INFO("Initializing application");
@@ -39,10 +66,11 @@ bool application::init(i32 width, i32 height, HWND hwnd)
     m_camera = DBG_NEW gfx::camera{};
     m_camera->set_position(0.f, 0.f, -5.f);
 
+    app::set(m_game);
     m_game->set_camera(m_camera);
 
     LOG_INFO("Initializing game");
-    if(!m_game->init())
+    if (!m_game->init())
     {
         return false;
     }
@@ -79,7 +107,7 @@ bool application::render() const
 
     m_camera->render();
 
-    if(!m_game->render())
+    if (!m_game->render())
     {
         return false;
     }

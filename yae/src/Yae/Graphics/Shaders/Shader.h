@@ -99,8 +99,15 @@ private:
 class shader
 {
 public:
-    shader()          = default;
-    virtual ~shader() = default;
+    shader() = default;
+    virtual ~shader()
+    {
+        m_matrix_buffer.release();
+        core::release(m_sampler_state);
+        core::release(m_layout);
+        core::release(m_pixel_shader);
+        core::release(m_vertex_shader);
+    }
 
     virtual bool init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
                       const shader_layout& layout);

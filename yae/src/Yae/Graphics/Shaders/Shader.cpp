@@ -23,6 +23,7 @@
 #include "Shader.h"
 
 #include "Yae/Core/System.h"
+#include "Yae/Core/Application.h"
 #include "../D3D11Core.h"
 
 #include <fstream>
@@ -138,6 +139,7 @@ bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const 
 
     DX_CALL(core::get_device()->CreateSamplerState(&sampler_desc, &m_sampler_state));
 
+    set_camera(app::instance()->camera());
     return true;
 }
 

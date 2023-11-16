@@ -40,6 +40,8 @@ public:
 
     void set_camera(gfx::camera* cam) { m_camera = cam; }
 
+    gfx::camera* camera() const { return m_camera; }
+
 protected:
     gfx::camera* m_camera{};
 };

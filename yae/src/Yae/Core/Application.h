@@ -39,6 +39,13 @@
 
 namespace yae
 {
+
+namespace app
+{
+void set(game* game);
+game* instance();
+}
+
 class application
 {
 public:
