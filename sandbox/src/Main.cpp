@@ -35,6 +35,7 @@ private:
     gfx::model*        m_model{};
     gfx::light_shader* m_lights_shader{};
     gfx::texture*      m_bricks_texture{};
+    gfx::texture*      m_default_texture{};
     gfx::base_light    m_light{};
 
 public:
@@ -95,6 +96,13 @@ public:
             return false;
         }
 
+        m_default_texture = DBG_NEW gfx::texture{};
+        if (!m_default_texture->init("./assets/textures/default.tga"))
+        {
+            popup::show("Failed to initialize the default texture", "Error", popup::style::error);
+            return false;
+        }
+
         m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
         m_light.diffuse_color  = { 1.f, 1.f, 1.f, 1.f };
         m_light.direction      = { 1.f, 0.f, 1.f };
@@ -116,23 +124,23 @@ public:
         math::matrix translate = XMMatrixTranslation(-2.f, 0.f, 0.f);
         gfx::core::set_world_matrix(XMMatrixMultiply(rotate, translate));
 
-        m_model->render();
+
 
         m_lights_shader->set_texture(m_bricks_texture->texture_view());
         m_lights_shader->set_camera(m_camera);
         m_lights_shader->set_light(&m_light);
-        if (!m_lights_shader->render(m_model->index_count()))
+        if (!m_model->render(m_lights_shader))
         {
             return false;
         }
 
-        math::matrix scale = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+        math::matrix scale = XMMatrixScaling(0.75f, 0.75f, 0.75f);
         rotate             = XMMatrixRotationX(rotation);
         translate          = XMMatrixTranslation(2.f, 0.f, 0.f);
         gfx::core::set_world_matrix(XMMatrixMultiply(XMMatrixMultiply(scale, rotate), translate));
 
-        m_model->render();
-        if (!m_lights_shader->render(m_model->index_count()))
+        m_lights_shader->set_texture(m_default_texture->texture_view());
+        if(!m_model->render(m_lights_shader))
         {
             return false;
         }
