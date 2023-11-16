@@ -36,7 +36,7 @@ bool application::init(i32 width, i32 height, HWND hwnd)
         return false;
     }
 
-    m_camera = new gfx::camera{};
+    m_camera = DBG_NEW gfx::camera{};
     m_camera->set_position(0.f, 0.f, -5.f);
 
     m_game->set_camera(m_camera);

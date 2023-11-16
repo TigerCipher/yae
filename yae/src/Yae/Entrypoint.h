@@ -26,6 +26,10 @@
 #pragma message("This file should only be included once, in your 'Main.cpp'")
 #include "Yae.h"
 
+#ifdef _DEBUG
+    #include <crtdbg.h>
+#endif
+
 
 extern yae::game* create_game();
 extern void pre_init();
@@ -34,6 +38,18 @@ extern const char* game_version;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+#if _DEBUG
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    // EXAMPLE: If the debugger outputs the following:
+    //     Detected memory leaks!
+    // Dumping objects ->
+    // {380} normal block at 0x000001C3F54F87B0, 40 bytes long.
+    //  Data: <         * >   >> 00 00 00 00 00 00 00 00 DC 2A DC 3E DA 04 E9 3E
+    // Object dump complete.
+    // You see that {380} normal block... ? well put that 380 in the following line and it will breakpoint where that block is allocated
+    // so you can identify the memory leak
+    //_CrtSetBreakAlloc(380); // break point when block 380 is allocated
+#endif
     yae::init(game_name, game_version);
     
     pre_init();

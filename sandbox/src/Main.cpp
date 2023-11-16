@@ -55,7 +55,7 @@ public:
             }
         }
 
-        m_model = new gfx::model{};
+        m_model = DBG_NEW gfx::model{};
         if (!m_model->init("./assets/models/sphere.txt"))
         {
             popup::show("Failed to initialize the test model", "Error", popup::style::error);
@@ -88,7 +88,7 @@ public:
         //    return false;
         //}
 
-        m_bricks_texture = new gfx::texture{};
+        m_bricks_texture = DBG_NEW gfx::texture{};
         if (!m_bricks_texture->init("./assets/textures/bricks.tga"))
         {
             popup::show("Failed to initialize the test texture", "Error", popup::style::error);
