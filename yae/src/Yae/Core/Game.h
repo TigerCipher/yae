@@ -39,8 +39,9 @@ public:
     virtual bool render()          = 0;
     virtual void shutdown()        = 0;
 
-    void set_camera(gfx::camera* cam) { m_camera = cam; }
+    virtual bool render2d() { return true; }
 
+    void set_camera(gfx::camera* cam) { m_camera = cam; }
     gfx::camera* camera() const { return m_camera; }
 
 protected:

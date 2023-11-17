@@ -28,6 +28,12 @@ namespace yae::gfx
 {
 void camera::render()
 {
+    if (m_setup_once && math::are_vectors_equal(m_old_position, m_position) &&
+        math::are_vectors_equal(m_old_rotation, m_rotation))
+    {
+        return;
+    }
+    m_setup_once = true;
     constexpr math::vec3 up{ 0.f, 1.f, 0.f };
     const math::vec3     pos = m_position;
     constexpr math::vec3 look_at{ 0.f, 0.f, 1.f };

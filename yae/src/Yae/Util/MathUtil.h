@@ -75,6 +75,11 @@ inline bool are_matrices_equal(const matrix& matrix1, const matrix& matrix2)
     return true;
 }
 
+constexpr bool are_vectors_equal(const vec3& vec1, const vec3& vec2)
+{
+    return near_equal(vec1.x, vec2.x) && near_equal(vec1.y, vec2.y) && near_equal(vec1.z, vec2.z);
+}
+
 } // namespace yae::math
 
 namespace yae

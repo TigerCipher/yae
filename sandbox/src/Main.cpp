@@ -72,7 +72,6 @@ public:
         }
         m_camera->set_position(0.f, 7.f, -12.f);
         m_camera->set_rotation(30.f, 0.f, 0.f);
-        m_camera->render();
 
         m_plane.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{"./assets/models/plane.txt"});
 
@@ -151,6 +150,14 @@ public:
         {
             rotation += 360.f;
         }
+
+        //math::vec3 rot = m_camera->rotation();
+        //rot.y -= 15.f * delta;
+        //if(rot.y < 0.f)
+        //{
+        //    rot.y += 360.f;
+        //}
+        //m_camera->set_rotation(rot);
 
         ball.set_rotation(rotation, axis::y);
         box.set_rotation(rotation, axis::x);

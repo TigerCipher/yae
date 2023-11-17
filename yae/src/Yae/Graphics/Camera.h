@@ -40,8 +40,9 @@ public:
 
     void set_position(const math::vec3& pos) { m_position = pos; }
 
+    // Angles expected to be in degrees
     void set_rotation(f32 x, f32 y, f32 z) { m_rotation = { x, y, z }; }
-
+    // Angles expected to be in degrees
     void set_rotation(const math::vec3& rot) { m_rotation = rot; }
 
     constexpr math::vec3   position() const { return m_position; }
@@ -51,7 +52,10 @@ public:
 private:
     math::vec3   m_position{};
     math::vec3   m_rotation{};
+    math::vec3   m_old_position{};
+    math::vec3   m_old_rotation{};
     math::matrix m_view{};
+    bool         m_setup_once{};
 };
 
 } // namespace yae::gfx
