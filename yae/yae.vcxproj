@@ -86,6 +86,7 @@
   <ItemGroup>
     <ClInclude Include="src\Yae\Common.h" />
     <ClInclude Include="src\Yae\Core\Application.h" />
+    <ClInclude Include="src\Yae\Core\Event.h" />
     <ClInclude Include="src\Yae\Core\Game.h" />
     <ClInclude Include="src\Yae\Core\Input.h" />
     <ClInclude Include="src\Yae\Core\Settings.h" />
@@ -115,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Yae\Core\Application.cpp" />
+    <ClCompile Include="src\Yae\Core\Event.cpp" />
     <ClCompile Include="src\Yae\Core\Input.cpp" />
     <ClCompile Include="src\Yae\Core\Settings.cpp" />
     <ClCompile Include="src\Yae\Core\System.cpp" />

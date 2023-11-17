@@ -24,6 +24,7 @@
 
 #include "Input.h"
 #include "Application.h"
+#include "Event.h"
 
 namespace yae::system
 {
@@ -192,6 +193,7 @@ bool init(game* game)
 void shutdown()
 {
     LOG_INFO("Shutting down YAE system");
+    events::fire(events::app_quit, nullptr, nullptr);
     if (app)
     {
         app->shutdown();
@@ -200,7 +202,7 @@ void shutdown()
     }
 
     shutdown_windows();
-
+    events::shutdown();
     LOG_INFO("YAE system shutdown");
 }
 

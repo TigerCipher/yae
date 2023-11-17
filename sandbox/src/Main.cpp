@@ -29,6 +29,20 @@ const char* game_version = "1.0.0";
 using namespace yae;
 using namespace DirectX;
 
+namespace
+{
+bool on_app_quit(u16 code, void* sender, void* listener, void* userdata)
+{
+    if(code != events::app_quit)
+    {
+        return false;
+    }
+
+    LOG_INFO("App quit event received and responded to via callback!");
+    return true;
+}
+} // anonymous namespace
+
 class sandbox : public game
 {
 private:
@@ -46,6 +60,7 @@ public:
     ~sandbox() override = default;
     bool init() override
     {
+        events::register_listener(events::app_quit, nullptr, on_app_quit);
         m_camera->set_position(0.f, 0.f, -10.f);
         {
             gfx::shader_layout layout{};
@@ -213,6 +228,8 @@ public:
     {
         gfx::core::shutdown(m_lights_shader);
         gfx::core::shutdown(m_texture_shader);
+
+        events::unregister_listener(events::app_quit, nullptr, on_app_quit);
     }
 };
 
