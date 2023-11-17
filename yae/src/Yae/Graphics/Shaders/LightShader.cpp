@@ -22,6 +22,7 @@
 //  ------------------------------------------------------------------------------
 #include "LightShader.h"
 #include "../D3D11Core.h"
+#include "Yae/Scene/GameObject.h"
 
 namespace yae::gfx
 {

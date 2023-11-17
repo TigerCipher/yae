@@ -26,6 +26,8 @@
 #include "Yae/Types.h"
 #include <DirectXMath.h>
 
+// Because it annoys me to keep including this when I want to use operator overloads. Sue me
+using namespace DirectX;
 
 namespace yae::math
 {

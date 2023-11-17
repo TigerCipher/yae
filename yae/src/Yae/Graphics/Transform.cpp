@@ -74,16 +74,27 @@ void transform::set_rotation(f32 angle, axis axis)
 {
     switch (axis)
     {
-    case axis::x: m_rot = { angle, 0.f, 0.f }; break;
-    case axis::y: m_rot = { 0.f, angle, 0.f }; break;
-    case axis::z: m_rot = { 0.f, 0.f, angle }; break;
+    case axis::x: m_rot = { angle * math::deg2rad_multiplier, m_rot.y, m_rot.z }; break;
+    case axis::y: m_rot = { m_rot.x, angle * math::deg2rad_multiplier, m_rot.z }; break;
+    case axis::z: m_rot = { m_rot.x, m_rot.y, angle * math::deg2rad_multiplier }; break;
     }
     m_recalculate = true;
 }
 
 void transform::set_rotation(f32 x, f32 y, f32 z)
 {
-    m_rot         = { x, y, z };
+    m_rot         = { x * math::deg2rad_multiplier, y * math::deg2rad_multiplier, z * math::deg2rad_multiplier };
+    m_recalculate = true;
+}
+
+void transform::rotate(f32 angle, axis axis)
+{
+    switch (axis)
+    {
+    case axis::x: m_rot = { m_rot.x + angle * math::deg2rad_multiplier, m_rot.y, m_rot.z }; break;
+    case axis::y: m_rot = { m_rot.x, m_rot.y + angle * math::deg2rad_multiplier, m_rot.z }; break;
+    case axis::z: m_rot = { m_rot.x, m_rot.y, m_rot.z + angle * math::deg2rad_multiplier }; break;
+    }
     m_recalculate = true;
 }
 
@@ -116,6 +127,22 @@ void transform::calculate_transformation(const transform* parent)
         m_transformation = XMMatrixMultiply(XMMatrixMultiply(m_scale_mat, m_rot_mat), m_translation);
         m_transformation = XMMatrixMultiply(m_transformation, parent->transformation());
     }
+
+    constexpr math::vec3 look_at{ 0.f, 0.f, 1.f };
+    math::vector         look_at_v = XMLoadFloat3(&look_at);
+
+    //const f32          pitch    = m_rot.x;// * math::deg2rad_multiplier;
+    //const f32          yaw      = m_rot.y * math::deg2rad_multiplier;
+    //const f32          roll     = m_rot.z * math::deg2rad_multiplier;
+    //const math::matrix rotation = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+    look_at_v         = XMVector3TransformCoord(look_at_v, m_rot_mat);
+    math::vector up_v = m_up;
+    up_v              = XMVector3TransformCoord(up_v, m_rot_mat);
+
+    look_at_v = XMVectorAdd(position_vector(), look_at_v);
+
+    m_view = XMMatrixLookAtLH(position_vector(), look_at_v, up_v);
 }
 
 } // namespace yae

@@ -24,15 +24,18 @@
 #pragma once
 #include "../D3D11Common.h"
 
-#include "../Camera.h"
 #include "ConstantBuffer.h"
 
 #include <functional>
 #include <format>
 
+namespace yae
+{
+class game_object;
+}
+
 namespace yae::gfx
 {
-
 
 template<typename T>
 constexpr DXGI_FORMAT resolve_shader_type() // by default, returns uint
@@ -116,13 +119,13 @@ public:
 
     void set_texture(ID3D11ShaderResourceView* texture) { m_texture_view = texture; }
 
-    void set_camera(const camera* cam) { m_camera = cam; }
+    void set_camera(const game_object* camera) { m_camera = camera; }
 
     void set_world(const math::matrix& world);
 
 protected:
     virtual bool                                      set_parameters();
-    const camera*                                     m_camera{};
+    const game_object*                                m_camera{};
     ID3D11ShaderResourceView*                         m_texture_view{};
     ID3D11VertexShader*                               m_vertex_shader{};
     ID3D11PixelShader*                                m_pixel_shader{};

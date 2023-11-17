@@ -74,6 +74,8 @@ public:
         m_camera->set_position(0.f, 7.f, -12.f);
         m_camera->set_rotation(30.f, 0.f, 0.f);
 
+        m_camera->add(new move_component{});
+
         m_plane.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{"./assets/models/plane.txt"});
 
         box.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
@@ -93,7 +95,7 @@ public:
         ball2.set_scale(0.75f);
 
         ball3.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
-            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" })->add(new move_component{});
+            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
         ball3.set_position(2.f, 2.f, 0.f);
 
         m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
@@ -150,7 +152,7 @@ public:
             LOG_DEBUG("Frame time: {}", delta);
         }
         static f32 rotation{};
-        rotation -= math::deg2rad_multiplier * 15.f * delta;
+        rotation -= 15.f * delta;
         if (rotation < 0.f)
         {
             rotation += 360.f;

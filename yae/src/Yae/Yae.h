@@ -46,6 +46,7 @@
 // Scene
 #include "Scene/GameObject.h"
 #include "Scene/GameComponent.h"
+#include "Scene/MoveComponent.h"
 
 namespace yae
 {

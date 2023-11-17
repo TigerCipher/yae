@@ -69,13 +69,4 @@ private:
     gfx::texture m_texture{};
 };
 
-class move_component : public game_component
-{
-public:
-    move_component() = default;
-    ~move_component() override = default;
-
-    void update(f32 delta) override;
-};
-
 } // namespace yae

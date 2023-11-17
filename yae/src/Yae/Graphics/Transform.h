@@ -40,6 +40,7 @@ public:
     constexpr const math::matrix& transformation() const { return m_transformation; }
     constexpr const math::matrix& rotation_matrix() const { return m_rot_mat; }
     constexpr const math::matrix& scale_matrix() const { return m_scale_mat; }
+    constexpr const math::matrix& view() const { return m_view; }
     constexpr const math::vector& forward() const { return m_forward; }
     constexpr const math::vector& back() const { return m_back; }
     constexpr const math::vector& left() const { return m_left; }
@@ -53,16 +54,25 @@ public:
     void set_scale(const math::vec3& scale);
     void set_scale(f32 x, f32 y, f32 z);
     void set_scale(f32 scale);
+
+    // rotation angles expected in radians
     void set_rotation(const math::vec3& rot);
+
+    // angle expected in degrees
     void set_rotation(f32 angle, axis axis);
+
+    // angles expected in degrees
     void set_rotation(f32 x, f32 y, f32 z);
+
+    // angle expected in degrees
+    void rotate(f32 angle, axis axis);
 
     void calculate_transformation(const transform* parent);
 
 private:
     math::vector m_pos_vec{};
     math::vec3   m_pos{};
-    math::vec3   m_scale{1.f, 1.f, 1.f};
+    math::vec3   m_scale{ 1.f, 1.f, 1.f };
     math::vec3   m_rot{};
     math::matrix m_transformation{};
     math::matrix m_translation{};
@@ -74,6 +84,7 @@ private:
     math::vector m_right{};
     math::vector m_up{};
     math::vector m_down{};
+    math::matrix m_view{};
 
     bool m_recalculate{ true };
 };

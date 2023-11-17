@@ -15,36 +15,29 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Game.h
-//  Date File Created: 11/14/2023
+//  File Name: MoveComponent.h
+//  Date File Created: 11/17/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
 
 #pragma once
-
-#include "Yae/Common.h"
-#include "Yae/Scene/GameObject.h"
+#include "GameComponent.h"
 
 namespace yae
 {
-class game
+
+// Free move
+class move_component : public game_component
 {
 public:
-    game()          = default;
-    virtual ~game() = default;
+    move_component(f32 speed = 10.f) : m_speed{speed} {}
+    ~move_component() override = default;
 
-    virtual bool init()            = 0;
-    virtual void update(f32 delta) = 0;
-    virtual bool render()          = 0;
-    virtual void shutdown()        = 0;
+    void update(f32 delta) override;
 
-    virtual bool render2d() { return true; }
-
-    void         set_camera(game_object* cam) { m_camera = cam; }
-    game_object* camera() const { return m_camera; }
-
-protected:
-    game_object* m_camera{};
+private:
+    f32 m_speed{};
 };
-} // namespace yae
+
+}

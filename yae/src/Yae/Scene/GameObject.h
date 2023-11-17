@@ -60,16 +60,18 @@ public:
     void set_rotation(f32 x, f32 y, f32 z) { m_transform.set_rotation(x, y, z); }
     void set_rotation(f32 angle, axis axis) { m_transform.set_rotation(angle, axis); }
 
+
     constexpr const math::matrix& world_transformation() const { return m_transform.transformation(); }
+    constexpr const math::matrix& view() const { return m_transform.view(); }
     constexpr const math::vec3&   position() const { return m_transform.position(); }
     constexpr const math::vec3&   scale() const { return m_transform.scale(); }
     constexpr const math::vec3&   rotation() const { return m_transform.rotation(); }
 
-    constexpr const transform& transformation() const { return m_transform; }
+    constexpr transform& transformation() { return m_transform; }
 
     //constexpr const math::vector& forward() const { return m_forward; }
 
-private:
+protected:
     void set_parent(game_object* parent) { m_parent = parent; }
 
 

@@ -31,7 +31,7 @@
 #endif
 #include <Windows.h>
 
-#include "Yae/Graphics/Camera.h"
+#include "Yae/Scene/GameObject.h"
 #include "Yae/Graphics/Model.h"
 #include "Yae/Graphics/Texture.h"
 #include "Yae/Graphics/Shaders/Shader.h"
@@ -61,7 +61,7 @@ private:
     bool render() const;
 
     game*        m_game{};
-    gfx::camera* m_camera{};
+    game_object* m_camera{};
     timer        m_timer{};
 };
 } // namespace yae

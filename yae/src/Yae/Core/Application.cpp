@@ -63,7 +63,7 @@ bool application::init(i32 width, i32 height, HWND hwnd)
         return false;
     }
 
-    m_camera = DBG_NEW gfx::camera{};
+    m_camera = DBG_NEW game_object{};
     m_camera->set_position(0.f, 0.f, -5.f);
 
     app::set(m_game);
@@ -99,6 +99,8 @@ void application::shutdown()
 bool application::frame()
 {
     m_timer.frame();
+    //m_camera->calculate_view();
+    m_camera->update(m_timer.frame_time());
     m_game->update(m_timer.frame_time());
     return render();
 }
@@ -106,8 +108,6 @@ bool application::frame()
 bool application::render() const
 {
     gfx::core::begin_scene(0.f, 0.f, 0.f, 1.f);
-
-    m_camera->render();
 
     if (!m_game->render())
     {

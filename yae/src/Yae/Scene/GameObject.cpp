@@ -97,7 +97,7 @@ void game_object::remove(game_object* child)
 
 bool game_object::render(gfx::shader* shader)
 {
-    shader->set_world(m_transform.transformation());
+    shader->set_world(world_transformation());
     for (const auto comp : m_components)
     {
         if (!comp->render(shader))
@@ -143,7 +143,7 @@ void game_object::update(f32 delta)
         child->update(delta);
     }
 
-    m_transform.calculate_transformation(m_parent ? &m_parent->transformation() : nullptr);
+    //m_transform.calculate_transformation(m_parent ? &m_parent->transformation() : nullptr);
 }
 
 } // namespace yae
