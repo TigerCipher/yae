@@ -24,7 +24,7 @@
 #pragma once
 
 #include "Yae/Common.h"
-#include "Yae/Graphics/Camera.h"
+#include "Yae/Scene/GameObject.h"
 
 namespace yae
 {
@@ -39,11 +39,12 @@ public:
     virtual bool render()          = 0;
     virtual void shutdown()        = 0;
 
-    void set_camera(gfx::camera* cam) { m_camera = cam; }
+    virtual bool render2d() { return true; }
 
-    gfx::camera* camera() const { return m_camera; }
+    void         set_camera(game_object* cam) { m_camera = cam; }
+    game_object* camera() const { return m_camera; }
 
 protected:
-    gfx::camera* m_camera{};
+    game_object* m_camera{};
 };
 } // namespace yae

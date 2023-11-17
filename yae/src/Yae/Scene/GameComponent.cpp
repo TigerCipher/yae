@@ -23,6 +23,8 @@
 
 #include "GameComponent.h"
 
+using namespace DirectX;
+
 namespace yae
 {
 model_component::model_component(const std::string_view filename)

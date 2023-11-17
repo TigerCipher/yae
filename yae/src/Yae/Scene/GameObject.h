@@ -24,6 +24,7 @@
 #pragma once
 
 #include "Yae/Common.h"
+#include "Yae/Graphics/Transform.h"
 #include "Yae/Graphics/Shaders/Shader.h"
 
 namespace yae
@@ -47,43 +48,39 @@ public:
     bool render(gfx::shader* shader);
     void update(f32 delta);
 
-    void set_position(const math::vec3& pos);
-    void set_position(f32 x, f32 y, f32 z);
+    void set_position(const math::vec3& pos) { m_transform.set_position(pos); }
+    void set_position(const math::vector& pos) { m_transform.set_position(pos); }
+    void set_position(f32 x, f32 y, f32 z) { m_transform.set_position(x, y, z); }
 
-    void set_scale(const math::vec3& scale);
-    void set_scale(f32 x, f32 y, f32 z);
-    void set_scale(f32 scale);
+    void set_scale(const math::vec3& scale) { m_transform.set_scale(scale); }
+    void set_scale(f32 x, f32 y, f32 z) { m_transform.set_scale(x, y, z); }
+    void set_scale(f32 scale) { m_transform.set_scale(scale); }
 
-    void set_rotation(const math::vec3& rotation);
-    void set_rotation(f32 x, f32 y, f32 z);
-    void set_rotation(f32 angle, axis axis);
+    void set_rotation(const math::vec3& rotation) { m_transform.set_rotation(rotation); }
+    void set_rotation(f32 x, f32 y, f32 z) { m_transform.set_rotation(x, y, z); }
+    void set_rotation(f32 angle, axis axis) { m_transform.set_rotation(angle, axis); }
 
-    constexpr const math::matrix& transform() const { return m_transform; }
-    constexpr const math::vec3&   position() const { return m_position; }
-    constexpr const math::vec3&   scale() const { return m_scale; }
-    constexpr const math::vec3&   rotation() const { return m_rotation; }
 
-private:
-    void calculate_world_transformation();
+    constexpr const math::matrix& world_transformation() const { return m_transform.transformation(); }
+    constexpr const math::matrix& view() const { return m_transform.view(); }
+    constexpr const math::vec3&   position() const { return m_transform.position(); }
+    constexpr const math::vec3&   scale() const { return m_transform.scale(); }
+    constexpr const math::vec3&   rotation() const { return m_transform.rotation(); }
+
+    constexpr transform& transformation() { return m_transform; }
+
+    //constexpr const math::vector& forward() const { return m_forward; }
+
+protected:
     void set_parent(game_object* parent) { m_parent = parent; }
 
-    struct transformation
-    {
-        math::matrix translation{};
-        math::matrix scale{};
-        math::matrix rotation{};
-    };
 
     std::vector<game_object*>    m_children{};
     std::vector<game_object*>    m_children_unmanaged{};
     std::vector<game_component*> m_components{};
-    math::matrix                 m_transform{};
-    math::vec3                   m_position{};
-    math::vec3                   m_scale{ 1.f, 1.f, 1.f };
-    math::vec3                   m_rotation{};
-    bool                         m_recalculate_transformation{ true };
-    transformation               m_transformation{};
     game_object*                 m_parent{};
+
+    transform m_transform{};
 };
 
 } // namespace yae

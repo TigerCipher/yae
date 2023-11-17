@@ -52,6 +52,26 @@ struct camera_buffer
     math::vec3 position;
     f32        padding{};
 };
+
+struct light_position_buffer
+{
+    math::vec4 position[4];
+};
+
+struct point_light
+{
+    math::vec4 diffuse_color{};
+    f32        constant_factor{};
+    f32        linear_factor{};
+    f32        quadradic_factor{};
+    f32        padding{};
+};
+
+struct point_light_buffer
+{
+    point_light lights[4];
+};
+
 } // namespace cb
 
 enum shader_type

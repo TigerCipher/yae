@@ -15,43 +15,29 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Camera.h
-//  Date File Created: 11/12/2023
+//  File Name: MoveComponent.h
+//  Date File Created: 11/17/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
 
 #pragma once
+#include "GameComponent.h"
 
-#include "Yae/Common.h"
-
-namespace yae::gfx
+namespace yae
 {
 
-class camera
+// Free move
+class move_component : public game_component
 {
 public:
-    camera()  = default;
-    ~camera() = default;
+    move_component(f32 speed = 10.f) : m_speed{speed} {}
+    ~move_component() override = default;
 
-    void render();
-
-    void set_position(f32 x, f32 y, f32 z) { m_position = { x, y, z }; }
-
-    void set_position(const math::vec3& pos) { m_position = pos; }
-
-    void set_rotation(f32 x, f32 y, f32 z) { m_rotation = { x, y, z }; }
-
-    void set_rotation(const math::vec3& rot) { m_rotation = rot; }
-
-    constexpr math::vec3   position() const { return m_position; }
-    constexpr math::vec3   rotation() const { return m_rotation; }
-    constexpr math::matrix view() const { return m_view; }
+    void update(f32 delta) override;
 
 private:
-    math::vec3   m_position{};
-    math::vec3   m_rotation{};
-    math::matrix m_view{};
+    f32 m_speed{};
 };
 
-} // namespace yae::gfx
+}

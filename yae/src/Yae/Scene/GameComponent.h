@@ -43,7 +43,7 @@ public:
     virtual void update(f32 delta) {}
     virtual bool render(gfx::shader* shader) { return true; }
 
-private:
+protected:
     game_object* m_owner{};
 };
 

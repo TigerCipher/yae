@@ -23,7 +23,7 @@
 
 #pragma once
 
-#pragma message("This file should only be included once, in your 'Main.cpp'")
+#pragma message("This Entrypoint header can only be included once, in your 'Main.cpp'")
 #include "Yae.h"
 
 #ifdef _DEBUG
@@ -54,9 +54,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     
     pre_init();
 
-    bool result = yae::system::init(create_game());
-
-    if (result)
+    if (yae::system::init(create_game()))
     {
         yae::system::run();
     }

@@ -24,6 +24,7 @@
 
 #include "Yae/Core/System.h"
 #include "Yae/Core/Application.h"
+#include "Yae/Scene/GameObject.h"
 #include "../D3D11Core.h"
 
 #include <fstream>
