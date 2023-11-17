@@ -45,10 +45,24 @@ bool light_shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, 
         return false;
     }
 
+    if (!m_light_pos_buffer.init())
+    {
+        LOG_ERROR("Failed to initialize light pos constant buffer");
+        return false;
+    }
+
+    if (!m_pl_buffer.init())
+    {
+        LOG_ERROR("Failed to initialize point light constant buffer");
+        return false;
+    }
+
     return true;
 }
 void light_shader::shutdown()
 {
+    m_light_pos_buffer.release();
+    m_pl_buffer.release();
     m_camera_buffer.release();
     m_light_buffer.release();
     shader::shutdown();
@@ -57,27 +71,56 @@ bool light_shader::set_parameters()
 {
     m_camera_buffer.data().position = m_camera->position();
 
-    if(!m_light)
+    if (!m_light)
     {
         LOG_ERROR("light_shader::set_light must be called before render");
         return false;
     }
+
+    if(!m_point_lights)
+    {
+        LOG_ERROR("light_shader::set_point_lights must be called");
+        return false;
+    }
+
     m_light_buffer.data().ambient_color  = m_light->ambient_color;
     m_light_buffer.data().diffuse_color  = m_light->diffuse_color;
     m_light_buffer.data().direction      = m_light->direction;
     m_light_buffer.data().specular_power = m_light->specular_power;
     m_light_buffer.data().specular_color = m_light->specular_color;
 
+    for (u32 i = 0; i < 4; ++i)
+    {
+        m_pl_buffer.data().lights[i].diffuse_color    = m_point_lights[i].diffuse_color;
+        m_pl_buffer.data().lights[i].constant_factor  = m_point_lights[i].constant_factor;
+        m_pl_buffer.data().lights[i].linear_factor    = m_point_lights[i].linear_factor;
+        m_pl_buffer.data().lights[i].quadradic_factor = m_point_lights[i].quadradic_factor;
 
-    if(!m_camera_buffer.apply())
+        m_light_pos_buffer.data().position[i] = { m_point_lights[i].position.x, m_point_lights[i].position.y,
+                                                  m_point_lights[i].position.z, 1.f };
+    }
+
+
+    if (!m_camera_buffer.apply())
     {
         return false;
     }
 
-    if(!m_light_buffer.apply())
+    if(!m_light_pos_buffer.apply())
     {
         return false;
     }
+
+    if (!m_light_buffer.apply())
+    {
+        return false;
+    }
+
+    if(!m_pl_buffer.apply())
+    {
+        return false;
+    }
+
     return shader::set_parameters();
 }
 

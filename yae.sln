@@ -12,12 +12,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sandbox", "sandbox\sandbox.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{CB4384C1-6C00-445B-817C-CB84A227A200}"
 	ProjectSection(SolutionItems) = preProject
-		Shaders\Color.ps = Shaders\Color.ps
-		Shaders\Color.vs = Shaders\Color.vs
-		Shaders\Light.ps = Shaders\Light.ps
-		Shaders\Light.vs = Shaders\Light.vs
-		Shaders\Texture.ps = Shaders\Texture.ps
-		Shaders\Texture.vs = Shaders\Texture.vs
+		Shaders\ColorPS.hlsl = Shaders\ColorPS.hlsl
+		Shaders\ColorVS.hlsl = Shaders\ColorVS.hlsl
+		Shaders\LightPS.hlsl = Shaders\LightPS.hlsl
+		Shaders\LightVS.hlsl = Shaders\LightVS.hlsl
+		Shaders\TexturePS.hlsl = Shaders\TexturePS.hlsl
+		Shaders\TextureVS.hlsl = Shaders\TextureVS.hlsl
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{8618357A-B441-4AC4-8795-B1894F6409BC}"

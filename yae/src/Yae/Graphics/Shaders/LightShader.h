@@ -37,13 +37,17 @@ public:
     void shutdown() override;
 
     void set_light(base_light* light) { m_light = light; }
+    void set_point_lights(point_light lights[4]) { m_point_lights = lights; }
 
 protected:
     bool set_parameters() override;
 
-    base_light*                                       m_light{};
-    constant_buffer<cb::light_buffer, shader_pixel>   m_light_buffer{ 0 };
-    constant_buffer<cb::camera_buffer, shader_vertex> m_camera_buffer{ 1 };
+    base_light*                                               m_light{};
+    point_light*                                              m_point_lights{};
+    constant_buffer<cb::light_buffer, shader_pixel>           m_light_buffer{ 0 };
+    constant_buffer<cb::point_light_buffer, shader_pixel>     m_pl_buffer{ 1 };
+    constant_buffer<cb::camera_buffer, shader_vertex>         m_camera_buffer{ 1 };
+    constant_buffer<cb::light_position_buffer, shader_vertex> m_light_pos_buffer{ 2 };
 };
 
 } // namespace yae::gfx

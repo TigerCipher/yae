@@ -142,8 +142,8 @@ T* create_shader(const std::string& name, const shader_layout& layout)
     LOG_INFO("Loading {} shader", name);
     const std::string  vs_func = std::format("{}VertexShader", name);
     const std::string  ps_func = std::format("{}PixelShader", name);
-    const std::wstring vs_file = std::format(L"../Shaders/{}.vs", std::wstring{ name.begin(), name.end() });
-    const std::wstring ps_file = std::format(L"../Shaders/{}.ps", std::wstring{ name.begin(), name.end() });
+    const std::wstring vs_file = std::format(L"../Shaders/{}VS.hlsl", std::wstring{ name.begin(), name.end() });
+    const std::wstring ps_file = std::format(L"../Shaders/{}PS.hlsl", std::wstring{ name.begin(), name.end() });
 
     T* ret = new T;
     if (!ret->init(vs_file.c_str(), ps_file.c_str(), vs_func.c_str(), ps_func.c_str(), layout))

@@ -43,4 +43,15 @@ struct base_light
     math::vec4 specular_color{};
 };
 
+
+struct point_light
+{
+    math::vec4 diffuse_color{};
+    f32        constant_factor{};
+    f32        linear_factor{};
+    f32        quadradic_factor{};
+
+    math::vec3 position{};
+};
+
 } // namespace yae::gfx

@@ -32,11 +32,14 @@ using namespace DirectX;
 class sandbox : public game
 {
 private:
+    gfx::shader*       m_texture_shader{};
     gfx::light_shader* m_lights_shader{};
     gfx::base_light    m_light{};
+    gfx::point_light   m_point_lights[4]{};
     game_object        ball{};
     game_object        ball2{};
     game_object        box{};
+    game_object m_plane{};
 
 public:
     ~sandbox() override = default;
@@ -51,10 +54,27 @@ public:
             m_lights_shader = gfx::create_shader<gfx::light_shader>("Light", layout);
             if (!m_lights_shader)
             {
-                popup::show("Failed to initialize the test shader", "Error", popup::style::error);
+                popup::show("Failed to initialize the lights shader", "Error", popup::style::error);
                 return false;
             }
         }
+
+        {
+            gfx::shader_layout layout{};
+            layout.add<math::vec3>("POSITION");
+            layout.add<math::vec2>("TEXCOORD");
+            m_texture_shader = gfx::create_shader<gfx::shader>("Texture", layout);
+            if (!m_texture_shader)
+            {
+                popup::show("Failed to initialize the texture shader", "Error", popup::style::error);
+                return false;
+            }
+        }
+        m_camera->set_position(0.f, 7.f, -12.f);
+        m_camera->set_rotation(30.f, 0.f, 0.f);
+        m_camera->render();
+
+        m_plane.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{"./assets/models/plane.txt"});
 
         box.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
             ->add(DBG_NEW model_component{ "./assets/models/cube.txt" });
@@ -78,14 +98,50 @@ public:
         m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
         m_light.specular_power = 32.f;
 
+
+        gfx::point_light light1{};
+        light1.position         = { -3.f, 1.f, 3.f };
+        light1.diffuse_color    = { 1.f, 0.f, 0.f, 1.f };
+        light1.constant_factor  = 3.f;
+        light1.linear_factor    = 0.09f;
+        light1.quadradic_factor = 0.032f;
+
+        gfx::point_light light2{};
+        light2.position         = { 3.f, 1.f, 3.f };
+        light2.diffuse_color    = { 0.f, 1.f, 0.f, 1.f };
+        light2.constant_factor  = 1.f;
+        light2.linear_factor    = 0.09f;
+        light2.quadradic_factor = 0.032f;
+
+        gfx::point_light light3{};
+        light3.position         = { -3.f, 1.f, -3.f };
+        light3.diffuse_color    = { 0.f, 0.f, 1.f, 1.f };
+        light3.constant_factor  = 2.f;
+        light3.linear_factor    = 0.09f;
+        light3.quadradic_factor = 0.032f;
+
+        gfx::point_light light4{};
+        light4.position         = { 3.f, 1.f, -3.f };
+        light4.diffuse_color    = { 1.f, 1.f, 0.f, 1.f }; // set alpha = 0 to make this light not get applied
+        light4.constant_factor  = 2.f;
+        light4.linear_factor    = 0.09f;
+        light4.quadradic_factor = 0.032f;
+
+        m_point_lights[0] = light1;
+        m_point_lights[1] = light2;
+        m_point_lights[2] = light3;
+        m_point_lights[3] = light4;
+
         //m_lights_shader->set_camera(m_camera); // by default, shader will now set the camera initially when init is called
+
+        m_lights_shader->set_point_lights(m_point_lights);
         m_lights_shader->set_light(&m_light);
         return true;
     }
 
     void update(f32 delta) override
     {
-        if(input::is_key_down('B'))
+        if (input::is_key_down('B'))
         {
             LOG_DEBUG("Frame time: {}", delta);
         }
@@ -100,6 +156,7 @@ public:
         box.set_rotation(rotation, axis::x);
         ball2.set_rotation(rotation, axis::x);
 
+        m_plane.update(delta);
         ball.update(delta);
         ball2.update(delta);
     }
@@ -108,6 +165,12 @@ public:
     {
         m_light.specular_power = 32.f;
         m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
+
+        if(!m_plane.render(m_lights_shader))
+        {
+            return false;
+        }
+
 
         if (!ball.render(m_lights_shader))
         {
@@ -126,7 +189,11 @@ public:
         return true;
     }
 
-    void shutdown() override { gfx::core::shutdown(m_lights_shader); }
+    void shutdown() override
+    {
+        gfx::core::shutdown(m_lights_shader);
+        gfx::core::shutdown(m_texture_shader);
+    }
 };
 
 
