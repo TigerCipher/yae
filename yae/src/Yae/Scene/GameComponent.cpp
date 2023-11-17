@@ -22,6 +22,9 @@
 //  ------------------------------------------------------------------------------
 
 #include "GameComponent.h"
+#include "Yae/Core/Input.h"
+
+using namespace DirectX;
 
 namespace yae
 {
@@ -52,6 +55,51 @@ bool texture_component::render(gfx::shader* shader)
 {
     shader->set_texture(m_texture.texture_view());
     return true;
+}
+
+void move_component::update(f32 delta)
+{
+    if (input::is_key_down('W'))
+    {
+        m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().forward() * 10.f * delta);
+    }
+
+    if (input::is_key_down('A'))
+    {
+        m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().left() * 10.f * delta);
+    }
+
+    if (input::is_key_down('D'))
+    {
+        m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().right() * 10.f * delta);
+    }
+
+    if (input::is_key_down('S'))
+    {
+        m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().back() * 10.f * delta);
+    }
+
+    if (input::is_key_down('E'))
+    {
+        math::vec3 rot = m_owner->rotation();
+        m_owner->set_rotation(rot.x, rot.y, rot.z + 10.f * delta);
+    }
+
+    if (input::is_key_down('Q'))
+    {
+        math::vec3 rot = m_owner->rotation();
+        m_owner->set_rotation(rot.x, rot.y, rot.z - 10.f * delta);
+    }
+
+    if (input::is_key_down(VK_SPACE))
+    {
+        m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().up() * 10.f * delta);
+    }
+
+    if (input::is_key_down(VK_SHIFT))
+    {
+        m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().down() * 10.f * delta);
+    }
 }
 
 } // namespace yae

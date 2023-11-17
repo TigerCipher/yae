@@ -40,6 +40,7 @@ private:
     game_object        ball2{};
     game_object        box{};
     game_object m_plane{};
+    game_object ball3{};
 
 public:
     ~sandbox() override = default;
@@ -90,6 +91,10 @@ public:
             ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
         ball2.set_position(2.f, 0.f, 0.f);
         ball2.set_scale(0.75f);
+
+        ball3.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
+            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" })->add(new move_component{});
+        ball3.set_position(2.f, 2.f, 0.f);
 
         m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
         m_light.diffuse_color  = { 1.f, 1.f, 1.f, 1.f };
@@ -166,6 +171,7 @@ public:
         m_plane.update(delta);
         ball.update(delta);
         ball2.update(delta);
+        ball3.update(delta);
     }
 
     bool render() override
@@ -180,6 +186,11 @@ public:
 
 
         if (!ball.render(m_lights_shader))
+        {
+            return false;
+        }
+
+        if(!ball3.render(m_lights_shader))
         {
             return false;
         }

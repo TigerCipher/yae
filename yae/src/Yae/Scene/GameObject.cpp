@@ -55,6 +55,7 @@ game_object::~game_object()
 game_object* game_object::add(game_component* component)
 {
     m_components.push_back(component);
+    component->set_owner(this);
     return this;
 }
 
@@ -96,7 +97,7 @@ void game_object::remove(game_object* child)
 
 bool game_object::render(gfx::shader* shader)
 {
-    shader->set_world(m_transform);
+    shader->set_world(m_transform.transformation());
     for (const auto comp : m_components)
     {
         if (!comp->render(shader))
@@ -126,7 +127,7 @@ bool game_object::render(gfx::shader* shader)
 
 void game_object::update(f32 delta)
 {
-    calculate_world_transformation();
+    m_transform.calculate_transformation(m_parent ? &m_parent->transformation() : nullptr);
     for (const auto comp : m_components)
     {
         comp->update(delta);
@@ -142,83 +143,7 @@ void game_object::update(f32 delta)
         child->update(delta);
     }
 
-    calculate_world_transformation();
+    m_transform.calculate_transformation(m_parent ? &m_parent->transformation() : nullptr);
 }
 
-void game_object::set_position(const math::vec3& pos)
-{
-    m_position                   = pos;
-    m_recalculate_transformation = true;
-}
-
-void game_object::set_position(f32 x, f32 y, f32 z)
-{
-    m_position                   = { x, y, z };
-    m_recalculate_transformation = true;
-}
-
-void game_object::set_scale(const math::vec3& scale)
-{
-    m_scale                      = scale;
-    m_recalculate_transformation = true;
-}
-
-void game_object::set_scale(f32 x, f32 y, f32 z)
-{
-    m_scale                      = { x, y, z };
-    m_recalculate_transformation = true;
-}
-
-void game_object::set_scale(f32 scale)
-{
-    m_scale                      = { scale, scale, scale };
-    m_recalculate_transformation = true;
-}
-
-void game_object::set_rotation(const math::vec3& rotation)
-{
-    m_rotation                   = rotation;
-    m_recalculate_transformation = true;
-}
-
-void game_object::set_rotation(f32 x, f32 y, f32 z)
-{
-    m_rotation                   = { x, y, z };
-    m_recalculate_transformation = true;
-}
-
-void game_object::set_rotation(f32 angle, axis axis)
-{
-    switch (axis)
-    {
-    case axis::x: m_rotation = { angle, 0.f, 0.f }; break;
-    case axis::y: m_rotation = { 0.f, angle, 0.f }; break;
-    case axis::z: m_rotation = { 0.f, 0.f, angle }; break;
-    }
-    m_recalculate_transformation = true;
-}
-
-void game_object::calculate_world_transformation()
-{
-    if (!m_recalculate_transformation && (m_parent && m_parent->m_recalculate_transformation))
-    {
-        return;
-    }
-
-    m_recalculate_transformation = false;
-
-    const math::matrix scale     = XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
-    const math::matrix rotate    = XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z);
-    const math::matrix translate = XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
-
-    if (!m_parent)
-    {
-        m_transform = XMMatrixMultiply(XMMatrixMultiply(scale, rotate), translate);
-
-    } else
-    {
-        m_transform = XMMatrixMultiply(XMMatrixMultiply(scale, rotate), translate);
-        m_transform = XMMatrixMultiply(m_transform, m_parent->transform());
-    }
-}
 } // namespace yae
