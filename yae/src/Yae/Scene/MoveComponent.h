@@ -40,4 +40,15 @@ private:
     f32 m_speed{};
 };
 
+class freelook_component : public game_component
+{
+public:
+    freelook_component(f32 sensitivity = 10.f) : m_sensitivity{sensitivity} {}
+    ~freelook_component() override = default;
+
+    void update(f32 delta) override;
+private:
+    f32 m_sensitivity{};
+};
+
 }

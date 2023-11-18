@@ -82,6 +82,28 @@ constexpr bool are_vectors_equal(const vec3& vec1, const vec3& vec2)
     return near_equal(vec1.x, vec2.x) && near_equal(vec1.y, vec2.y) && near_equal(vec1.z, vec2.z);
 }
 
+template<primitive_type T>
+T wrap_angle_rad(T angle)
+{
+    constexpr T pi2 = (T)2 * (T)pi;
+    const T mod = fmod(angle, pi2);
+    if(mod > (T)pi)
+    {
+        return mod - pi2;
+    }
+    if(mod < (T)pi)
+    {
+        return mod + pi2;
+    }
+    return mod;
+}
+
+template<primitive_type T>
+T wrap_angle_deg(T angle)
+{
+    return wrap_angle_rad(angle * deg2rad_multiplier) * rad2deg_multiplier;
+}
+
 } // namespace yae::math
 
 namespace yae

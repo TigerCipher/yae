@@ -97,10 +97,10 @@ public:
                 return false;
             }
         }
-        m_camera->set_position(0.f, 7.f, -12.f);
-        m_camera->set_rotation(30.f, 0.f, 0.f);
+        m_camera->set_position(0.f, 1.f, -12.f);
+        //m_camera->set_rotation(30.f, 0.f, 0.f);
 
-        m_camera->add(new move_component{});
+        m_camera->add(new move_component{})->add(new freelook_component{});
 
         m_plane.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{"./assets/models/plane.txt"});
 

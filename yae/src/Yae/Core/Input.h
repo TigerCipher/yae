@@ -198,4 +198,9 @@ bool button_pressed(u16 btn);
 void get_mouse_position(i32* x, i32* y);
 void get_previous_mouse_position(i32* x, i32* y);
 
+void center_cursor();
+void show_cursor(bool show);
+void lock_cursor(bool lock, bool show = false);
+bool is_cursor_locked();
+
 } // namespace yae::input

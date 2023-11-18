@@ -43,6 +43,12 @@ application* app;
 std::set<resolution> resolutions;
 
 
+i32 screen_width{};
+i32 screen_height{};
+
+i32 fullscreen_width{};
+i32 fullscreen_height{};
+
 bool frame()
 {
     if (input::key_down(VK_ESCAPE))
@@ -91,6 +97,9 @@ void init_windows(i32& width, i32& height)
         resolutions.insert(res);
         mode++;
     }
+
+    fullscreen_width  = resolutions.rbegin()->width;
+    fullscreen_height = resolutions.rbegin()->height;
 
     width  = g_settings->get<i32>("display", "width");
     height = g_settings->get<i32>("display", "height");
@@ -146,7 +155,7 @@ void init_windows(i32& width, i32& height)
     SetForegroundWindow(hwnd);
     SetFocus(hwnd);
 
-    ShowCursor(false);
+    //ShowCursor(false);
 
     LOG_INFO("Window created and initialized");
 }
@@ -172,8 +181,6 @@ void shutdown_windows()
 bool init(game* game)
 {
     LOG_INFO("Initializing YAE system");
-    i32  screen_width  = 0;
-    i32  screen_height = 0;
     bool result{};
 
     init_windows(screen_width, screen_height);
@@ -338,6 +345,25 @@ const std::set<resolution>& get_resolutions()
 HWND handle()
 {
     return hwnd;
+}
+i32 width()
+{
+    return screen_width;
+}
+
+i32 height()
+{
+    return screen_height;
+}
+
+i32 monitor_width()
+{
+    return fullscreen_width;
+}
+
+i32 monitor_height()
+{
+    return fullscreen_height;
 }
 
 } // namespace yae::system

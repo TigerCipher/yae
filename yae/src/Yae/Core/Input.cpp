@@ -21,9 +21,8 @@
 //
 //  ------------------------------------------------------------------------------
 #include "Input.h"
-
-
 #include "Event.h"
+#include "System.h"
 
 
 namespace yae::input
@@ -51,6 +50,8 @@ keyboard old_keyboard{};
 
 mouse current_mouse{};
 mouse old_mouse{};
+
+bool locked{};
 
 } // anonymous namespace
 
@@ -153,6 +154,39 @@ void get_previous_mouse_position(i32* x, i32* y)
 {
     *x = old_mouse.x;
     *y = old_mouse.y;
+}
+
+void center_cursor()
+{
+    current_mouse.x = system::width() / 2;
+    current_mouse.y = system::height() / 2;
+    SetCursorPos(system::monitor_width() / 2, system::monitor_height() / 2);
+}
+
+void show_cursor(bool show)
+{
+    ShowCursor(show);
+}
+
+void lock_cursor(bool lock, bool show)
+{
+    if (lock)
+    {
+        if (!locked)
+        {
+            show_cursor(show);
+        }
+        center_cursor();
+    } else if(locked)
+    {
+        show_cursor(true);
+    }
+    locked = lock;
+}
+
+bool is_cursor_locked()
+{
+    return locked;
 }
 
 } // namespace yae::input
