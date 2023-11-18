@@ -26,6 +26,8 @@
 #include "Application.h"
 #include "Event.h"
 
+#include <windowsx.h>
+
 namespace yae::system
 {
 namespace
@@ -43,7 +45,7 @@ std::set<resolution> resolutions;
 
 bool frame()
 {
-    if (input::is_key_down(VK_ESCAPE))
+    if (input::key_down(VK_ESCAPE))
     {
         return false;
     }
@@ -193,7 +195,7 @@ bool init(game* game)
 void shutdown()
 {
     LOG_INFO("Shutting down YAE system");
-    events::fire(events::app_quit, nullptr, nullptr);
+
     if (app)
     {
         app->shutdown();
@@ -242,18 +244,73 @@ LRESULT message_handler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
     switch (umsg)
     {
-    case WM_KEYDOWN: input::process_key((u32) wparam, true); return 0;
-    case WM_KEYUP: input::process_key((u32) wparam, false); return 0;
-    case WM_CHAR:
+    case WM_SYSKEYDOWN:
+    case WM_SYSKEYUP:
+    case WM_KEYDOWN:
+    case WM_KEYUP:
+    {
+        const bool pressed     = umsg == WM_KEYDOWN || umsg == WM_SYSKEYDOWN;
+        auto       k           = (u16) wparam;
+        const bool is_extended = (HIWORD(lparam) & KF_EXTENDED) == KF_EXTENDED;
+        if (wparam == VK_MENU)
+        {
+            k = is_extended ? input::key::ralt : input::key::lalt;
+        } else if (wparam == VK_SHIFT)
+        {
+            const u32 left_shift = MapVirtualKey(VK_LSHIFT, MAPVK_VK_TO_VSC);
+            const u32 scancode   = (u32) ((lparam & (0xff << 16)) >> 16);
+            k                    = scancode == left_shift ? input::key::lshift : input::key::rshift;
+        } else if (wparam == VK_CONTROL)
+        {
+            k = is_extended ? input::key::rcontrol : input::key::lcontrol;
+        }
+
+        input::process_key(k, pressed);
+    }
+        return 0;
     case WM_MOUSEMOVE:
+    {
+        const i32 xpos = GET_X_LPARAM(lparam);
+        const i32 ypos = GET_Y_LPARAM(lparam);
+        input::process_mouse_move(xpos, ypos);
+    }
+        return 0;
     case WM_LBUTTONDOWN:
     case WM_LBUTTONUP:
     case WM_RBUTTONDOWN:
     case WM_RBUTTONUP:
     case WM_MBUTTONDOWN:
     case WM_MBUTTONUP:
+    {
+        const bool          pressed = umsg == WM_LBUTTONDOWN || umsg == WM_MBUTTONDOWN || umsg == WM_RBUTTONDOWN;
+        input::button::code btn{ input::button::max_buttons };
+
+        switch (umsg)
+        {
+        case WM_LBUTTONDOWN:
+        case WM_LBUTTONUP: btn = input::button::left; break;
+        case WM_RBUTTONDOWN:
+        case WM_RBUTTONUP: btn = input::button::right; break;
+        case WM_MBUTTONDOWN:
+        case WM_MBUTTONUP: btn = input::button::middle; break;
+        default: break;
+        }
+
+        if (btn != input::button::max_buttons)
+        {
+            input::process_button(btn, pressed);
+        }
+    }
+        return 0;
     case WM_MOUSEWHEEL:
+        if (i16 delta = GET_WHEEL_DELTA_WPARAM(wparam); delta != 0)
+        {
+            delta = delta < 0 ? -1 : 1;
+            input::process_mouse_wheel((i8) delta);
+        }
+        return 0;
     case WM_MOUSEHWHEEL:
+    case WM_CHAR:
     default: break;
     }
 
@@ -265,7 +322,10 @@ LRESULT window_proc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
     switch (umsg)
     {
     case WM_DESTROY:
-    case WM_CLOSE: PostQuitMessage(0); return 0;
+    case WM_CLOSE:
+        events::fire(events::app_quit, nullptr, nullptr);
+        PostQuitMessage(0);
+        return 0;
     default: return message_handler(hwnd, umsg, wparam, lparam);
     }
 }

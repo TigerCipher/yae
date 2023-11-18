@@ -23,6 +23,7 @@
 #include "Application.h"
 
 
+#include "Input.h"
 #include "Yae/Graphics/D3D11Core.h"
 
 namespace yae
@@ -102,6 +103,8 @@ bool application::frame()
     //m_camera->calculate_view();
     m_camera->update(m_timer.frame_time());
     m_game->update(m_timer.frame_time());
+
+    input::update(m_timer.frame_time());
     return render();
 }
 

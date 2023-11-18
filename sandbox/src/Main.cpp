@@ -33,14 +33,24 @@ namespace
 {
 bool on_app_quit(u16 code, void* sender, void* listener, void* userdata)
 {
-    if(code != events::app_quit)
-    {
-        return false;
-    }
-
     LOG_INFO("App quit event received and responded to via callback!");
     return true;
 }
+
+
+bool on_key_typed(u16 code, void* sender, void* listener, void* userdata)
+{
+    u16 key = GET_KEY(userdata);
+    if(key == input::key::f1)
+    {
+        LOG_DEBUG("F1 was typed");
+    }
+
+    LOG_DEBUG("Key typed: code={}, char={}", key, (char)key);
+
+    return false;
+}
+
 } // anonymous namespace
 
 class sandbox : public game
@@ -61,6 +71,7 @@ public:
     bool init() override
     {
         events::register_listener(events::app_quit, nullptr, on_app_quit);
+        events::register_listener(events::key_pressed, nullptr, on_key_typed);
         m_camera->set_position(0.f, 0.f, -10.f);
         {
             gfx::shader_layout layout{};
@@ -162,7 +173,7 @@ public:
 
     void update(f32 delta) override
     {
-        if (input::is_key_down('B'))
+        if (input::key_released('B'))
         {
             LOG_DEBUG("Frame time: {}", delta);
         }
@@ -228,8 +239,6 @@ public:
     {
         gfx::core::shutdown(m_lights_shader);
         gfx::core::shutdown(m_texture_shader);
-
-        events::unregister_listener(events::app_quit, nullptr, on_app_quit);
     }
 };
 

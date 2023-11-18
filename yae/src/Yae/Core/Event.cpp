@@ -22,6 +22,7 @@
 //  ------------------------------------------------------------------------------
 #include "Event.h"
 
+
 namespace yae::events
 {
 
@@ -52,6 +53,7 @@ event_code_entry registered[max_message_codes];
 
 void shutdown()
 {
+    LOG_INFO("Unregistering all remaining events");
     for (auto& [events] : registered)
     {
         if (!events.empty())
@@ -99,7 +101,7 @@ bool unregister_listener(u16 code, void* listener, func_on_event on_event)
 
 bool fire(u16 code, void* sender, void* userdata)
 {
-    LOG_DEBUG("Firing event: {}", event_names[code - 1]);
+    //LOG_DEBUG("Firing event: {}", event_names[code - 1]);
     std::vector<registered_event>& events = registered[code].events;
     for (u64 i = 0; i < events.size(); ++i)
     {

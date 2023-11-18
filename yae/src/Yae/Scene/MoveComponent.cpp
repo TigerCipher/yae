@@ -28,27 +28,27 @@ namespace yae
 {
 void move_component::update(f32 delta)
 {
-    if (input::is_key_down('W'))
+    if (input::key_down('W'))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().forward() * m_speed * delta);
     }
 
-    if (input::is_key_down('A'))
+    if (input::key_down('A'))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().left() * m_speed * delta);
     }
 
-    if (input::is_key_down('D'))
+    if (input::key_down('D'))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().right() * m_speed * delta);
     }
 
-    if (input::is_key_down('S'))
+    if (input::key_down('S'))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().back() * m_speed * delta);
     }
 
-    if (input::is_key_down('E'))
+    if (input::key_down('E'))
     {
         //math::vec3 rot = m_owner->rotation();
         //rot.z += math::deg2rad_multiplier * m_speed * delta;
@@ -57,7 +57,7 @@ void move_component::update(f32 delta)
         m_owner->transformation().rotate(m_speed * delta, axis::z);
     }
 
-    if (input::is_key_down('Q'))
+    if (input::key_down('Q'))
     {
         //math::vec3 rot = m_owner->rotation();
         //rot.z -= math::deg2rad_multiplier * m_speed * delta;
@@ -66,12 +66,12 @@ void move_component::update(f32 delta)
         m_owner->transformation().rotate(-m_speed * delta, axis::z);
     }
 
-    if (input::is_key_down(VK_SPACE))
+    if (input::key_down(VK_SPACE))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().up() * m_speed * delta);
     }
 
-    if (input::is_key_down(VK_SHIFT))
+    if (input::key_down(VK_SHIFT))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().down() * m_speed * delta);
     }
