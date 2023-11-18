@@ -50,24 +50,6 @@ void move_component::update(f32 delta)
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().back() * m_speed * delta);
     }
 
-    if (input::key_down('E'))
-    {
-        //math::vec3 rot = m_owner->rotation();
-        //rot.z += math::deg2rad_multiplier * m_speed * delta;
-        //m_owner->set_rotation(rot);
-        //m_owner->set_rotation(rot.z * math::rad2deg_multiplier + m_speed * delta, axis::z);
-        m_owner->transformation().rotate(m_speed * delta, axis::z);
-    }
-
-    if (input::key_down('Q'))
-    {
-        //math::vec3 rot = m_owner->rotation();
-        //rot.z -= math::deg2rad_multiplier * m_speed * delta;
-        //m_owner->set_rotation(rot);
-        //m_owner->set_rotation(rot.z * math::rad2deg_multiplier - m_speed * delta, axis::z);
-        m_owner->transformation().rotate(-m_speed * delta, axis::z);
-    }
-
     if (input::key_down(VK_SPACE))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().up() * m_speed * delta);
@@ -109,26 +91,28 @@ void freelook_component::update(f32 delta)
         //f32 new_rot = m_owner->rotation().y /** math::rad2deg_multiplier*/ + delta_pos.x * m_sensitivity * delta * math::deg2rad_multiplier;
         //new_rot = math::wrap_angle_rad(new_rot);
         //m_owner->set_rotation(m_owner->rotation().x * math::rad2deg_multiplier, new_rot * math::rad2deg_multiplier, 0.f);
-        math::vector axis = m_owner->transformation().up();
-        math::vector rot  = XMQuaternionRotationAxis(axis, delta_pos.x * m_sensitivity * delta * math::deg2rad_multiplier);
-        math::vector cur  = XMLoadFloat3(&m_owner->rotation());
-        rot += cur;
-        math::vec3 newrot;
-        XMStoreFloat3(&newrot, rot);
-        m_owner->set_rotation(newrot);
+        m_owner->rotate(delta_pos.x * m_sensitivity * delta, axis::y);
+        //math::vector axis = m_owner->transformation().up();
+        //math::vector rot  = XMQuaternionRotationAxis(axis, delta_pos.x * m_sensitivity * delta * math::deg2rad_multiplier);
+        //math::vector cur  = XMLoadFloat3(&m_owner->rotation());
+        //rot += cur;
+        //math::vec3 newrot;
+        //XMStoreFloat3(&newrot, rot);
+        //m_owner->set_rotation(newrot);
     }
     if (rotx)
     {
         //f32 new_rot = m_owner->rotation().x * math::rad2deg_multiplier + delta_pos.y * m_sensitivity * delta;
         //new_rot = std::clamp(new_rot, -89.f, 89.f);
         //m_owner->set_rotation(new_rot, m_owner->rotation().y * math::rad2deg_multiplier, 0.f);
-        math::vector axis = m_owner->transformation().right();
-        math::vector rot = XMQuaternionRotationAxis(axis, delta_pos.y * m_sensitivity * delta * math::deg2rad_multiplier);
-        math::vector cur = XMLoadFloat3(&m_owner->rotation());
-        rot += cur;
-        math::vec3 newrot;
-        XMStoreFloat3(&newrot, rot);
-        m_owner->set_rotation(newrot);
+        //math::vector axis = m_owner->transformation().right();
+        //math::vector rot = XMQuaternionRotationAxis(axis, delta_pos.y * m_sensitivity * delta * math::deg2rad_multiplier);
+        //math::vector cur = XMLoadFloat3(&m_owner->rotation());
+        //rot += cur;
+        //math::vec3 newrot;
+        //XMStoreFloat3(&newrot, rot);
+        //m_owner->set_rotation(newrot);
+        m_owner->rotate(delta_pos.y * m_sensitivity * delta, m_owner->transformation().right());
     }
 
     if (rotx || roty)

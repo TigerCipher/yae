@@ -108,7 +108,7 @@ public:
             ->add(DBG_NEW model_component{ "./assets/models/cube.txt" });
         box.set_position(2.f, 1.f, 0.f);
         box.set_scale(0.3f);
-        box.set_rotation(math::deg2rad_multiplier * 15.f, axis::x);
+        box.rotate(15.f, axis::x);
         ball.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
             ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
         ball.add(box);
@@ -192,9 +192,9 @@ public:
         //}
         //m_camera->set_rotation(rot);
 
-        ball.set_rotation(rotation, axis::y);
-        box.set_rotation(rotation, axis::x);
-        ball2.set_rotation(rotation, axis::x);
+        ball.rotate(rotation, axis::y);
+        box.rotate(rotation, axis::x);
+        ball2.rotate(rotation, axis::x);
 
         m_plane.update(delta);
         ball.update(delta);
