@@ -15,8 +15,8 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: Camera.h
+//  Date File Created: 11/18/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
@@ -25,45 +25,39 @@
 
 #include "Yae/Common.h"
 
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
-
-#include "Yae/Scene/GameObject.h"
-#include "Yae/Graphics/Model.h"
-#include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/Shaders/Shader.h"
-#include "Yae/Graphics/Camera.h"
-#include "Game.h"
-#include "Timer.h"
-
-namespace yae
+namespace yae::gfx
 {
 
-namespace app
-{
-void  set(game* game);
-game* instance();
-} // namespace app
-
-class application
+class camera
 {
 public:
-    application(game* game) : m_game{ game } {}
-    ~application() = default;
+    camera()  = default;
+    ~camera() = default;
 
-    bool init(i32 width, i32 height, HWND hwnd);
-    void shutdown();
-    bool frame();
+    void rotate(f32 dx, f32 dy, f32 delta);
+    void move(f32 x, f32 y, f32 z, f32 delta);
+
+    math::matrix view();
+
+    void set_speed(f32 speed) { m_speed = speed; }
+    void modify_speed(f32 factor) { m_speed *= factor; }
+
+    void set_sensitivity(f32 sens) { m_sensitivity = sens; }
+
+    constexpr const math::vec3& position() const { return m_position; }
+
+    void set_position(f32 x, f32 y, f32 z) { m_position = { x, y, z }; }
 
 private:
-    bool render() const;
+    f32        m_pitch{};
+    f32        m_yaw{};
+    math::vec3 m_position{};
 
-    game*        m_game{};
-    gfx::camera* m_camera{};
-    //game_object* m_camera{};
-    timer m_timer{};
+    f32 m_speed{ 10.f };
+    f32 m_sensitivity{ 10.f };
+
+    math::matrix m_view{};
+    bool         m_recalculate{ true };
 };
-} // namespace yae
+
+} // namespace yae::gfx

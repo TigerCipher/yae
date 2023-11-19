@@ -25,6 +25,7 @@
 
 #include "Yae/Common.h"
 #include "Yae/Scene/GameObject.h"
+#include "Yae/Graphics/Camera.h"
 
 namespace yae
 {
@@ -41,10 +42,10 @@ public:
 
     virtual bool render2d() { return true; }
 
-    void         set_camera(game_object* cam) { m_camera = cam; }
-    game_object* camera() const { return m_camera; }
+    void         set_camera(gfx::camera* cam) { m_camera = cam; }
+    gfx::camera* camera() const { return m_camera; }
 
 protected:
-    game_object* m_camera{};
+    gfx::camera* m_camera{};
 };
 } // namespace yae

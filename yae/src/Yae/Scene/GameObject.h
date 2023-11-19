@@ -59,7 +59,7 @@ public:
     void rotate(f32 angle, axis axis) { m_transform.rotate(angle, axis); }
     void rotate(f32 angle, const math::vector& axis) { m_transform.rotate(angle, axis); }
     void rotate(const math::vector& quaternion) { m_transform.rotate(quaternion); }
-    void set_rotation(f32 x, f32 y, f32 z);
+    void set_rotation(f32 x, f32 y, f32 z) { m_transform.set_rotation(x, y, z); }
 
 
     constexpr const math::matrix& world_transformation() const { return m_transform.transformation(); }

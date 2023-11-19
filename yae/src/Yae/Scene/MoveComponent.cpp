@@ -55,7 +55,7 @@ void move_component::update(f32 delta)
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().up() * m_speed * delta);
     }
 
-    if (input::key_down(VK_SHIFT))
+    if (input::key_down('C'))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().down() * m_speed * delta);
     }
@@ -92,6 +92,8 @@ void freelook_component::update(f32 delta)
         //new_rot = math::wrap_angle_rad(new_rot);
         //m_owner->set_rotation(m_owner->rotation().x * math::rad2deg_multiplier, new_rot * math::rad2deg_multiplier, 0.f);
         m_owner->rotate(delta_pos.x * m_sensitivity * delta, axis::y);
+        //m_owner->rotate(delta_pos.x * m_sensitivity * delta, m_owner->transformation().up());
+        //m_owner->transformation().calculate_transformation(nullptr);
         //math::vector axis = m_owner->transformation().up();
         //math::vector rot  = XMQuaternionRotationAxis(axis, delta_pos.x * m_sensitivity * delta * math::deg2rad_multiplier);
         //math::vector cur  = XMLoadFloat3(&m_owner->rotation());
@@ -113,6 +115,7 @@ void freelook_component::update(f32 delta)
         //XMStoreFloat3(&newrot, rot);
         //m_owner->set_rotation(newrot);
         m_owner->rotate(delta_pos.y * m_sensitivity * delta, m_owner->transformation().right());
+        //m_owner->rotate(delta_pos.y * m_sensitivity * delta, axis::x);
     }
 
     if (rotx || roty)

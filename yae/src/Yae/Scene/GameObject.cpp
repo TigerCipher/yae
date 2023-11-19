@@ -145,11 +145,5 @@ void game_object::update(f32 delta)
 
     //m_transform.calculate_transformation(m_parent ? &m_parent->transformation() : nullptr);
 }
-void game_object::set_rotation(f32 x, f32 y, f32 z)
-{
-    rotate(x, axis::x);
-    rotate(y, axis::y);
-    rotate(z, axis::z);
-}
 
 } // namespace yae

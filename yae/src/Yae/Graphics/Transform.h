@@ -30,7 +30,7 @@ namespace yae
 class transform
 {
 public:
-    transform();
+    transform() = default;
     ~transform() = default;
 
     constexpr const math::vector& position_vector() const { return m_pos_vec; }
@@ -61,6 +61,9 @@ public:
     void rotate(f32 angle, const math::vector& axis);
     void rotate(const math::vector& quat);
 
+    // angles expected in degrees
+    void set_rotation(f32 x, f32 y, f32 z);
+
     void calculate_transformation(const transform* parent);
 
 private:
@@ -68,7 +71,7 @@ private:
     math::vec3   m_pos{};
     math::vec3   m_scale{ 1.f, 1.f, 1.f };
     math::vec3   m_rot{};
-    math::vector m_rot_quat{};
+    math::vector m_rot_quat{0.f, 0.f, 0.f, 1.f};
     math::matrix m_transformation{};
     math::matrix m_translation{};
     math::matrix m_rot_mat{};
@@ -76,7 +79,7 @@ private:
     math::vector m_forward{};
     math::vector m_back{};
     math::vector m_left{};
-    math::vector m_right{};
+    math::vector m_right{1.f, 0.f, 0.f, 0.f};
     math::vector m_up{};
     math::vector m_down{};
     math::matrix m_view{};
