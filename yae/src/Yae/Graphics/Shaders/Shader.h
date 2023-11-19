@@ -38,6 +38,12 @@
 namespace yae::gfx
 {
 
+enum render_type
+{
+    render_2d,
+    render_3d,
+};
+
 template<typename T>
 constexpr DXGI_FORMAT resolve_shader_type() // by default, returns uint
 {
@@ -116,24 +122,24 @@ public:
     virtual bool init(const wchar_t* vs_filename, const wchar_t* ps_filename, const char* vs_func_name, const char* ps_func_name,
                       const shader_layout& layout);
     virtual void shutdown();
-    bool         render(u32 index_count);
+    bool         render(u32 index_count, const math::matrix& world);
 
     void set_texture(ID3D11ShaderResourceView* texture) { m_texture_view = texture; }
 
     void set_camera(gfx::camera* camera) { m_camera = camera; }
 
-    void set_world(const math::matrix& world);
+    void set_renderer(render_type renderer) { m_renderer = renderer; }
 
 protected:
-    virtual bool                                      set_parameters();
+    virtual bool                                      set_parameters(const math::matrix& world);
     gfx::camera*                                      m_camera{};
     ID3D11ShaderResourceView*                         m_texture_view{};
     ID3D11VertexShader*                               m_vertex_shader{};
     ID3D11PixelShader*                                m_pixel_shader{};
     ID3D11InputLayout*                                m_layout{};
     ID3D11SamplerState*                               m_sampler_state{};
-    math::matrix                                      m_world{};
     constant_buffer<cb::matrix_buffer, shader_vertex> m_matrix_buffer{ 0 };
+    render_type                                       m_renderer{ render_3d };
 };
 
 

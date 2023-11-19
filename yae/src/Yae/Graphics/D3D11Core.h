@@ -69,4 +69,7 @@ void get_video_card_info(char* card_name, i32& memory);
 void set_back_buffer_render_target();
 void reset_viewport();
 
+void enable_zbuffer();
+void disable_zbuffer();
+
 } // namespace yae::gfx::core

@@ -67,6 +67,10 @@ private:
     game_object        ball3{};
     game_object        m_box2{};
 
+    //game_object m_hud{};
+    gfx::bitmap m_hud{true};
+
+
 public:
     ~sandbox() override = default;
     bool init() override
@@ -123,7 +127,8 @@ public:
         ball2.set_scale(0.75f);
 
         ball3.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
-            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
+            ->add(DBG_NEW model_component{ "./assets/models/cube.txt" })
+            ->add(new move_component{});
         ball3.set_position(2.f, 2.f, 0.f);
 
 
@@ -131,6 +136,13 @@ public:
             ->add(new model_component{ "./assets/models/cube.txt" });
         m_box2.set_position(0.f, 2.f, -2.f);
         m_box2.set_rotation(0.f, 45.f, 0.f);
+
+        //m_hud.add(new bitmap_component{ "./assets/textures/stone01.tga", 50, 50 });
+        m_hud.init("./assets/textures/stone01.tga", 50, 50);
+        //m_hud.set_location(0, 0);
+
+        //m_hudobj.set_position(3.f, 0.f, 0.f);
+        //m_hudobj.rotate(45.f, axis::z);
 
         m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
         m_light.diffuse_color  = { 1.f, 1.f, 1.f, 1.f };
@@ -176,17 +188,13 @@ public:
 
         m_lights_shader->set_point_lights(m_point_lights);
         m_lights_shader->set_light(&m_light);
+
+
         return true;
     }
 
-    void update(f32 delta) override
+    void process_input(f32 delta)
     {
-        if (input::key_released('B'))
-        {
-            LOG_DEBUG("Frame time: {}", delta);
-        }
-        const f32 rotation = -15.f * delta;
-
         if (input::key_down('W'))
         {
             m_camera->move(0, 0, 1, delta);
@@ -206,13 +214,13 @@ public:
 
         if (input::button_pressed(input::button::left))
         {
-            input::lock_cursor(true, true);
+            input::lock_cursor(true);
         } else if (input::button_pressed(input::button::right))
         {
             input::lock_cursor(false);
         }
 
-        if(input::is_cursor_locked())
+        if (input::is_cursor_locked())
         {
             i32 x, y;
             input::get_mouse_position(&x, &y);
@@ -222,21 +230,21 @@ public:
             m_camera->rotate(delta_pos.x, delta_pos.y, delta);
             input::center_cursor();
         }
+    }
 
-        //math::vec3 rot = m_camera->rotation();
-        //rot.y -= 15.f * delta;
-        //if(rot.y < 0.f)
-        //{
-        //    rot.y += 360.f;
-        //}
-        //m_camera->set_rotation(rot);
+    void update(f32 delta) override
+    {
+        process_input(delta);
+        if (input::key_released('B'))
+        {
+            LOG_DEBUG("Frame time: {}", delta);
+        }
+        const f32 rotation = -15.f * delta;
 
         ball.rotate(rotation, axis::y);
         box.rotate(rotation, axis::x);
         ball2.rotate(rotation, axis::x);
-        m_box2.rotate(rotation, XMVector4Normalize(m_box2.transformation().right()));
-        //m_box2.rotate(rotation, axis::y);
-        //m_box2.rotate(rotation, axis::x);
+        m_box2.rotate(rotation, m_box2.transformation().right());
 
         m_plane.update(delta);
         ball.update(delta);
@@ -279,6 +287,15 @@ public:
         {
             return false;
         }
+
+
+        gfx::core::disable_zbuffer();
+
+        if (!m_hud.render(m_texture_shader, XMMatrixIdentity()))
+        {
+            return false;
+        }
+        gfx::core::enable_zbuffer();
 
         return true;
     }

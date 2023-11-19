@@ -51,7 +51,7 @@ public:
 private:
     f32        m_pitch{};
     f32        m_yaw{};
-    math::vec3 m_position{};
+    math::vec3 m_position{0.f, 0.f, -10.f};
 
     f32 m_speed{ 10.f };
     f32 m_sensitivity{ 10.f };
@@ -59,5 +59,8 @@ private:
     math::matrix m_view{};
     bool         m_recalculate{ true };
 };
+
+void create_default_view_matrix();
+const math::matrix& default_view_matrix();
 
 } // namespace yae::gfx

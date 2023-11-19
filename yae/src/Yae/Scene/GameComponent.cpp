@@ -38,7 +38,7 @@ model_component::model_component(const std::string_view filename)
 
 bool model_component::render(gfx::shader* shader)
 {
-    return m_model.render(shader);
+    return m_model.render(shader, m_owner->world_transformation());
 }
 
 

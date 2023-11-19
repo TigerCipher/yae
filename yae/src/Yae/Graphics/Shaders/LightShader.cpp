@@ -68,7 +68,7 @@ void light_shader::shutdown()
     m_light_buffer.release();
     shader::shutdown();
 }
-bool light_shader::set_parameters()
+bool light_shader::set_parameters(const math::matrix& world)
 {
     m_camera_buffer.data().position = m_camera->position();
 
@@ -122,7 +122,7 @@ bool light_shader::set_parameters()
         return false;
     }
 
-    return shader::set_parameters();
+    return shader::set_parameters(world);
 }
 
 } // namespace yae::gfx

@@ -141,7 +141,7 @@ void model::shutdown()
 }
 
 
-bool model::render(shader* shader) const
+bool model::render(shader* shader, const math::matrix& world) const
 {
     constexpr u32 offset = 0;
 
@@ -149,7 +149,7 @@ bool model::render(shader* shader) const
     core::get_device_context()->IASetIndexBuffer(m_index_buffer, DXGI_FORMAT_R32_UINT, 0);
     core::get_device_context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    if(!shader->render(m_index_count))
+    if(!shader->render(m_index_count, world))
     {
         return false;
     }

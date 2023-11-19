@@ -49,6 +49,7 @@ ID3D11DeviceContext*     device_context{};
 ID3D11RenderTargetView*  render_target_view{};
 ID3D11Texture2D*         depth_stencil_buffer{};
 ID3D11DepthStencilState* depth_stencil_state{};
+ID3D11DepthStencilState* disabled_depth_stencil_state{};
 ID3D11DepthStencilView*  depth_stencil_view{};
 ID3D11RasterizerState*   raster_state{};
 math::matrix             projection_matrix{};
@@ -239,18 +240,38 @@ bool init(i32 width, i32 height, HWND hwnd, bool fullscreen, f32 screen_depth, f
     world_matrix      = XMMatrixIdentity();
     ortho_matrix      = XMMatrixOrthographicLH((f32) width, (f32) height, screen_near, screen_depth);
 
+    D3D11_DEPTH_STENCIL_DESC disabled_desc{};
+    disabled_desc.DepthEnable                  = false;
+    disabled_desc.DepthWriteMask               = D3D11_DEPTH_WRITE_MASK_ALL;
+    disabled_desc.DepthFunc                    = D3D11_COMPARISON_LESS;
+    disabled_desc.StencilEnable                = true;
+    disabled_desc.StencilReadMask              = 0xFF;
+    disabled_desc.StencilWriteMask             = 0xFF;
+    disabled_desc.FrontFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
+    disabled_desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+    disabled_desc.FrontFace.StencilPassOp      = D3D11_STENCIL_OP_KEEP;
+    disabled_desc.FrontFace.StencilFunc        = D3D11_COMPARISON_ALWAYS;
+    disabled_desc.BackFace.StencilFailOp       = D3D11_STENCIL_OP_KEEP;
+    disabled_desc.BackFace.StencilDepthFailOp  = D3D11_STENCIL_OP_DECR;
+    disabled_desc.BackFace.StencilPassOp       = D3D11_STENCIL_OP_KEEP;
+    disabled_desc.BackFace.StencilFunc         = D3D11_COMPARISON_ALWAYS;
+
+    DX_CALL(device->CreateDepthStencilState(&disabled_desc, &disabled_depth_stencil_state));
+
     initialized = true;
     return true;
 }
 
 void shutdown()
 {
-    if(!initialized) return;
+    if (!initialized)
+        return;
     if (swapchain)
     {
         swapchain->SetFullscreenState(false, nullptr);
     }
 
+    release(disabled_depth_stencil_state);
     release(raster_state);
     release(depth_stencil_view);
     release(depth_stencil_state);
@@ -320,5 +341,16 @@ void reset_viewport()
 {
     device_context->RSSetViewports(1, &viewport);
 }
+
+void enable_zbuffer()
+{
+    device_context->OMSetDepthStencilState(depth_stencil_state, 1);
+}
+
+void disable_zbuffer()
+{
+    device_context->OMSetDepthStencilState(disabled_depth_stencil_state, 1);
+}
+
 
 } // namespace yae::gfx::core

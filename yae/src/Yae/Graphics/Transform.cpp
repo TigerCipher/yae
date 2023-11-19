@@ -41,6 +41,12 @@ void extract_angles(f32& pitch, f32& yaw, f32& roll, const math::matrix& rotatio
 }
 } // anonymous namespace
 
+
+transform::transform()
+{
+    m_transformation = XMMatrixIdentity();
+}
+
 void transform::set_position(const math::vec3& pos)
 {
     m_pos         = pos;

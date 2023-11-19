@@ -25,6 +25,11 @@
 namespace yae::gfx
 {
 
+namespace
+{
+math::matrix default_view{};
+} // anonymous namespace
+
 void camera::rotate(f32 dx, f32 dy, f32 delta)
 {
     m_yaw         = math::wrap_angle_rad(m_yaw + dx * m_sensitivity * delta * math::deg2rad_multiplier);
@@ -58,4 +63,16 @@ math::matrix camera::view()
     m_view                        = XMMatrixLookAtLH(pos, target, { 0.f, 1.f, 0.f, 0.f });
     return m_view;
 }
+
+void create_default_view_matrix()
+{
+    camera cam{};
+    default_view = cam.view();
+}
+
+const math::matrix& default_view_matrix()
+{
+    return default_view;
+}
+
 } // namespace yae::gfx

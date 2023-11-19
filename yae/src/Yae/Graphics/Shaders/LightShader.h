@@ -40,7 +40,7 @@ public:
     void set_point_lights(point_light lights[4]) { m_point_lights = lights; }
 
 protected:
-    bool set_parameters() override;
+    bool set_parameters(const math::matrix& world) override;
 
     base_light*                                               m_light{};
     point_light*                                              m_point_lights{};

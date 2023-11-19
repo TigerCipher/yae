@@ -29,28 +29,28 @@ namespace yae
 {
 void move_component::update(f32 delta)
 {
-    if (input::key_down('W'))
+    if (input::key_down(input::key::up))
     {
         m_owner->set_position(m_owner->transformation().position_vector() +
                               m_owner->transformation().forward() * m_speed * delta);
     }
 
-    if (input::key_down('A'))
+    if (input::key_down(input::key::left))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().left() * m_speed * delta);
     }
 
-    if (input::key_down('D'))
+    if (input::key_down(input::key::right))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().right() * m_speed * delta);
     }
 
-    if (input::key_down('S'))
+    if (input::key_down(input::key::down))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().back() * m_speed * delta);
     }
 
-    if (input::key_down(VK_SPACE))
+    if (input::key_down(input::key::space))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().up() * m_speed * delta);
     }
@@ -58,6 +58,22 @@ void move_component::update(f32 delta)
     if (input::key_down('C'))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().down() * m_speed * delta);
+    }
+
+    if (input::key_down('Q'))
+    {
+        m_owner->rotate(m_speed * delta, axis::y);
+    }
+
+    if (input::key_down('E'))
+    {
+        m_owner->rotate(-m_speed * delta, axis::y);
+    }
+
+    if(input::key_down('F'))
+    {
+        //m_owner->transformation().rotate(m_owner->transformation().right() * m_speed * delta * math::deg2rad_multiplier);
+        m_owner->rotate(m_speed * delta, m_owner->transformation().right());
     }
 }
 

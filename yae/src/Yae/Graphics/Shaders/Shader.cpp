@@ -153,9 +153,9 @@ void shader::shutdown()
     core::release(m_vertex_shader);
 }
 
-bool shader::render(u32 index_count)
+bool shader::render(u32 index_count, const math::matrix& world)
 {
-    if (!set_parameters())
+    if (!set_parameters(world))
     {
         return false;
     }
@@ -170,28 +170,30 @@ bool shader::render(u32 index_count)
     return true;
 }
 
-void shader::set_world(const math::matrix& world)
-{
-    if (!math::are_matrices_equal(m_world, world))
-    {
-        m_world = XMMatrixTranspose(world);
-    }
-}
 
-bool shader::set_parameters()
+bool shader::set_parameters(const math::matrix& world_)
 {
     if (m_texture_view)
     {
         core::get_device_context()->PSSetShaderResources(0, 1, &m_texture_view);
     }
-    const auto world = m_world;
+    const auto world = XMMatrixTranspose(world_);
     if (!m_camera)
     {
         LOG_ERROR("<shader>.set_camera must be called before rendering with the shader");
         return false;
     }
-    const auto view = XMMatrixTranspose(m_camera->view());
-    const auto proj = XMMatrixTranspose(core::get_projection_matrix()); // TODO: don't think this needs to always get recalculated
+    math::matrix view;
+    math::matrix proj;
+    if (m_renderer == render_3d)
+    {
+        proj = XMMatrixTranspose(core::get_projection_matrix());
+        view = XMMatrixTranspose(m_camera->view());
+    } else if (m_renderer == render_2d)
+    {
+        view = XMMatrixTranspose(default_view_matrix());
+        proj = XMMatrixTranspose(core::get_orthographic_matrix());
+    }
 
     m_matrix_buffer.data().world      = world;
     m_matrix_buffer.data().view       = view;

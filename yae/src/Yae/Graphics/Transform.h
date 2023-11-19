@@ -30,7 +30,7 @@ namespace yae
 class transform
 {
 public:
-    transform() = default;
+    transform();
     ~transform() = default;
 
     constexpr const math::vector& position_vector() const { return m_pos_vec; }

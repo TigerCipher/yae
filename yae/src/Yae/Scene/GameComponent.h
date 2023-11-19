@@ -28,6 +28,7 @@
 #include "GameObject.h"
 #include "Yae/Graphics/Model.h"
 #include "Yae/Graphics/Texture.h"
+#include "Yae/Graphics/Bitmap.h"
 
 namespace yae
 {
@@ -65,6 +66,7 @@ public:
     ~texture_component() override = default;
 
     bool render(gfx::shader* shader) override;
+
 private:
     gfx::texture m_texture{};
 };
