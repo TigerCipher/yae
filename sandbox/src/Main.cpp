@@ -288,14 +288,15 @@ public:
             return false;
         }
 
+        return true;
+    }
 
-        gfx::core::disable_zbuffer();
-
+    bool render2d() override
+    {
         if (!m_hud.render(m_texture_shader, XMMatrixIdentity()))
         {
             return false;
         }
-        gfx::core::enable_zbuffer();
 
         return true;
     }

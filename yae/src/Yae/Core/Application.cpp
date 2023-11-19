@@ -117,12 +117,12 @@ bool application::render() const
         return false;
     }
 
-    // disable zbuffer
+    gfx::core::disable_zbuffer();
     if(!m_game->render2d())
     {
         return false;
     }
-    // enable zbuffer
+    gfx::core::enable_zbuffer();
 
     gfx::core::end_scene();
     return true;
