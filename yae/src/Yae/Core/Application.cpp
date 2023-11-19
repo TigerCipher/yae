@@ -23,6 +23,7 @@
 #include "Application.h"
 
 
+#include "Input.h"
 #include "Yae/Graphics/D3D11Core.h"
 
 namespace yae
@@ -63,8 +64,7 @@ bool application::init(i32 width, i32 height, HWND hwnd)
         return false;
     }
 
-    m_camera = DBG_NEW game_object{};
-    m_camera->set_position(0.f, 0.f, -5.f);
+    m_camera = DBG_NEW gfx::camera{};
 
     app::set(m_game);
     m_game->set_camera(m_camera);
@@ -100,8 +100,10 @@ bool application::frame()
 {
     m_timer.frame();
     //m_camera->calculate_view();
-    m_camera->update(m_timer.frame_time());
+    //m_camera->update(m_timer.frame_time());
     m_game->update(m_timer.frame_time());
+
+    input::update(m_timer.frame_time());
     return render();
 }
 

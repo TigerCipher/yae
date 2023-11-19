@@ -21,22 +21,172 @@
 //
 //  ------------------------------------------------------------------------------
 #include "Input.h"
+#include "Event.h"
+#include "System.h"
+
 
 namespace yae::input
 {
 
 namespace
 {
-bool keys[256]{};
+
+constexpr u16 max_keys = 256;
+
+struct keyboard
+{
+    bool keys[max_keys]{};
+};
+
+struct mouse
+{
+    i32  x{};
+    i32  y{};
+    bool buttons[button::max_buttons]{};
+};
+
+keyboard current_keyboard{};
+keyboard old_keyboard{};
+
+mouse current_mouse{};
+mouse old_mouse{};
+
+bool locked{};
+
 } // anonymous namespace
 
-void process_key(u32 key, bool pressed)
+void update(f32 delta)
 {
-    keys[key] = pressed;
+    old_keyboard = current_keyboard;
+    old_mouse    = current_mouse;
 }
 
-bool is_key_down(u32 key)
+void process_key(u16 key, bool pressed)
 {
-    return keys[key];
+    // key state not changed, no need to process
+    if (current_keyboard.keys[key] == pressed)
+    {
+        return;
+    }
+
+    current_keyboard.keys[key] = pressed;
+    events::fire(pressed ? events::key_pressed : events::key_released, nullptr, &key);
 }
+
+void process_button(u16 btn, bool pressed)
+{
+    if (current_mouse.buttons[btn] == pressed)
+    {
+        return;
+    }
+
+    current_mouse.buttons[btn] = pressed;
+    events::fire(pressed ? events::button_pressed : events::button_released, nullptr, &btn);
 }
+
+void process_mouse_move(i32 x, i32 y)
+{
+    if (current_mouse.x == x && current_mouse.y == y)
+    {
+        return;
+    }
+
+    current_mouse.x = x;
+    current_mouse.y = y;
+    u16 data[2];
+    data[0] = x;
+    data[1] = y;
+    events::fire(events::mouse_moved, nullptr, data);
+}
+
+void process_mouse_wheel(i8 delta)
+{
+    events::fire(events::mouse_wheel, nullptr, &delta);
+}
+
+bool key_down(u16 key)
+{
+    return current_keyboard.keys[key];
+}
+
+bool key_released(u16 key)
+{
+    return old_keyboard.keys[key] && !current_keyboard.keys[key];
+}
+
+bool key_up(u16 key)
+{
+    return !current_keyboard.keys[key];
+}
+
+bool key_pressed(u16 key)
+{
+    return !old_keyboard.keys[key] && current_keyboard.keys[key];
+}
+
+bool button_down(u16 btn)
+{
+    return current_mouse.buttons[btn];
+}
+
+bool button_released(u16 btn)
+{
+    return old_mouse.buttons[btn] && !current_mouse.buttons[btn];
+}
+
+bool button_up(u16 btn)
+{
+    return !current_mouse.buttons[btn];
+}
+
+bool button_pressed(u16 btn)
+{
+    return !old_mouse.buttons[btn] && current_mouse.buttons[btn];
+}
+
+void get_mouse_position(i32* x, i32* y)
+{
+    *x = current_mouse.x;
+    *y = current_mouse.y;
+}
+
+void get_previous_mouse_position(i32* x, i32* y)
+{
+    *x = old_mouse.x;
+    *y = old_mouse.y;
+}
+
+void center_cursor()
+{
+    current_mouse.x = system::width() / 2;
+    current_mouse.y = system::height() / 2;
+    SetCursorPos(system::monitor_width() / 2, system::monitor_height() / 2);
+}
+
+void show_cursor(bool show)
+{
+    ShowCursor(show);
+}
+
+void lock_cursor(bool lock, bool show)
+{
+    if (lock)
+    {
+        if (!locked)
+        {
+            show_cursor(show);
+        }
+        center_cursor();
+    } else if(locked)
+    {
+        show_cursor(true);
+    }
+    locked = lock;
+}
+
+bool is_cursor_locked()
+{
+    return locked;
+}
+
+} // namespace yae::input

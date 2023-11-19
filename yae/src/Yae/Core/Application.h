@@ -35,6 +35,7 @@
 #include "Yae/Graphics/Model.h"
 #include "Yae/Graphics/Texture.h"
 #include "Yae/Graphics/Shaders/Shader.h"
+#include "Yae/Graphics/Camera.h"
 #include "Game.h"
 #include "Timer.h"
 
@@ -61,7 +62,8 @@ private:
     bool render() const;
 
     game*        m_game{};
-    game_object* m_camera{};
-    timer        m_timer{};
+    gfx::camera* m_camera{};
+    //game_object* m_camera{};
+    timer m_timer{};
 };
 } // namespace yae

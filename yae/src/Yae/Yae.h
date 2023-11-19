@@ -30,6 +30,7 @@
 #include "Core/Application.h"
 #include "Core/Game.h"
 #include "Core/Input.h"
+#include "Core/Event.h"
 
 // Util
 #include "Util/PathUtil.h"

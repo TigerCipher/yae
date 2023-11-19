@@ -61,4 +61,10 @@ const std::set<resolution>& get_resolutions();
 
 HWND handle();
 
+i32 width();
+i32 height();
+
+i32 monitor_width();
+i32 monitor_height();
+
 } // namespace yae::system

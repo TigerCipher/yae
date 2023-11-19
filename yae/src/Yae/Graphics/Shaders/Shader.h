@@ -25,14 +25,15 @@
 #include "../D3D11Common.h"
 
 #include "ConstantBuffer.h"
+#include "Yae/Graphics/Camera.h"
 
 #include <functional>
 #include <format>
 
-namespace yae
-{
-class game_object;
-}
+//namespace yae
+//{
+//class game_object;
+//}
 
 namespace yae::gfx
 {
@@ -119,13 +120,13 @@ public:
 
     void set_texture(ID3D11ShaderResourceView* texture) { m_texture_view = texture; }
 
-    void set_camera(const game_object* camera) { m_camera = camera; }
+    void set_camera(gfx::camera* camera) { m_camera = camera; }
 
     void set_world(const math::matrix& world);
 
 protected:
     virtual bool                                      set_parameters();
-    const game_object*                                m_camera{};
+    gfx::camera*                                      m_camera{};
     ID3D11ShaderResourceView*                         m_texture_view{};
     ID3D11VertexShader*                               m_vertex_shader{};
     ID3D11PixelShader*                                m_pixel_shader{};

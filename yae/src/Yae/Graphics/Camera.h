@@ -15,40 +15,49 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: MoveComponent.h
-//  Date File Created: 11/17/2023
+//  File Name: Camera.h
+//  Date File Created: 11/18/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
 
 #pragma once
-#include "GameComponent.h"
 
-namespace yae
+#include "Yae/Common.h"
+
+namespace yae::gfx
 {
 
-// Free move
-class move_component : public game_component
-{
-public:
-    move_component(f32 speed = 10.f) : m_speed{speed} {}
-    ~move_component() override = default;
-
-    void update(f32 delta) override;
-
-private:
-    f32 m_speed{};
-};
-
-class freelook_component : public game_component
+class camera
 {
 public:
-    freelook_component(f32 sensitivity = 10.f) : m_sensitivity{sensitivity} {}
-    ~freelook_component() override = default;
+    camera()  = default;
+    ~camera() = default;
 
-    void update(f32 delta) override;
+    void rotate(f32 dx, f32 dy, f32 delta);
+    void move(f32 x, f32 y, f32 z, f32 delta);
+
+    math::matrix view();
+
+    void set_speed(f32 speed) { m_speed = speed; }
+    void modify_speed(f32 factor) { m_speed *= factor; }
+
+    void set_sensitivity(f32 sens) { m_sensitivity = sens; }
+
+    constexpr const math::vec3& position() const { return m_position; }
+
+    void set_position(f32 x, f32 y, f32 z) { m_position = { x, y, z }; }
+
 private:
-    f32 m_sensitivity{};
+    f32        m_pitch{};
+    f32        m_yaw{};
+    math::vec3 m_position{};
+
+    f32 m_speed{ 10.f };
+    f32 m_sensitivity{ 10.f };
+
+    math::matrix m_view{};
+    bool         m_recalculate{ true };
 };
 
-}
+} // namespace yae::gfx

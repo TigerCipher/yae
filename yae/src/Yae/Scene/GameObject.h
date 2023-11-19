@@ -56,16 +56,16 @@ public:
     void set_scale(f32 x, f32 y, f32 z) { m_transform.set_scale(x, y, z); }
     void set_scale(f32 scale) { m_transform.set_scale(scale); }
 
-    void set_rotation(const math::vec3& rotation) { m_transform.set_rotation(rotation); }
+    void rotate(f32 angle, axis axis) { m_transform.rotate(angle, axis); }
+    void rotate(f32 angle, const math::vector& axis) { m_transform.rotate(angle, axis); }
+    void rotate(const math::vector& quaternion) { m_transform.rotate(quaternion); }
     void set_rotation(f32 x, f32 y, f32 z) { m_transform.set_rotation(x, y, z); }
-    void set_rotation(f32 angle, axis axis) { m_transform.set_rotation(angle, axis); }
 
 
     constexpr const math::matrix& world_transformation() const { return m_transform.transformation(); }
     constexpr const math::matrix& view() const { return m_transform.view(); }
     constexpr const math::vec3&   position() const { return m_transform.position(); }
     constexpr const math::vec3&   scale() const { return m_transform.scale(); }
-    constexpr const math::vec3&   rotation() const { return m_transform.rotation(); }
 
     constexpr transform& transformation() { return m_transform; }
 

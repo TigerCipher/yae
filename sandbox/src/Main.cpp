@@ -29,6 +29,30 @@ const char* game_version = "1.0.0";
 using namespace yae;
 using namespace DirectX;
 
+namespace
+{
+bool on_app_quit(u16 code, void* sender, void* listener, void* userdata)
+{
+    LOG_INFO("App quit event received and responded to via callback!");
+    return true;
+}
+
+
+bool on_key_typed(u16 code, void* sender, void* listener, void* userdata)
+{
+    u16 key = GET_KEY(userdata);
+    if (key == input::key::f1)
+    {
+        LOG_DEBUG("F1 was typed");
+    }
+
+    LOG_DEBUG("Key typed: code={}, char={}", key, (char) key);
+
+    return false;
+}
+
+} // anonymous namespace
+
 class sandbox : public game
 {
 private:
@@ -39,14 +63,16 @@ private:
     game_object        ball{};
     game_object        ball2{};
     game_object        box{};
-    game_object m_plane{};
-    game_object ball3{};
+    game_object        m_plane{};
+    game_object        ball3{};
+    game_object        m_box2{};
 
 public:
     ~sandbox() override = default;
     bool init() override
     {
-        m_camera->set_position(0.f, 0.f, -10.f);
+        events::register_listener(events::app_quit, nullptr, on_app_quit);
+        events::register_listener(events::key_pressed, nullptr, on_key_typed);
         {
             gfx::shader_layout layout{};
             layout.add<math::vec3>("POSITION");
@@ -71,18 +97,20 @@ public:
                 return false;
             }
         }
-        m_camera->set_position(0.f, 7.f, -12.f);
-        m_camera->set_rotation(30.f, 0.f, 0.f);
+        m_camera->set_position(0.f, 1.f, -12.f);
+        m_camera->set_sensitivity(15.f);
+        //m_camera->set_rotation(30.f, 0.f, 0.f);
 
-        m_camera->add(new move_component{});
+        //m_camera->add(new move_component{})->add(new freelook_component{});
 
-        m_plane.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{"./assets/models/plane.txt"});
+        m_plane.add(new texture_component{ "./assets/textures/bricks.tga" })
+            ->add(new model_component{ "./assets/models/plane.txt" });
 
         box.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
             ->add(DBG_NEW model_component{ "./assets/models/cube.txt" });
         box.set_position(2.f, 1.f, 0.f);
         box.set_scale(0.3f);
-        box.set_rotation(math::deg2rad_multiplier * 15.f, axis::x);
+        box.rotate(15.f, axis::x);
         ball.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
             ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
         ball.add(box);
@@ -97,6 +125,12 @@ public:
         ball3.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
             ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
         ball3.set_position(2.f, 2.f, 0.f);
+
+
+        m_box2.add(new texture_component{ "./assets/textures/default.tga" })
+            ->add(new model_component{ "./assets/models/cube.txt" });
+        m_box2.set_position(0.f, 2.f, -2.f);
+        m_box2.set_rotation(0.f, 45.f, 0.f);
 
         m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
         m_light.diffuse_color  = { 1.f, 1.f, 1.f, 1.f };
@@ -147,15 +181,46 @@ public:
 
     void update(f32 delta) override
     {
-        if (input::is_key_down('B'))
+        if (input::key_released('B'))
         {
             LOG_DEBUG("Frame time: {}", delta);
         }
-        static f32 rotation{};
-        rotation -= 15.f * delta;
-        if (rotation < 0.f)
+        const f32 rotation = -15.f * delta;
+
+        if (input::key_down('W'))
         {
-            rotation += 360.f;
+            m_camera->move(0, 0, 1, delta);
+        }
+        if (input::key_down('A'))
+        {
+            m_camera->move(-1, 0, 0, delta);
+        }
+        if (input::key_down('S'))
+        {
+            m_camera->move(0, 0, -1, delta);
+        }
+        if (input::key_down('D'))
+        {
+            m_camera->move(1, 0, 0, delta);
+        }
+
+        if (input::button_pressed(input::button::left))
+        {
+            input::lock_cursor(true, true);
+        } else if (input::button_pressed(input::button::right))
+        {
+            input::lock_cursor(false);
+        }
+
+        if(input::is_cursor_locked())
+        {
+            i32 x, y;
+            input::get_mouse_position(&x, &y);
+            math::vec2 pos       = { (f32) x, (f32) y };
+            math::vec2 center    = { (f32) system::width() / 2, (f32) system::height() / 2 };
+            math::vec2 delta_pos = { pos.x - center.x, pos.y - center.y };
+            m_camera->rotate(delta_pos.x, delta_pos.y, delta);
+            input::center_cursor();
         }
 
         //math::vec3 rot = m_camera->rotation();
@@ -166,14 +231,18 @@ public:
         //}
         //m_camera->set_rotation(rot);
 
-        ball.set_rotation(rotation, axis::y);
-        box.set_rotation(rotation, axis::x);
-        ball2.set_rotation(rotation, axis::x);
+        ball.rotate(rotation, axis::y);
+        box.rotate(rotation, axis::x);
+        ball2.rotate(rotation, axis::x);
+        m_box2.rotate(rotation, XMVector4Normalize(m_box2.transformation().right()));
+        //m_box2.rotate(rotation, axis::y);
+        //m_box2.rotate(rotation, axis::x);
 
         m_plane.update(delta);
         ball.update(delta);
         ball2.update(delta);
         ball3.update(delta);
+        m_box2.update(delta);
     }
 
     bool render() override
@@ -181,7 +250,7 @@ public:
         m_light.specular_power = 32.f;
         m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
 
-        if(!m_plane.render(m_lights_shader))
+        if (!m_plane.render(m_lights_shader))
         {
             return false;
         }
@@ -192,7 +261,12 @@ public:
             return false;
         }
 
-        if(!ball3.render(m_lights_shader))
+        if (!ball3.render(m_lights_shader))
+        {
+            return false;
+        }
+
+        if (!m_box2.render(m_lights_shader))
         {
             return false;
         }

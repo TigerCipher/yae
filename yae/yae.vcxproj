@@ -86,6 +86,7 @@
   <ItemGroup>
     <ClInclude Include="src\Yae\Common.h" />
     <ClInclude Include="src\Yae\Core\Application.h" />
+    <ClInclude Include="src\Yae\Core\Event.h" />
     <ClInclude Include="src\Yae\Core\Game.h" />
     <ClInclude Include="src\Yae\Core\Input.h" />
     <ClInclude Include="src\Yae\Core\Settings.h" />
@@ -93,6 +94,7 @@
     <ClInclude Include="src\Yae\Core\Timer.h" />
     <ClInclude Include="src\Yae\Entrypoint.h" />
     <ClInclude Include="src\Yae\Globals.h" />
+    <ClInclude Include="src\Yae\Graphics\Camera.h" />
     <ClInclude Include="src\Yae\Graphics\D3D11Common.h" />
     <ClInclude Include="src\Yae\Graphics\D3D11Core.h" />
     <ClInclude Include="src\Yae\Graphics\Light.h" />
@@ -115,10 +117,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Yae\Core\Application.cpp" />
+    <ClCompile Include="src\Yae\Core\Event.cpp" />
     <ClCompile Include="src\Yae\Core\Input.cpp" />
     <ClCompile Include="src\Yae\Core\Settings.cpp" />
     <ClCompile Include="src\Yae\Core\System.cpp" />
     <ClCompile Include="src\Yae\Core\Timer.cpp" />
+    <ClCompile Include="src\Yae\Graphics\Camera.cpp" />
     <ClCompile Include="src\Yae\Graphics\D3D11Core.cpp" />
     <ClCompile Include="src\Yae\Graphics\Model.cpp" />
     <ClCompile Include="src\Yae\Graphics\Shaders\LightShader.cpp" />
