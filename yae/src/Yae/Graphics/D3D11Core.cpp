@@ -23,6 +23,7 @@
 #include "D3D11Core.h"
 
 
+
 // Linking directx libraries
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
