@@ -56,9 +56,9 @@ public:
     void set_scale(f32 scale);
 
     // angle expected in degrees
-    void rotate(f32 angle, axis axis);
+    void rotate(f32 angle, axis axis, bool global = false);
     // angle expected in degrees
-    void rotate(f32 angle, const math::vector& axis);
+    void rotate(f32 angle, const math::vector& axis, bool global = false);
     void rotate(const math::vector& quat);
 
     // angles expected in degrees

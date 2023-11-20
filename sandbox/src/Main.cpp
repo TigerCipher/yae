@@ -244,7 +244,9 @@ public:
         ball.rotate(rotation, axis::y);
         box.rotate(rotation, axis::x);
         ball2.rotate(rotation, axis::x);
-        m_box2.rotate(rotation, m_box2.transformation().right());
+        //m_box2.rotate(rotation, m_box2.transformation().right());
+        //m_box2.transformation().rotate(rotation, {1.f, 0.f, 0.f, 0.f}, true);
+        m_box2.transformation().rotate(rotation, m_box2.transformation().right(), true);
 
         m_plane.update(delta);
         ball.update(delta);

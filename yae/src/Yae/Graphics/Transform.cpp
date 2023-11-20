@@ -45,6 +45,7 @@ void extract_angles(f32& pitch, f32& yaw, f32& roll, const math::matrix& rotatio
 transform::transform()
 {
     m_transformation = XMMatrixIdentity();
+    m_rot_mat = XMMatrixIdentity();
 }
 
 void transform::set_position(const math::vec3& pos)
@@ -84,7 +85,7 @@ void transform::set_scale(f32 scale)
     set_scale(scale, scale, scale);
 }
 
-void transform::rotate(f32 angle, axis axis)
+void transform::rotate(f32 angle, axis axis, bool global)
 {
     switch (axis)
     {
@@ -107,10 +108,18 @@ void transform::rotate(f32 angle, axis axis)
     m_recalculate = true;
 }
 
-void transform::rotate(f32 angle, const math::vector& axis)
+void transform::rotate(f32 angle, const math::vector& axis, bool global)
 {
     //m_rot_quat    = XMQuaternionMultiply(m_rot_quat, XMQuaternionRotationAxis(axis, angle * math::deg2rad_multiplier));
-    m_rot_quat    = XMQuaternionMultiply(XMQuaternionRotationAxis(axis, angle * math::deg2rad_multiplier), m_rot_quat);
+    if (global)
+    {
+        //const math::vector original_rot = m_rot_quat;
+        //m_rot_quat = XMQuaternionRotationAxis(axis, angle * math::deg2rad_multiplier);
+        m_rot_quat = XMQuaternionMultiply(m_rot_quat, XMQuaternionRotationAxis(axis, angle * math::deg2rad_multiplier));
+    } else
+    {
+        m_rot_quat = XMQuaternionMultiply(XMQuaternionRotationAxis(axis, angle * math::deg2rad_multiplier), m_rot_quat);
+    }
     m_recalculate = true;
 }
 
