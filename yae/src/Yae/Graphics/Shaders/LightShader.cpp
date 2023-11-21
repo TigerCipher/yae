@@ -22,6 +22,7 @@
 //  ------------------------------------------------------------------------------
 #include "LightShader.h"
 #include "../D3D11Core.h"
+#include "Yae/Core/Application.h"
 #include "Yae/Scene/GameObject.h"
 
 namespace yae::gfx
@@ -70,7 +71,7 @@ void light_shader::shutdown()
 }
 bool light_shader::set_parameters(const math::matrix& world)
 {
-    m_camera_buffer.data().position = m_camera->position();
+    m_camera_buffer.data().position = app::instance()->camera()->owner()->position();
 
     if (!m_light)
     {

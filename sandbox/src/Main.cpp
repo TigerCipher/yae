@@ -71,6 +71,7 @@ private:
 
     game_object m_quad{};
     game_object m_plane{};
+    game_object m_cam{};
 
 
 public:
@@ -103,8 +104,12 @@ public:
                 return false;
             }
         }
-        m_camera->set_position(0.f, 1.f, -12.f);
-        m_camera->set_sensitivity(15.f);
+
+        m_cam.add(new camera_component{})->add(new move_component{})->add(new freelook_component{});
+        m_cam.set_position(0.f, 1.f, -12.f);
+        m_root.add(m_cam);
+        //m_camera->set_position(0.f, 1.f, -12.f);
+        //m_camera->set_sensitivity(15.f);
         //m_camera->set_rotation(30.f, 0.f, 0.f);
 
         //m_camera->add(new move_component{})->add(new freelook_component{});
@@ -189,48 +194,48 @@ public:
         return true;
     }
 
-    void process_input(f32 delta)
-    {
-        if (input::key_down('W'))
-        {
-            m_camera->move(0, 0, 1, delta);
-        }
-        if (input::key_down('A'))
-        {
-            m_camera->move(-1, 0, 0, delta);
-        }
-        if (input::key_down('S'))
-        {
-            m_camera->move(0, 0, -1, delta);
-        }
-        if (input::key_down('D'))
-        {
-            m_camera->move(1, 0, 0, delta);
-        }
+    //void process_input(f32 delta)
+    //{
+    //    if (input::key_down('W'))
+    //    {
+    //        m_camera->move(0, 0, 1, delta);
+    //    }
+    //    if (input::key_down('A'))
+    //    {
+    //        m_camera->move(-1, 0, 0, delta);
+    //    }
+    //    if (input::key_down('S'))
+    //    {
+    //        m_camera->move(0, 0, -1, delta);
+    //    }
+    //    if (input::key_down('D'))
+    //    {
+    //        m_camera->move(1, 0, 0, delta);
+    //    }
 
-        if (input::button_pressed(input::button::left))
-        {
-            input::lock_cursor(true);
-        } else if (input::button_pressed(input::button::right))
-        {
-            input::lock_cursor(false);
-        }
+    //    if (input::button_pressed(input::button::left))
+    //    {
+    //        input::lock_cursor(true);
+    //    } else if (input::button_pressed(input::button::right))
+    //    {
+    //        input::lock_cursor(false);
+    //    }
 
-        if (input::is_cursor_locked())
-        {
-            i32 x, y;
-            input::get_mouse_position(&x, &y);
-            math::vec2 pos       = { (f32) x, (f32) y };
-            math::vec2 center    = { (f32) system::width() / 2, (f32) system::height() / 2 };
-            math::vec2 delta_pos = { pos.x - center.x, pos.y - center.y };
-            m_camera->rotate(delta_pos.x, delta_pos.y, delta);
-            input::center_cursor();
-        }
-    }
+    //    if (input::is_cursor_locked())
+    //    {
+    //        i32 x, y;
+    //        input::get_mouse_position(&x, &y);
+    //        math::vec2 pos       = { (f32) x, (f32) y };
+    //        math::vec2 center    = { (f32) system::width() / 2, (f32) system::height() / 2 };
+    //        math::vec2 delta_pos = { pos.x - center.x, pos.y - center.y };
+    //        m_camera->rotate(delta_pos.x, delta_pos.y, delta);
+    //        input::center_cursor();
+    //    }
+    //}
 
     void update(f32 delta) override
     {
-        process_input(delta);
+        //process_input(delta);
         if (input::key_released('B'))
         {
             LOG_DEBUG("Frame time: {}", delta);

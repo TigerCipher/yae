@@ -39,14 +39,15 @@ public:
     //constexpr const math::vec3&   rotation() const { return m_rot; }
     constexpr const math::matrix& transformation() const { return m_transformation; }
     constexpr const math::matrix& rotation_matrix() const { return m_rot_mat; }
-    constexpr const math::matrix& scale_matrix() const { return m_scale_mat; }
-    constexpr const math::matrix& view() const { return m_view; }
+    //constexpr const math::matrix& scale_matrix() const { return m_scale_mat; }
+    //constexpr const math::matrix& view() const { return m_view; }
     constexpr const math::vector& forward() const { return m_forward; }
     constexpr const math::vector& back() const { return m_back; }
     constexpr const math::vector& left() const { return m_left; }
     constexpr const math::vector& right() const { return m_right; }
     constexpr const math::vector& up() const { return m_up; }
     constexpr const math::vector& down() const { return m_down; }
+    constexpr const math::vector& look() const { return m_look; }
 
     void set_position(const math::vec3& pos);
     void set_position(const math::vector& pos);
@@ -70,19 +71,19 @@ private:
     math::vector m_pos_vec{};
     math::vec3   m_pos{};
     math::vec3   m_scale{ 1.f, 1.f, 1.f };
-    math::vec3   m_rot{};
+    //math::vec3   m_rot{};
     math::vector m_rot_quat{0.f, 0.f, 0.f, 1.f};
     math::matrix m_transformation{};
-    math::matrix m_translation{};
+    //math::matrix m_translation{};
     math::matrix m_rot_mat{};
-    math::matrix m_scale_mat{};
+    //math::matrix m_scale_mat{};
     math::vector m_forward{};
     math::vector m_back{};
     math::vector m_left{};
     math::vector m_right{1.f, 0.f, 0.f, 0.f};
     math::vector m_up{};
     math::vector m_down{};
-    math::matrix m_view{};
+    math::vector m_look{};
 
     bool m_recalculate{ true };
 };

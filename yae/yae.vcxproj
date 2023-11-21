@@ -106,6 +106,7 @@
     <ClInclude Include="src\Yae\Graphics\Texture.h" />
     <ClInclude Include="src\Yae\Graphics\Transform.h" />
     <ClInclude Include="src\Yae\Graphics\Vertex.h" />
+    <ClInclude Include="src\Yae\Scene\CameraComponent.h" />
     <ClInclude Include="src\Yae\Scene\GameComponent.h" />
     <ClInclude Include="src\Yae\Scene\GameObject.h" />
     <ClInclude Include="src\Yae\Scene\MoveComponent.h" />
@@ -131,6 +132,7 @@
     <ClCompile Include="src\Yae\Graphics\Shaders\Shader.cpp" />
     <ClCompile Include="src\Yae\Graphics\Texture.cpp" />
     <ClCompile Include="src\Yae\Graphics\Transform.cpp" />
+    <ClCompile Include="src\Yae\Scene\CameraComponent.cpp" />
     <ClCompile Include="src\Yae\Scene\GameComponent.cpp" />
     <ClCompile Include="src\Yae\Scene\GameObject.cpp" />
     <ClCompile Include="src\Yae\Scene\MoveComponent.cpp" />

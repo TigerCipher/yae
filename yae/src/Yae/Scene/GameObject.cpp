@@ -56,6 +56,7 @@ game_object* game_object::add(game_component* component)
 {
     m_components.push_back(component);
     component->set_owner(this);
+    component->add_to_engine();
     return this;
 }
 

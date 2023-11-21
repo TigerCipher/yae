@@ -15,53 +15,32 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: CameraComponent.h
+//  Date File Created: 11/20/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
 
 #pragma once
 
-#include "Yae/Common.h"
-
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
-
-#include "Yae/Scene/GameObject.h"
-#include "Yae/Graphics/Model.h"
-#include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/Shaders/Shader.h"
-#include "Yae/Graphics/Camera.h"
-#include "Game.h"
-#include "Timer.h"
+#include "GameComponent.h"
 
 namespace yae
 {
-
-namespace app
-{
-void  set(game* game);
-game* instance();
-} // namespace app
-
-class application
+class camera_component : public game_component
 {
 public:
-    application(game* game) : m_game{ game } {}
-    ~application() = default;
+    camera_component();
+    ~camera_component() override = default;
 
-    bool init(i32 width, i32 height, HWND hwnd);
-    void shutdown();
-    bool frame();
+    void update(f32 delta) override;
+
+    void add_to_engine() override;
+
+    constexpr const math::matrix& view() const { return m_view; }
 
 private:
-    bool render() const;
-
-    game* m_game{};
-    timer m_timer{};
+    math::matrix m_view{};
+    bool         m_recalculate{ true };
 };
 } // namespace yae

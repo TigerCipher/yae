@@ -39,9 +39,12 @@ public:
     virtual ~game_component() = default;
 
     void set_owner(game_object* owner) { m_owner = owner; }
+    constexpr game_object* owner() const { return m_owner; }
 
     virtual void update(f32 delta) {}
     virtual bool render(gfx::shader* shader) { return true; }
+
+    virtual void add_to_engine(){}
 
 protected:
     game_object* m_owner{};

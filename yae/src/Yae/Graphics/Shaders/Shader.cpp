@@ -140,7 +140,6 @@ bool shader::init(const wchar_t* vs_filename, const wchar_t* ps_filename, const 
 
     DX_CALL(core::get_device()->CreateSamplerState(&sampler_desc, &m_sampler_state));
 
-    set_camera(app::instance()->camera());
     return true;
 }
 
@@ -178,7 +177,7 @@ bool shader::set_parameters(const math::matrix& world_)
         core::get_device_context()->PSSetShaderResources(0, 1, &m_texture_view);
     }
     const auto world = XMMatrixTranspose(world_);
-    if (!m_camera)
+    if (!app::instance()->camera())
     {
         LOG_ERROR("<shader>.set_camera must be called before rendering with the shader");
         return false;
@@ -188,7 +187,7 @@ bool shader::set_parameters(const math::matrix& world_)
     if (m_renderer == render_3d)
     {
         proj = XMMatrixTranspose(core::get_projection_matrix());
-        view = XMMatrixTranspose(m_camera->view());
+        view = XMMatrixTranspose(app::instance()->camera()->view());
     } else if (m_renderer == render_2d)
     {
         view = XMMatrixTranspose(default_view_matrix());

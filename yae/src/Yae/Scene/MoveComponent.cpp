@@ -29,51 +29,35 @@ namespace yae
 {
 void move_component::update(f32 delta)
 {
-    if (input::key_down(input::key::up))
+    if (input::key_down(m_forward))
     {
         m_owner->set_position(m_owner->transformation().position_vector() +
                               m_owner->transformation().forward() * m_speed * delta);
     }
 
-    if (input::key_down(input::key::left))
+    if (input::key_down(m_left))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().left() * m_speed * delta);
     }
 
-    if (input::key_down(input::key::right))
+    if (input::key_down(m_right))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().right() * m_speed * delta);
     }
 
-    if (input::key_down(input::key::down))
+    if (input::key_down(m_back))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().back() * m_speed * delta);
     }
 
-    if (input::key_down(input::key::space))
+    if (input::key_down(m_up))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().up() * m_speed * delta);
     }
 
-    if (input::key_down('C'))
+    if (input::key_down(m_down))
     {
         m_owner->set_position(m_owner->transformation().position_vector() + m_owner->transformation().down() * m_speed * delta);
-    }
-
-    if (input::key_down('Q'))
-    {
-        m_owner->rotate(m_speed * delta, axis::y);
-    }
-
-    if (input::key_down('E'))
-    {
-        m_owner->rotate(-m_speed * delta, axis::y);
-    }
-
-    if(input::key_down('F'))
-    {
-        //m_owner->transformation().rotate(m_owner->transformation().right() * m_speed * delta * math::deg2rad_multiplier);
-        m_owner->rotate(m_speed * delta, m_owner->transformation().right());
     }
 }
 
@@ -104,34 +88,15 @@ void freelook_component::update(f32 delta)
 
     if (roty)
     {
-        //f32 new_rot = m_owner->rotation().y /** math::rad2deg_multiplier*/ + delta_pos.x * m_sensitivity * delta * math::deg2rad_multiplier;
-        //new_rot = math::wrap_angle_rad(new_rot);
-        //m_owner->set_rotation(m_owner->rotation().x * math::rad2deg_multiplier, new_rot * math::rad2deg_multiplier, 0.f);
-        m_owner->rotate(delta_pos.x * m_sensitivity * delta, axis::y);
-        //m_owner->rotate(delta_pos.x * m_sensitivity * delta, m_owner->transformation().up());
-        //m_owner->transformation().calculate_transformation(nullptr);
-        //math::vector axis = m_owner->transformation().up();
-        //math::vector rot  = XMQuaternionRotationAxis(axis, delta_pos.x * m_sensitivity * delta * math::deg2rad_multiplier);
-        //math::vector cur  = XMLoadFloat3(&m_owner->rotation());
-        //rot += cur;
-        //math::vec3 newrot;
-        //XMStoreFloat3(&newrot, rot);
-        //m_owner->set_rotation(newrot);
+        f32 angle = delta_pos.x * m_sensitivity * delta;
+        //angle     = math::wrap_angle_deg(angle); // TODO get current yaw and add to angle to wrap
+        m_owner->rotate(angle, axis::y, true);
     }
     if (rotx)
     {
-        //f32 new_rot = m_owner->rotation().x * math::rad2deg_multiplier + delta_pos.y * m_sensitivity * delta;
-        //new_rot = std::clamp(new_rot, -89.f, 89.f);
-        //m_owner->set_rotation(new_rot, m_owner->rotation().y * math::rad2deg_multiplier, 0.f);
-        //math::vector axis = m_owner->transformation().right();
-        //math::vector rot = XMQuaternionRotationAxis(axis, delta_pos.y * m_sensitivity * delta * math::deg2rad_multiplier);
-        //math::vector cur = XMLoadFloat3(&m_owner->rotation());
-        //rot += cur;
-        //math::vec3 newrot;
-        //XMStoreFloat3(&newrot, rot);
-        //m_owner->set_rotation(newrot);
-        m_owner->rotate(delta_pos.y * m_sensitivity * delta, m_owner->transformation().right());
-        //m_owner->rotate(delta_pos.y * m_sensitivity * delta, axis::x);
+        f32 angle = delta_pos.y * m_sensitivity * delta;
+        //angle     = std::clamp(angle, -89.f, 89.f); // TODO get current pitch and add to angle to clamp
+        m_owner->rotate(angle, axis::x);
     }
 
     if (rotx || roty)
