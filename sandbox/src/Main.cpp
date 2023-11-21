@@ -21,6 +21,9 @@
 //
 // ------------------------------------------------------------------------------
 
+#include "Yae/Graphics/Geometry.h"
+
+
 #include <Yae/Entrypoint.h>
 
 const char* game_name    = "sandbox";
@@ -60,12 +63,11 @@ private:
     gfx::light_shader* m_lights_shader{};
     gfx::base_light    m_light{};
     gfx::point_light   m_point_lights[4]{};
-    game_object        ball{};
-    game_object        ball2{};
-    game_object        box{};
-    game_object        m_plane{};
-    game_object        ball3{};
-    game_object        m_box2{};
+
+    game_object m_root{};
+    game_object m_cube{};
+    game_object m_cube2{};
+    game_object m_ball1{};
 
     //game_object m_hud{};
     gfx::bitmap m_hud{true};
@@ -80,8 +82,8 @@ public:
         {
             gfx::shader_layout layout{};
             layout.add<math::vec3>("POSITION");
-            layout.add<math::vec2>("TEXCOORD");
             layout.add<math::vec3>("NORMAL");
+            layout.add<math::vec2>("TEXCOORD");
             m_lights_shader = gfx::create_shader<gfx::light_shader>("Light", layout);
             if (!m_lights_shader)
             {
@@ -107,35 +109,6 @@ public:
 
         //m_camera->add(new move_component{})->add(new freelook_component{});
 
-        m_plane.add(new texture_component{ "./assets/textures/bricks.tga" })
-            ->add(new model_component{ "./assets/models/plane.txt" });
-
-        box.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
-            ->add(DBG_NEW model_component{ "./assets/models/cube.txt" });
-        box.set_position(2.f, 1.f, 0.f);
-        box.set_scale(0.3f);
-        box.rotate(15.f, axis::x);
-        ball.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
-            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
-        ball.add(box);
-        ball.set_position(-4.f, 0.f, 0.f);
-        ball.set_scale(1.5f);
-
-        ball2.add(DBG_NEW texture_component{ "./assets/textures/default.tga" })
-            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
-        ball2.set_position(2.f, 0.f, 0.f);
-        ball2.set_scale(0.75f);
-
-        ball3.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
-            ->add(DBG_NEW model_component{ "./assets/models/cube.txt" })
-            ->add(new move_component{});
-        ball3.set_position(2.f, 2.f, 0.f);
-
-
-        m_box2.add(new texture_component{ "./assets/textures/default.tga" })
-            ->add(new model_component{ "./assets/models/cube.txt" });
-        m_box2.set_position(0.f, 2.f, -2.f);
-        m_box2.set_rotation(0.f, 45.f, 0.f);
 
         //m_hud.add(new bitmap_component{ "./assets/textures/stone01.tga", 50, 50 });
         m_hud.init("./assets/textures/stone01.tga", 50, 50);
@@ -143,6 +116,18 @@ public:
 
         //m_hudobj.set_position(3.f, 0.f, 0.f);
         //m_hudobj.rotate(45.f, axis::z);
+
+        m_cube.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{gfx::geometry::create_box(1.f, 1.f, 1.f)});
+        m_cube2.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{gfx::geometry::create_box(1.f, 1.f, 1.f)});
+        m_ball1.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{gfx::geometry::create_sphere(1.5f, 32, 15)});
+        m_ball1.add(m_cube2);
+        m_cube2.set_position(3.f, 1.f, 0.f);
+        m_cube2.rotate(45.f, axis::x);
+
+        m_ball1.set_position(3.f, -1.f, 5.f);
+
+        m_root.add(m_cube);
+        m_root.add(m_ball1);
 
         m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
         m_light.diffuse_color  = { 1.f, 1.f, 1.f, 1.f };
@@ -241,55 +226,18 @@ public:
         }
         const f32 rotation = -15.f * delta;
 
-        ball.rotate(rotation, axis::y);
-        box.rotate(rotation, axis::x);
-        ball2.rotate(rotation, axis::x);
-        //m_box2.rotate(rotation, m_box2.transformation().right());
-        //m_box2.transformation().rotate(rotation, {1.f, 0.f, 0.f, 0.f}, true);
-        m_box2.transformation().rotate(rotation, m_box2.transformation().right(), true);
+        m_cube2.rotate(rotation, axis::y); // TODO: Update on parent transformation update as well
+        m_ball1.transformation().rotate(rotation, axis::y, true);
 
-        m_plane.update(delta);
-        ball.update(delta);
-        ball2.update(delta);
-        ball3.update(delta);
-        m_box2.update(delta);
+        m_root.update(delta);
     }
 
     bool render() override
     {
-        m_light.specular_power = 32.f;
-        m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
-
-        if (!m_plane.render(m_lights_shader))
+        if(!m_root.render(m_lights_shader))
         {
             return false;
         }
-
-
-        if (!ball.render(m_lights_shader))
-        {
-            return false;
-        }
-
-        if (!ball3.render(m_lights_shader))
-        {
-            return false;
-        }
-
-        if (!m_box2.render(m_lights_shader))
-        {
-            return false;
-        }
-
-
-        m_light.specular_power = 20.f;
-        m_light.specular_color = { 0.8f, 0.2f, 0.2f, 1.f };
-
-        if (!ball2.render(m_lights_shader))
-        {
-            return false;
-        }
-
         return true;
     }
 

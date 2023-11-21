@@ -29,16 +29,25 @@ namespace yae
 {
 model_component::model_component(const std::string_view filename)
 {
-    if (!m_model.init(filename))
+    m_model = new gfx::model{};
+    if (!m_model->init(filename))
     {
         LOG_ERROR("Failed to load model file {} from component", filename);
         // TODO: Throw exception?
     }
 }
 
+model_component::~model_component()
+{
+    if(m_model)
+    {
+        SAFE_DELETE(m_model);
+    }
+}
+
 bool model_component::render(gfx::shader* shader)
 {
-    return m_model.render(shader, m_owner->world_transformation());
+    return m_model->render(shader, m_owner->world_transformation());
 }
 
 

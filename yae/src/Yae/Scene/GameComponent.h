@@ -52,11 +52,12 @@ class model_component : public game_component
 {
 public:
     model_component(const std::string_view filename);
-    ~model_component() override = default;
+    model_component(gfx::model* model) : m_model{model} {} 
+    ~model_component() override;
     bool render(gfx::shader* shader) override;
 
 private:
-    gfx::model m_model{};
+    gfx::model* m_model{};
 };
 
 class texture_component : public game_component

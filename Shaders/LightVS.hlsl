@@ -21,15 +21,15 @@ cbuffer LightPositionBuffer
 struct VertexInputType
 {
     float4 position : POSITION;
-    float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
+    float2 tex : TEXCOORD0;
 };
 
 struct PixelInputType
 {
     float4 position : SV_POSITION;
-    float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
+    float2 tex : TEXCOORD0;
     float3 viewDirection : TEXCOORD1;
     float3 lightPos[NUM_LIGHTS] : TEXCOORD2;
 };

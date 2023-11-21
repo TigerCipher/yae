@@ -30,22 +30,47 @@ namespace yae::gfx
 
 struct vertex
 {
-    math::vec3 position{};
 };
 
 struct vertex_position_color : vertex
 {
+    math::vec3 position{};
     math::vec4 color{};
+    vertex_position_color() = default;
+    vertex_position_color(const math::vec3& position, const math::vec4& color) : position(position), color(color) {}
 };
 
 struct vertex_position_texture : vertex
 {
+    math::vec3 position{};
     math::vec2 texture{};
+
+    vertex_position_texture() = default;
+    vertex_position_texture(const math::vec3& position, const math::vec2& texture) : position(position), texture(texture) {}
 };
 
-struct vertex_position_texture_normal : vertex_position_texture
+struct vertex_position_texture_normal : vertex
 {
+    math::vec3 position{};
+    math::vec2 texture{};
     math::vec3 normal{};
+
+    vertex_position_texture_normal() = default;
+    vertex_position_texture_normal(const math::vec3& position, const math::vec2& texture, const math::vec3& normal) :
+        position(position), texture(texture), normal(normal)
+    {}
+};
+
+struct vertex_position_normal_texture : vertex
+{
+    math::vec3 position{};
+    math::vec3 normal{};
+    math::vec2 texture{};
+
+    vertex_position_normal_texture() = default;
+    vertex_position_normal_texture(const math::vec3& position, const math::vec3& normal, const math::vec2& texture) :
+        position(position), normal(normal), texture(texture)
+    {}
 };
 
 } // namespace yae::gfx
