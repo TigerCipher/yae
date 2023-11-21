@@ -33,7 +33,7 @@ namespace yae::gfx
 namespace
 {
 
-std::vector<vertex_position_texture_normal> load_model(const char* filename)
+std::vector<vertex_position_normal_texture> load_model(const char* filename)
 {
     LOG_INFO("Loading model from {}", filename);
     std::ifstream fin{ filename };
@@ -53,7 +53,7 @@ std::vector<vertex_position_texture_normal> load_model(const char* filename)
     u32 vertex_count;
     fin >> vertex_count;
 
-    std::vector<vertex_position_texture_normal> model{ vertex_count };
+    std::vector<vertex_position_normal_texture> model{ vertex_count };
 
     fin.get(input);
     while (input != ':')
@@ -81,9 +81,9 @@ std::vector<vertex_position_texture_normal> load_model(const char* filename)
 
 bool model::init(const std::string_view filename)
 {
-    m_stride = sizeof(vertex_position_texture_normal);
+    m_stride = sizeof(vertex_position_normal_texture);
 
-    const std::vector<vertex_position_texture_normal> vertices = load_model(filename.data());
+    const std::vector<vertex_position_normal_texture> vertices = load_model(filename.data());
     if (vertices.empty())
     {
         return false;
@@ -106,7 +106,7 @@ bool model::init(const std::string_view filename)
 
 
     vertex_buffer_desc.Usage               = D3D11_USAGE_DEFAULT;
-    vertex_buffer_desc.ByteWidth           = sizeof(vertex_position_texture_normal) * m_vertex_count;
+    vertex_buffer_desc.ByteWidth           = sizeof(vertex_position_normal_texture) * m_vertex_count;
     vertex_buffer_desc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
     vertex_buffer_desc.CPUAccessFlags      = 0;
     vertex_buffer_desc.MiscFlags           = 0;

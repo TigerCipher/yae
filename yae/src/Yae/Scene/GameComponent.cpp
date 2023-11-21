@@ -23,6 +23,9 @@
 
 #include "GameComponent.h"
 
+
+#include "Yae/Graphics/Geometry.h"
+
 using namespace DirectX;
 
 namespace yae
@@ -39,7 +42,7 @@ model_component::model_component(const std::string_view filename)
 
 model_component::~model_component()
 {
-    if(m_model)
+    if (m_model)
     {
         SAFE_DELETE(m_model);
     }
@@ -63,6 +66,37 @@ bool texture_component::render(gfx::shader* shader)
 {
     shader->set_texture(m_texture.texture_view());
     return true;
+}
+
+bitmap_component::bitmap_component(u32 width, u32 height, const char* filename)
+{
+    if(!m_texture.init(filename))
+    {
+        LOG_ERROR("Failed to load texture file {} from bitmap component", filename);
+        return;
+    }
+    m_model = gfx::geometry::create_quad(width, height);
+}
+
+bitmap_component::~bitmap_component()
+{
+    if (m_model)
+    {
+        SAFE_DELETE(m_model);
+    }
+}
+
+bool bitmap_component::render(gfx::shader* shader)
+{
+    if(!m_model)
+    {
+        return false;
+    }
+    shader->set_renderer(gfx::render_2d);
+    shader->set_texture(m_texture.texture_view());
+    const bool res = m_model->render(shader, m_owner->world_transformation());
+    shader->set_renderer(gfx::render_3d);
+    return res;
 }
 
 } // namespace yae

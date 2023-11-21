@@ -94,7 +94,6 @@
     <ClInclude Include="src\Yae\Core\Timer.h" />
     <ClInclude Include="src\Yae\Entrypoint.h" />
     <ClInclude Include="src\Yae\Globals.h" />
-    <ClInclude Include="src\Yae\Graphics\Bitmap.h" />
     <ClInclude Include="src\Yae\Graphics\Camera.h" />
     <ClInclude Include="src\Yae\Graphics\D3D11Common.h" />
     <ClInclude Include="src\Yae\Graphics\D3D11Core.h" />
@@ -124,7 +123,6 @@
     <ClCompile Include="src\Yae\Core\Settings.cpp" />
     <ClCompile Include="src\Yae\Core\System.cpp" />
     <ClCompile Include="src\Yae\Core\Timer.cpp" />
-    <ClCompile Include="src\Yae\Graphics\Bitmap.cpp" />
     <ClCompile Include="src\Yae\Graphics\Camera.cpp" />
     <ClCompile Include="src\Yae\Graphics\D3D11Core.cpp" />
     <ClCompile Include="src\Yae\Graphics\Geometry.cpp" />

@@ -28,7 +28,6 @@
 #include "GameObject.h"
 #include "Yae/Graphics/Model.h"
 #include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/Bitmap.h"
 
 namespace yae
 {
@@ -69,6 +68,18 @@ public:
     bool render(gfx::shader* shader) override;
 
 private:
+    gfx::texture m_texture{};
+};
+
+class bitmap_component : public game_component
+{
+public:
+    bitmap_component(u32 width, u32 height, const char* filename);
+    ~bitmap_component() override;
+    bool render(gfx::shader* shader) override;
+
+private:
+    gfx::model* m_model{};
     gfx::texture m_texture{};
 };
 

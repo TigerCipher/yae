@@ -69,8 +69,8 @@ private:
     game_object m_cube2{};
     game_object m_ball1{};
 
-    //game_object m_hud{};
-    gfx::bitmap m_hud{true};
+    game_object m_quad{};
+    game_object m_plane{};
 
 
 public:
@@ -111,7 +111,6 @@ public:
 
 
         //m_hud.add(new bitmap_component{ "./assets/textures/stone01.tga", 50, 50 });
-        m_hud.init("./assets/textures/stone01.tga", 50, 50);
         //m_hud.set_location(0, 0);
 
         //m_hudobj.set_position(3.f, 0.f, 0.f);
@@ -124,10 +123,22 @@ public:
         m_cube2.set_position(3.f, 1.f, 0.f);
         m_cube2.rotate(45.f, axis::x);
 
-        m_ball1.set_position(3.f, -1.f, 5.f);
+        m_ball1.set_position(-3.f, -5.f, -3.f);
+
+        //m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{gfx::geometry::create_plane(32, 32)});
+        m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{"./assets/models/plane.txt"});
+        //m_plane.rotate(90.f, axis::x);
+        //m_plane.set_position(0.f, -1.f, 0.f);
+
+
+        m_quad.add(new bitmap_component{512, 512, "./assets/textures/default.tga"});
+        m_quad.set_position(0, 0, 0);
+
+
 
         m_root.add(m_cube);
         m_root.add(m_ball1);
+        m_root.add(m_plane);
 
         m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
         m_light.diffuse_color  = { 1.f, 1.f, 1.f, 1.f };
@@ -139,7 +150,7 @@ public:
         gfx::point_light light1{};
         light1.position         = { -3.f, 1.f, 3.f };
         light1.diffuse_color    = { 1.f, 0.f, 0.f, 1.f };
-        light1.constant_factor  = 3.f;
+        light1.constant_factor  = 1.f;
         light1.linear_factor    = 0.09f;
         light1.quadradic_factor = 0.032f;
 
@@ -153,14 +164,14 @@ public:
         gfx::point_light light3{};
         light3.position         = { -3.f, 1.f, -3.f };
         light3.diffuse_color    = { 0.f, 0.f, 1.f, 1.f };
-        light3.constant_factor  = 2.f;
+        light3.constant_factor  = 1.f;
         light3.linear_factor    = 0.09f;
         light3.quadradic_factor = 0.032f;
 
         gfx::point_light light4{};
         light4.position         = { 3.f, 1.f, -3.f };
         light4.diffuse_color    = { 1.f, 1.f, 0.f, 1.f }; // set alpha = 0 to make this light not get applied
-        light4.constant_factor  = 2.f;
+        light4.constant_factor  = 1.f;
         light4.linear_factor    = 0.09f;
         light4.quadradic_factor = 0.032f;
 
@@ -229,7 +240,10 @@ public:
         m_cube2.rotate(rotation, axis::y); // TODO: Update on parent transformation update as well
         m_ball1.transformation().rotate(rotation, axis::y, true);
 
+        m_quad.rotate(rotation, axis::z);
+
         m_root.update(delta);
+        m_quad.update(delta);
     }
 
     bool render() override
@@ -243,10 +257,7 @@ public:
 
     bool render2d() override
     {
-        if (!m_hud.render(m_texture_shader, XMMatrixIdentity()))
-        {
-            return false;
-        }
+        m_quad.render(m_texture_shader);
 
         return true;
     }

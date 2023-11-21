@@ -22,19 +22,44 @@
 //  ------------------------------------------------------------------------------
 #include "Geometry.h"
 
+
+#include "Yae/Core/System.h"
+
 namespace yae::gfx::geometry
 {
 
-void create_fullscreen_quad(std::vector<vertex_position_normal_texture>& vertices, std::vector<u32>& indices)
+void create_plane(std::vector<vertex_position_normal_texture>& vertices, std::vector<u32>& indices, u32 width, u32 height)
 {
     vertices.resize(4);
     indices.resize(6);
 
     // clang-format off
-	vertices[0] = { { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 1.0f } };
-	vertices[1] = { { -1.0f,  1.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f } };
-	vertices[2] = { {  1.0f,  1.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f } };
-	vertices[3] = { {  1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 1.0f } };
+    vertices[0] = { { -1.0f * (f32)width * 0.5f, -1.0f * (f32)height * 0.5f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 1.0f } };
+	vertices[1] = { { -1.0f * (f32)width * 0.5f,  1.0f * (f32)height * 0.5f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f } };
+	vertices[2] = { {  1.0f * (f32)width * 0.5f,  1.0f * (f32)height * 0.5f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f } };
+	vertices[3] = { {  1.0f * (f32)width * 0.5f, -1.0f * (f32)height * 0.5f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 1.0f } };
+    // clang-format on
+
+
+    indices[0] = 0;
+    indices[1] = 1;
+    indices[2] = 2;
+
+    indices[3] = 0;
+    indices[4] = 2;
+    indices[5] = 3;
+}
+
+void create_quad(std::vector<vertex_position_texture>& vertices, std::vector<u32>& indices, u32 width, u32 height)
+{
+    vertices.resize(4);
+    indices.resize(6);
+
+    // clang-format off
+    vertices[0] = { { -1.0f * (f32)width * 0.5f, -1.0f * (f32)height * 0.5f, 0.0f }, { 0.0f, 1.0f } };
+	vertices[1] = { { -1.0f * (f32)width * 0.5f,  1.0f * (f32)height * 0.5f, 0.0f }, { 0.0f, 0.0f } };
+	vertices[2] = { {  1.0f * (f32)width * 0.5f,  1.0f * (f32)height * 0.5f, 0.0f }, { 1.0f, 0.0f } };
+	vertices[3] = { {  1.0f * (f32)width * 0.5f, -1.0f * (f32)height * 0.5f, 0.0f }, { 1.0f, 1.0f } };
     // clang-format on
 
 
@@ -225,6 +250,26 @@ model* create_box(f32 width, f32 height, f32 depth)
     create_box(verts, ints, width, height, depth);
     ret->init(verts, ints);
 
+    return ret;
+}
+
+model* create_plane(u32 width, u32 height)
+{
+    auto*                                       ret = new model{};
+    std::vector<vertex_position_normal_texture> verts{};
+    std::vector<u32>                            ints{};
+    create_plane(verts, ints, width, height);
+    ret->init(verts, ints);
+    return ret;
+}
+
+model* create_quad(u32 width, u32 height)
+{
+    auto*                                ret = new model{};
+    std::vector<vertex_position_texture> verts{};
+    std::vector<u32>                     ints{};
+    create_quad(verts, ints, width, height);
+    ret->init(verts, ints);
     return ret;
 }
 
