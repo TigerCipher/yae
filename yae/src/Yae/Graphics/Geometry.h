@@ -31,11 +31,11 @@ namespace yae::gfx::geometry
 
 void create_fullscreen_quad(std::vector<vertex_position_normal_texture>& vertices, std::vector<u32>& indices);
 
-void create_sphere(std::vector<vertex_position_normal_texture>& vertices, std::vector<u32>& indices, f32 radius, u32 slice_count, u32 stack_count);
+void create_sphere(std::vector<vertex_position_normal_texture>& vertices, std::vector<u32>& indices, f32 radius, u32 slice_count = 36, u32 stack_count = 36);
 
 void create_box(std::vector<vertex_position_normal_texture>& vertices, std::vector<u32>& indices, f32 width, f32 height, f32 depth);
 
-model* create_sphere(f32 radius, u32 slice_count, u32 stack_count);
+model* create_sphere(f32 radius, u32 slice_count = 36, u32 stack_count = 36);
 model* create_box(f32 width, f32 height, f32 depth);
 
 }

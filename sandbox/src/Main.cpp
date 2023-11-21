@@ -119,7 +119,7 @@ public:
 
         m_cube.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{gfx::geometry::create_box(1.f, 1.f, 1.f)});
         m_cube2.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{gfx::geometry::create_box(1.f, 1.f, 1.f)});
-        m_ball1.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{gfx::geometry::create_sphere(1.5f, 32, 15)});
+        m_ball1.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{gfx::geometry::create_sphere(1.5f, 36, 36)});
         m_ball1.add(m_cube2);
         m_cube2.set_position(3.f, 1.f, 0.f);
         m_cube2.rotate(45.f, axis::x);
