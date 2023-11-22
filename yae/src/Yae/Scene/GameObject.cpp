@@ -96,11 +96,11 @@ void game_object::remove(game_object* child)
 //    }
 //}
 
-bool game_object::render(gfx::shader* shader)
+bool game_object::render()
 {
     for (const auto comp : m_components)
     {
-        if (!comp->render(shader))
+        if (!comp->render())
         {
             return false;
         }
@@ -108,7 +108,7 @@ bool game_object::render(gfx::shader* shader)
 
     for (const auto child : m_children)
     {
-        if (!child->render(shader))
+        if (!child->render())
         {
             return false;
         }
@@ -116,7 +116,7 @@ bool game_object::render(gfx::shader* shader)
 
     for (const auto child : m_children_unmanaged)
     {
-        if (!child->render(shader))
+        if (!child->render())
         {
             return false;
         }

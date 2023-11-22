@@ -19,4 +19,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="assets\TextureVertexShader.hlsl" />
+    <FxCompile Include="assets\TexturePixelShader.hlsl" />
+    <FxCompile Include="assets\LightsVertexShader.hlsl" />
+    <FxCompile Include="assets\LightsPixelShader.hlsl" />
+  </ItemGroup>
 </Project>

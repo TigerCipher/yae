@@ -23,14 +23,14 @@
 
 #include "GameComponent.h"
 
-
+#include "Yae/Graphics/Renderer.h"
 #include "Yae/Graphics/Geometry.h"
 
 using namespace DirectX;
 
 namespace yae
 {
-model_component::model_component(const std::string_view filename)
+model_component::model_component(const std::string_view filename, const char* tex_file)
 {
     m_model = new gfx::model{};
     if (!m_model->init(filename))
@@ -38,6 +38,8 @@ model_component::model_component(const std::string_view filename)
         LOG_ERROR("Failed to load model file {} from component", filename);
         // TODO: Throw exception?
     }
+
+    m_texture.init(tex_file);
 }
 
 model_component::~model_component()
@@ -48,23 +50,9 @@ model_component::~model_component()
     }
 }
 
-bool model_component::render(gfx::shader* shader)
+bool model_component::render()
 {
-    return m_model->render(shader, m_owner->world_transformation());
-}
-
-
-texture_component::texture_component(const char* filename)
-{
-    if (!m_texture.init(filename))
-    {
-        LOG_ERROR("Failed to load texture file {} from component", filename);
-    }
-}
-
-bool texture_component::render(gfx::shader* shader)
-{
-    shader->set_texture(m_texture.texture_view());
+    gfx::render3d(m_model, &m_texture, m_owner->world_transformation());
     return true;
 }
 
@@ -86,17 +74,9 @@ bitmap_component::~bitmap_component()
     }
 }
 
-bool bitmap_component::render(gfx::shader* shader)
+bool bitmap_component::render()
 {
-    if(!m_model)
-    {
-        return false;
-    }
-    shader->set_renderer(gfx::render_2d);
-    shader->set_texture(m_texture.texture_view());
-    const bool res = m_model->render(shader, m_owner->world_transformation());
-    shader->set_renderer(gfx::render_3d);
-    return res;
+    return true;
 }
 
 } // namespace yae

@@ -55,7 +55,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>src;$(SolutionDir)vendor</AdditionalIncludeDirectories>
@@ -71,7 +71,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>src;$(SolutionDir)vendor</AdditionalIncludeDirectories>
@@ -92,6 +92,7 @@
     <ClInclude Include="src\Yae\Core\Settings.h" />
     <ClInclude Include="src\Yae\Core\System.h" />
     <ClInclude Include="src\Yae\Core\Timer.h" />
+    <ClInclude Include="src\Yae\Core\Win32Header.h" />
     <ClInclude Include="src\Yae\Entrypoint.h" />
     <ClInclude Include="src\Yae\Globals.h" />
     <ClInclude Include="src\Yae\Graphics\Camera.h" />
@@ -100,9 +101,9 @@
     <ClInclude Include="src\Yae\Graphics\Geometry.h" />
     <ClInclude Include="src\Yae\Graphics\Light.h" />
     <ClInclude Include="src\Yae\Graphics\Model.h" />
-    <ClInclude Include="src\Yae\Graphics\Shaders\ConstantBuffer.h" />
-    <ClInclude Include="src\Yae\Graphics\Shaders\LightShader.h" />
+    <ClInclude Include="src\Yae\Graphics\Renderer.h" />
     <ClInclude Include="src\Yae\Graphics\Shaders\Shader.h" />
+    <ClInclude Include="src\Yae\Graphics\Shaders\ShaderLibrary.h" />
     <ClInclude Include="src\Yae\Graphics\Texture.h" />
     <ClInclude Include="src\Yae\Graphics\Transform.h" />
     <ClInclude Include="src\Yae\Graphics\Vertex.h" />
@@ -115,6 +116,7 @@
     <ClInclude Include="src\Yae\Util\MathUtil.h" />
     <ClInclude Include="src\Yae\Util\PathUtil.h" />
     <ClInclude Include="src\Yae\Util\Popup.h" />
+    <ClInclude Include="src\Yae\Util\StringUtil.h" />
     <ClInclude Include="src\Yae\Yae.h" />
   </ItemGroup>
   <ItemGroup>
@@ -128,8 +130,9 @@
     <ClCompile Include="src\Yae\Graphics\D3D11Core.cpp" />
     <ClCompile Include="src\Yae\Graphics\Geometry.cpp" />
     <ClCompile Include="src\Yae\Graphics\Model.cpp" />
-    <ClCompile Include="src\Yae\Graphics\Shaders\LightShader.cpp" />
+    <ClCompile Include="src\Yae\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Yae\Graphics\Shaders\Shader.cpp" />
+    <ClCompile Include="src\Yae\Graphics\Shaders\ShaderLibrary.cpp" />
     <ClCompile Include="src\Yae\Graphics\Texture.cpp" />
     <ClCompile Include="src\Yae\Graphics\Transform.cpp" />
     <ClCompile Include="src\Yae\Scene\CameraComponent.cpp" />
@@ -139,6 +142,7 @@
     <ClCompile Include="src\Yae\Util\Logger.cpp" />
     <ClCompile Include="src\Yae\Util\PathUtil.cpp" />
     <ClCompile Include="src\Yae\Util\Popup.cpp" />
+    <ClCompile Include="src\Yae\Util\StringUtil.cpp" />
     <ClCompile Include="src\Yae\Yae.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

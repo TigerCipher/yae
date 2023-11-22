@@ -24,7 +24,6 @@
 #pragma once
 
 #include "Yae/Common.h"
-#include "Yae/Graphics/Shaders/Shader.h"
 #include "GameObject.h"
 #include "Yae/Graphics/Model.h"
 #include "Yae/Graphics/Texture.h"
@@ -42,7 +41,7 @@ public:
     constexpr game_object* owner() const { return m_owner; }
 
     virtual void update(f32 delta) {}
-    virtual bool render(gfx::shader* shader) { return true; }
+    virtual bool render() { return true; }
 
     virtual void add_to_engine(){}
 
@@ -53,33 +52,26 @@ protected:
 class model_component : public game_component
 {
 public:
-    model_component(const std::string_view filename);
-    model_component(gfx::model* model) : m_model{model} {} 
+    model_component(const std::string_view filename, const char* texture_filename);
+    model_component(gfx::model* model, const char* texture) : m_model{model}
+    {
+        m_texture.init(texture);
+    } 
     ~model_component() override;
-    bool render(gfx::shader* shader) override;
+    bool render() override;
 
 private:
     gfx::model* m_model{};
-};
-
-class texture_component : public game_component
-{
-public:
-    texture_component(const char* filename);
-    ~texture_component() override = default;
-
-    bool render(gfx::shader* shader) override;
-
-private:
     gfx::texture m_texture{};
 };
+
 
 class bitmap_component : public game_component
 {
 public:
     bitmap_component(u32 width, u32 height, const char* filename);
     ~bitmap_component() override;
-    bool render(gfx::shader* shader) override;
+    bool render() override;
 
 private:
     gfx::model* m_model{};

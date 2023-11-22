@@ -23,11 +23,12 @@
 #include "D3D11Core.h"
 
 
+#include "Shaders/ShaderLibrary.h"
 
 // Linking directx libraries
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3dcompiler.lib")
+//#pragma comment(lib, "d3d11.lib")
+//#pragma comment(lib, "dxgi.lib")
+//#pragma comment(lib, "d3dcompiler.lib")
 
 using namespace DirectX;
 
@@ -259,6 +260,11 @@ bool init(i32 width, i32 height, HWND hwnd, bool fullscreen, f32 screen_depth, f
 
     DX_CALL(device->CreateDepthStencilState(&disabled_desc, &disabled_depth_stencil_state));
 
+    if (!shaders::init())
+    {
+        LOG_ERROR("Failed to initialize engine shaders");
+    }
+
     initialized = true;
     return true;
 }
@@ -267,6 +273,9 @@ void shutdown()
 {
     if (!initialized)
         return;
+
+    shaders::shutdown();
+
     if (swapchain)
     {
         swapchain->SetFullscreenState(false, nullptr);

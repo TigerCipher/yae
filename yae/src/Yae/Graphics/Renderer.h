@@ -15,40 +15,20 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Timer.cpp
-//  Date File Created: 11/16/2023
+//  File Name: Renderer.h
+//  Date File Created: 11/22/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
-#include "Timer.h"
 
-#include "Win32Header.h"
+#pragma once
 
-namespace yae
+#include "Model.h"
+#include "Texture.h"
+
+namespace yae::gfx
 {
-bool timer::start()
-{
-    i64 freq;
-    QueryPerformanceFrequency((LARGE_INTEGER*) &freq);
-    if (!freq)
-    {
-        return false;
-    }
 
-    m_frequency = (f32) freq;
-    QueryPerformanceCounter((LARGE_INTEGER*) &m_start);
+void render3d(const model* model, const texture* tex, const math::matrix& world);
 
-    return true;
 }
-
-void timer::frame()
-{
-    i64 cur;
-    QueryPerformanceCounter((LARGE_INTEGER*) &cur);
-
-    i64 elapsed = cur - m_start;
-
-    m_frame_time = (f32)elapsed / m_frequency;
-    m_start = cur;
-}
-} // namespace yae

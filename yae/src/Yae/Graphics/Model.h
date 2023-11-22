@@ -89,7 +89,8 @@ public:
     bool init(const std::string_view filename);
 
     void shutdown();
-    bool render(shader* shader, const math::matrix& world) const;
+
+    void bind() const;
 
     constexpr u32 index_count() const { return m_index_count; }
 

@@ -59,10 +59,6 @@ bool on_key_typed(u16 code, void* sender, void* listener, void* userdata)
 class sandbox : public game
 {
 private:
-    gfx::shader*       m_texture_shader{};
-    gfx::light_shader* m_lights_shader{};
-    gfx::base_light    m_light{};
-    gfx::point_light   m_point_lights[4]{};
 
     game_object m_root{};
     game_object m_cube{};
@@ -80,50 +76,14 @@ public:
     {
         events::register_listener(events::app_quit, nullptr, on_app_quit);
         events::register_listener(events::key_pressed, nullptr, on_key_typed);
-        {
-            gfx::shader_layout layout{};
-            layout.add<math::vec3>("POSITION");
-            layout.add<math::vec3>("NORMAL");
-            layout.add<math::vec2>("TEXCOORD");
-            m_lights_shader = gfx::create_shader<gfx::light_shader>("Light", layout);
-            if (!m_lights_shader)
-            {
-                popup::show("Failed to initialize the lights shader", "Error", popup::style::error);
-                return false;
-            }
-        }
-
-        {
-            gfx::shader_layout layout{};
-            layout.add<math::vec3>("POSITION");
-            layout.add<math::vec2>("TEXCOORD");
-            m_texture_shader = gfx::create_shader<gfx::shader>("Texture", layout);
-            if (!m_texture_shader)
-            {
-                popup::show("Failed to initialize the texture shader", "Error", popup::style::error);
-                return false;
-            }
-        }
 
         m_cam.add(new camera_component{})->add(new move_component{})->add(new freelook_component{});
         m_cam.set_position(0.f, 1.f, -12.f);
         m_root.add(m_cam);
-        //m_camera->set_position(0.f, 1.f, -12.f);
-        //m_camera->set_sensitivity(15.f);
-        //m_camera->set_rotation(30.f, 0.f, 0.f);
 
-        //m_camera->add(new move_component{})->add(new freelook_component{});
-
-
-        //m_hud.add(new bitmap_component{ "./assets/textures/stone01.tga", 50, 50 });
-        //m_hud.set_location(0, 0);
-
-        //m_hudobj.set_position(3.f, 0.f, 0.f);
-        //m_hudobj.rotate(45.f, axis::z);
-
-        m_cube.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{gfx::geometry::create_box(1.f, 1.f, 1.f)});
-        m_cube2.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{gfx::geometry::create_box(1.f, 1.f, 1.f)});
-        m_ball1.add(new texture_component{"./assets/textures/bricks.tga"})->add(new model_component{gfx::geometry::create_sphere(1.5f, 36, 36)});
+        m_cube.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/bricks.tga" });
+        m_cube2.add(new model_component{gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/default.tga"});
+        m_ball1.add(new model_component{gfx::geometry::create_sphere(1.5f, 36, 36), "./assets/textures/bricks.tga"});
         m_ball1.add(m_cube2);
         m_cube2.set_position(3.f, 1.f, 0.f);
         m_cube2.rotate(45.f, axis::x);
@@ -131,7 +91,7 @@ public:
         m_ball1.set_position(-3.f, -5.f, -3.f);
 
         //m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{gfx::geometry::create_plane(32, 32)});
-        m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{"./assets/models/plane.txt"});
+        m_plane.add(new model_component{"./assets/models/plane.txt", "./assets/textures/stone01.tga"});
         //m_plane.rotate(90.f, axis::x);
         //m_plane.set_position(0.f, -1.f, 0.f);
 
@@ -144,52 +104,6 @@ public:
         m_root.add(m_cube);
         m_root.add(m_ball1);
         m_root.add(m_plane);
-
-        m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
-        m_light.diffuse_color  = { 1.f, 1.f, 1.f, 1.f };
-        m_light.direction      = { 1.f, 0.f, 1.f };
-        m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
-        m_light.specular_power = 32.f;
-
-
-        gfx::point_light light1{};
-        light1.position         = { -3.f, 1.f, 3.f };
-        light1.diffuse_color    = { 1.f, 0.f, 0.f, 1.f };
-        light1.constant_factor  = 1.f;
-        light1.linear_factor    = 0.09f;
-        light1.quadradic_factor = 0.032f;
-
-        gfx::point_light light2{};
-        light2.position         = { 3.f, 1.f, 3.f };
-        light2.diffuse_color    = { 0.f, 1.f, 0.f, 1.f };
-        light2.constant_factor  = 1.f;
-        light2.linear_factor    = 0.09f;
-        light2.quadradic_factor = 0.032f;
-
-        gfx::point_light light3{};
-        light3.position         = { -3.f, 1.f, -3.f };
-        light3.diffuse_color    = { 0.f, 0.f, 1.f, 1.f };
-        light3.constant_factor  = 1.f;
-        light3.linear_factor    = 0.09f;
-        light3.quadradic_factor = 0.032f;
-
-        gfx::point_light light4{};
-        light4.position         = { 3.f, 1.f, -3.f };
-        light4.diffuse_color    = { 1.f, 1.f, 0.f, 1.f }; // set alpha = 0 to make this light not get applied
-        light4.constant_factor  = 1.f;
-        light4.linear_factor    = 0.09f;
-        light4.quadradic_factor = 0.032f;
-
-        m_point_lights[0] = light1;
-        m_point_lights[1] = light2;
-        m_point_lights[2] = light3;
-        m_point_lights[3] = light4;
-
-        //m_lights_shader->set_camera(m_camera); // by default, shader will now set the camera initially when init is called
-
-        m_lights_shader->set_point_lights(m_point_lights);
-        m_lights_shader->set_light(&m_light);
-
 
         return true;
     }
@@ -253,7 +167,7 @@ public:
 
     bool render() override
     {
-        if(!m_root.render(m_lights_shader))
+        if(!m_root.render())
         {
             return false;
         }
@@ -262,15 +176,13 @@ public:
 
     bool render2d() override
     {
-        m_quad.render(m_texture_shader);
+        m_quad.render();
 
         return true;
     }
 
     void shutdown() override
     {
-        gfx::core::shutdown(m_lights_shader);
-        gfx::core::shutdown(m_texture_shader);
     }
 };
 

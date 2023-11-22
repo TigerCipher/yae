@@ -25,7 +25,6 @@
 
 #include "Yae/Common.h"
 #include "Yae/Graphics/Transform.h"
-#include "Yae/Graphics/Shaders/Shader.h"
 
 namespace yae
 {
@@ -45,7 +44,7 @@ public:
     void         remove(game_object* child);
     //void         remove_unmanged(game_object* child);
 
-    bool render(gfx::shader* shader);
+    bool render();
     void update(f32 delta);
 
     void set_position(const math::vec3& pos) { m_transform.set_position(pos); }
