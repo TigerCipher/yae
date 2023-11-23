@@ -68,6 +68,7 @@ private:
     game_object m_quad{};
     game_object m_plane{};
     game_object m_cam{};
+    game_object m_light_sphere{};
 
 
 public:
@@ -77,27 +78,38 @@ public:
         events::register_listener(events::app_quit, nullptr, on_app_quit);
         events::register_listener(events::key_pressed, nullptr, on_key_typed);
 
-        m_cam.add(new camera_component{})->add(new move_component{})->add(new freelook_component{});
-        m_cam.set_position(0.f, 1.f, -12.f);
-        m_root.add(m_cam);
+        m_camera->set_position(0.f, 1.f, -12.f);
+        m_camera->set_sensitivity(25.f);
+        m_camera->set_speed(25.f);
+        //m_cam.add(new camera_component{})->add(new move_component{})->add(new freelook_component{});
+        //m_cam.set_position(0.f, 1.f, -12.f);
+        //m_root.add(m_cam);
 
         m_cube.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/bricks.tga" });
+        m_cube.set_position(3.f, 9.f, 3.f);
+
         m_cube2.add(new model_component{gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/default.tga"});
         m_ball1.add(new model_component{gfx::geometry::create_sphere(1.5f, 36, 36), "./assets/textures/bricks.tga"});
         m_ball1.add(m_cube2);
         m_cube2.set_position(3.f, 1.f, 0.f);
         m_cube2.rotate(45.f, axis::x);
 
-        m_ball1.set_position(-3.f, -5.f, -3.f);
+        m_ball1.set_position(-3.f, 5.f, -3.f);
 
         //m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{gfx::geometry::create_plane(32, 32)});
         m_plane.add(new model_component{"./assets/models/plane.txt", "./assets/textures/stone01.tga"});
         //m_plane.rotate(90.f, axis::x);
-        //m_plane.set_position(0.f, -1.f, 0.f);
+        m_plane.set_position(0.f, -1.f, 0.f);
+        m_plane.set_scale(10.f, 1.f, 10.f);
+
+        m_light_sphere.add(new model_component{ gfx::geometry::create_sphere(0.5f), "./assets/textures/default.tga" });
+        m_light_sphere.set_position(3.f, 10.f, 3.f);
+
+        m_root.add(m_light_sphere);
 
 
-        m_quad.add(new bitmap_component{512, 512, "./assets/textures/default.tga"});
-        m_quad.set_position(0, 0, 0);
+        m_quad.add(new bitmap_component{150, 150, "./assets/textures/default.tga"});
+        m_quad.set_position(-1920.f / 2.f, -1080.f / 2.f, 0);
 
 
 
@@ -108,48 +120,46 @@ public:
         return true;
     }
 
-    //void process_input(f32 delta)
-    //{
-    //    if (input::key_down('W'))
-    //    {
-    //        m_camera->move(0, 0, 1, delta);
-    //    }
-    //    if (input::key_down('A'))
-    //    {
-    //        m_camera->move(-1, 0, 0, delta);
-    //    }
-    //    if (input::key_down('S'))
-    //    {
-    //        m_camera->move(0, 0, -1, delta);
-    //    }
-    //    if (input::key_down('D'))
-    //    {
-    //        m_camera->move(1, 0, 0, delta);
-    //    }
-
-    //    if (input::button_pressed(input::button::left))
-    //    {
-    //        input::lock_cursor(true);
-    //    } else if (input::button_pressed(input::button::right))
-    //    {
-    //        input::lock_cursor(false);
-    //    }
-
-    //    if (input::is_cursor_locked())
-    //    {
-    //        i32 x, y;
-    //        input::get_mouse_position(&x, &y);
-    //        math::vec2 pos       = { (f32) x, (f32) y };
-    //        math::vec2 center    = { (f32) system::width() / 2, (f32) system::height() / 2 };
-    //        math::vec2 delta_pos = { pos.x - center.x, pos.y - center.y };
-    //        m_camera->rotate(delta_pos.x, delta_pos.y, delta);
-    //        input::center_cursor();
-    //    }
-    //}
+    void process_input(f32 delta)
+    {
+        if (input::key_down('W'))
+        {
+            m_camera->move(0, 0, 1, delta);
+        }
+        if (input::key_down('A'))
+        {
+            m_camera->move(-1, 0, 0, delta);
+        }
+        if (input::key_down('S'))
+        {
+            m_camera->move(0, 0, -1, delta);
+        }
+        if (input::key_down('D'))
+        {
+            m_camera->move(1, 0, 0, delta);
+        }
+        if (input::button_pressed(input::button::left))
+        {
+            input::lock_cursor(true);
+        } else if (input::button_pressed(input::button::right))
+        {
+            input::lock_cursor(false);
+        }
+        if (input::is_cursor_locked())
+        {
+            i32 x, y;
+            input::get_mouse_position(&x, &y);
+            math::vec2 pos       = { (f32) x, (f32) y };
+            math::vec2 center    = { (f32) system::width() / 2, (f32) system::height() / 2 };
+            math::vec2 delta_pos = { pos.x - center.x, pos.y - center.y };
+            m_camera->rotate(delta_pos.x, delta_pos.y, delta);
+            input::center_cursor();
+        }
+    }
 
     void update(f32 delta) override
     {
-        //process_input(delta);
+        process_input(delta);
         if (input::key_released('B'))
         {
             LOG_DEBUG("Frame time: {}", delta);

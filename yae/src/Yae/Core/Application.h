@@ -57,7 +57,8 @@ public:
 private:
     bool render() const;
 
-    game* m_game{};
-    timer m_timer{};
+    game*        m_game{};
+    timer        m_timer{};
+    gfx::camera* m_camera{};
 };
 } // namespace yae

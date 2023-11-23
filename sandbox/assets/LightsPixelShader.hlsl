@@ -11,6 +11,7 @@ cbuffer LightBuffer
     float4 specularColor;
 };
 
+/*
 struct PointLight
 {
     float4 diffuseColor;
@@ -19,10 +20,20 @@ struct PointLight
     float quadraticFactor;
     float padding;
 };
+*/
+
+struct PointLight
+{
+    float4 diffuseColor;
+    float radius;
+    float intensity;
+    float falloff;
+};
 
 cbuffer PointLightBuffer
 {
     PointLight pointLights;
+    float padding;
 };
 
 struct PixelInputType
@@ -34,15 +45,33 @@ struct PixelInputType
     float3 lightPos : TEXCOORD2;
 };
 
+float sqr(float x)
+{
+    return x * x;
+}
+
+float CalculateAttenuation(float dist, float radius, float intensity, float falloff)
+{
+    float s = dist / radius;
+    if(s >= 1.0f)
+    {
+        return 0.0f;
+    }
+
+    float s2 = sqr(s);
+    return intensity * sqr(1 - s2) / (1 + falloff * s);
+}
+
 float4 CalculatePointLight(PointLight light, float3 lightPos, float3 normal, float3 viewDir, float4 textureColor)
 {
-    float3 lightDir = lightPos;
+    float3 lightDir = normalize(lightPos);
     float diff = max(dot(normal, lightDir), 0.0f);
     float3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0f), specularPower);
     
-    float dist = length(lightDir);
-    float atten = 1.0f / (light.constantFactor + light.linearFactor * dist + light.quadraticFactor * dist * dist);
+    float dist = length(lightPos);
+    //float atten = 1.0f / (light.constantFactor + light.linearFactor * dist + light.quadraticFactor * dist * dist);
+    float atten = CalculateAttenuation(dist, light.radius, light.intensity, light.falloff);
 
     float4 ambient = ambientColor * textureColor * atten;
     float4 dif = light.diffuseColor * diff * textureColor * atten;

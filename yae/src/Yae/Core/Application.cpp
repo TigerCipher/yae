@@ -64,11 +64,11 @@ bool application::init(i32 width, i32 height, HWND hwnd)
         return false;
     }
 
-    //gfx::create_default_view_matrix();
-    //m_camera = DBG_NEW gfx::camera{};
+    gfx::create_default_view_matrix();
+    m_camera = DBG_NEW gfx::camera{};
 
     app::set(m_game);
-    //m_game->set_camera(m_camera);
+    m_game->set_camera(m_camera);
 
     LOG_INFO("Initializing game");
     if (!m_game->init())
@@ -91,7 +91,7 @@ void application::shutdown()
     SAFE_DELETE(m_game);
     LOG_INFO("Game shutdown");
 
-    //SAFE_DELETE(m_camera);
+    SAFE_DELETE(m_camera);
 
     gfx::core::shutdown();
     LOG_INFO("Application shutdown");

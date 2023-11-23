@@ -35,13 +35,21 @@ namespace
 //point_light light{};
 bool light_created{};
 
+//struct pl
+//{
+//    math::vec4 diffuse_color;
+//    f32        constant_factor;
+//    f32        linear_factor;
+//    f32        quadratic_factor;
+//    f32        padding{};
+//};
+
 struct pl
 {
     math::vec4 diffuse_color;
-    f32        constant_factor;
-    f32        linear_factor;
-    f32        quadratic_factor;
-    f32        padding{};
+    f32        radius;
+    f32        intensity;
+    f32        falloff;
 };
 
 pl         to_shader{};
@@ -52,11 +60,14 @@ void render3d(const model* model, const texture* tex, const math::matrix& world)
 {
     if (!light_created)
     {
-        light_pos                  = { 3.f, 1.f, 3.f };
-        to_shader.diffuse_color    = { 0.f, 1.f, 0.f, 1.f };
-        to_shader.constant_factor  = 1.f;
-        to_shader.linear_factor    = 0.09f;
-        to_shader.quadratic_factor = 0.032f;
+        light_pos               = { 3.f, 1.f, 3.f };
+        to_shader.diffuse_color = { 0.f, 1.f, 1.f, 1.f };
+        //to_shader.constant_factor  = 1.f;
+        //to_shader.linear_factor    = 0.09f;
+        //to_shader.quadratic_factor = 0.032f;
+        to_shader.radius    = 20.f;
+        to_shader.intensity = 4.5f;
+        to_shader.falloff   = 15.f;
 
         light_created = true;
     }
@@ -71,7 +82,7 @@ void render3d(const model* model, const texture* tex, const math::matrix& world)
     vs->set_matrix("worldMatrix", w);
     vs->set_matrix("projectionMatrix", p);
     vs->set_matrix("viewMatrix", v);
-    vs->set_float3("cameraPosition", app::instance()->camera()->owner()->position());
+    vs->set_float3("cameraPosition", app::instance()->camera()->position());
     vs->set_float3("lightPosition", light_pos);
     vs->copy_all_buffers();
     vs->bind();
@@ -93,6 +104,32 @@ void render3d(const model* model, const texture* tex, const math::matrix& world)
 
     model->bind();
 
+    core::get_device_context()->DrawIndexed(model->index_count(), 0, 0);
+}
+
+void render2d(const model* model, const texture* tex, const math::matrix& world)
+{
+    vertex_shader* vs = shaders::texture_shader()->vs;
+    pixel_shader*  ps = shaders::texture_shader()->ps;
+
+    const auto w = XMMatrixTranspose(world);
+    const auto p = XMMatrixTranspose(core::get_orthographic_matrix());
+    const auto v = XMMatrixTranspose(default_view_matrix());
+
+    vs->set_matrix("worldMatrix", w);
+    vs->set_matrix("projectionMatrix", p);
+    vs->set_matrix("viewMatrix", v);
+
+    vs->copy_all_buffers();
+    vs->bind();
+
+    ps->set_sampler_state("SamplerType", tex->sampler_state());
+    ps->set_shader_resource_view("shaderTexture", tex->texture_view());
+
+    ps->copy_all_buffers();
+    ps->bind();
+
+    model->bind();
     core::get_device_context()->DrawIndexed(model->index_count(), 0, 0);
 }
 } // namespace yae::gfx

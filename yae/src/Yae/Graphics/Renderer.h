@@ -30,5 +30,6 @@ namespace yae::gfx
 {
 
 void render3d(const model* model, const texture* tex, const math::matrix& world);
+void render2d(const model* model, const texture* tex, const math::matrix& world);
 
 }

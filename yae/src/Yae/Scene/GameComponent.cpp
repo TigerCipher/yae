@@ -76,6 +76,7 @@ bitmap_component::~bitmap_component()
 
 bool bitmap_component::render()
 {
+    gfx::render2d(m_model, &m_texture, m_owner->world_transformation());
     return true;
 }
 

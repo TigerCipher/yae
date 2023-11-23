@@ -38,6 +38,7 @@ public:
     void add_to_engine() override;
 
     constexpr const math::matrix& view() const { return m_view; }
+    static math::matrix     default_view;
 
 private:
     math::matrix m_view{};

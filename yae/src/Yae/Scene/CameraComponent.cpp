@@ -26,6 +26,8 @@
 
 namespace yae
 {
+math::matrix camera_component::default_view;
+
 camera_component::camera_component()
 {
     m_view = XMMatrixIdentity();
@@ -33,22 +35,22 @@ camera_component::camera_component()
 
 void camera_component::update(f32 delta)
 {
-    //if (!m_recalculate)
-    //{
-    //    return;
-    //}
-
-    //m_recalculate = false;
-
     constexpr math::vector front{ 0.f, 0.f, 1.f, 0.f };
     math::vector           look = XMVector3Transform(front, m_owner->transformation().rotation_matrix());
     const math::vector     up   = XMVector3Transform(m_owner->transformation().up(), m_owner->transformation().rotation_matrix());
     look                        = XMVectorAdd(m_owner->transformation().position_vector(), look);
-    m_view                      = XMMatrixLookAtLH(m_owner->transformation().position_vector(), look, {0.f, 1.f, 0.f, 0.f});
+    m_view                      = XMMatrixLookAtLH(m_owner->transformation().position_vector(), look, { 0.f, 1.f, 0.f, 0.f });
+
+    if (m_recalculate)
+    {
+        default_view = m_view;
+    }
+
+    m_recalculate = false;
 }
 
 void camera_component::add_to_engine()
 {
-    app::instance()->set_camera(this);
+    //app::instance()->set_camera(this);
 }
 } // namespace yae
