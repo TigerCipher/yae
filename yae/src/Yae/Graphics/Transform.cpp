@@ -45,6 +45,7 @@ void extract_angles(f32& pitch, f32& yaw, f32& roll, const math::matrix& rotatio
 transform::transform()
 {
     m_transformation = XMMatrixIdentity();
+    m_parent_transformation = XMMatrixIdentity();
 }
 
 void transform::set_position(const math::vec3& pos)
@@ -136,11 +137,10 @@ void transform::set_rotation(f32 x, f32 y, f32 z)
 
 void transform::calculate_transformation(const transform* parent)
 {
-    if (!m_recalculate)
+    if (!m_recalculate && parent && math::are_matrices_equal(parent->m_transformation, m_parent_transformation))
     {
         return;
     }
-
     m_recalculate = false;
 
     const math::matrix m_scale_mat   = XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
@@ -166,6 +166,7 @@ void transform::calculate_transformation(const transform* parent)
     {
         m_transformation = XMMatrixMultiply(XMMatrixMultiply(m_scale_mat, m_rot_mat), m_translation);
         m_transformation = XMMatrixMultiply(m_transformation, parent->transformation());
+        m_parent_transformation = parent->m_transformation;
     }
 
     //constexpr math::vector front{ 0.f, 0.f, 1.f, 0.f };

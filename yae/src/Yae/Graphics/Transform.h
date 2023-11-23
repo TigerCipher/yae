@@ -72,7 +72,7 @@ private:
     math::vec3   m_pos{};
     math::vec3   m_scale{ 1.f, 1.f, 1.f };
     //math::vec3   m_rot{};
-    math::vector m_rot_quat{0.f, 0.f, 0.f, 1.f};
+    math::vector m_rot_quat{ 0.f, 0.f, 0.f, 1.f };
     math::matrix m_transformation{};
     //math::matrix m_translation{};
     math::matrix m_rot_mat{};
@@ -80,11 +80,12 @@ private:
     math::vector m_forward{};
     math::vector m_back{};
     math::vector m_left{};
-    math::vector m_right{1.f, 0.f, 0.f, 0.f};
+    math::vector m_right{ 1.f, 0.f, 0.f, 0.f };
     math::vector m_up{};
     math::vector m_down{};
     math::vector m_look{};
 
-    bool m_recalculate{ true };
+    bool         m_recalculate{ true };
+    math::matrix m_parent_transformation{};
 };
 } // namespace yae

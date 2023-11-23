@@ -33,13 +33,14 @@ math::matrix default_view{};
 void camera::rotate(f32 dx, f32 dy, f32 delta)
 {
     m_yaw         = math::wrap_angle_rad(m_yaw + dx * m_sensitivity * delta * math::deg2rad_multiplier);
-    m_pitch       = std::clamp(m_pitch + dy * m_sensitivity * delta * math::deg2rad_multiplier, 0.995f * -math::pi / 2.f, 0.995f * math::pi / 2.f);
+    m_pitch       = std::clamp(m_pitch + dy * m_sensitivity * delta * math::deg2rad_multiplier, 0.995f * -math::pi / 2.f,
+                               0.995f * math::pi / 2.f);
     m_recalculate = true;
 }
 
-void camera::move(f32 x, f32 y, f32 z, f32 delta)
+void camera::move(f32 x, f32 y, f32 z)
 {
-    math::vec3 translation = { x * delta, y * delta, z * delta };
+    math::vec3 translation = { x, y, z };
     XMStoreFloat3(&translation, XMVector3Transform(XMLoadFloat3(&translation), XMMatrixRotationRollPitchYaw(m_pitch, m_yaw, 0.f) *
                                                                                    XMMatrixScaling(m_speed, m_speed, m_speed)));
 

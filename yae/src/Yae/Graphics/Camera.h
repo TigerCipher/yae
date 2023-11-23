@@ -35,7 +35,7 @@ public:
     ~camera() = default;
 
     void rotate(f32 dx, f32 dy, f32 delta);
-    void move(f32 x, f32 y, f32 z, f32 delta);
+    void move(f32 x, f32 y, f32 z);
 
     math::matrix view();
 

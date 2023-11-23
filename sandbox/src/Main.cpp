@@ -111,7 +111,7 @@ public:
         m_light_sphere.set_position(3.f, 10.f, 3.f);
         m_lights.add(m_light_sphere);
 
-        game_object* light2 = new game_object{};
+        auto* light2 = new game_object{};
         light2->add(new light_component{
             {1.f, 0.f, 0.f}
         });
@@ -121,20 +121,20 @@ public:
         std::random_device                  rd{};
         std::mt19937                        gen(rd());
         std::uniform_real_distribution<f32> dist(0.2f, 1.0f);
-        u32 count = 0;
+        u32                                 count = 0;
         for (i32 x = -50; x < 50; x += 10)
         {
             for (i32 z = -50; z < 50; z += 10)
             {
                 LOG_DEBUG("Adding light {}", ++count);
-                game_object* new_light = new game_object{};
-                f32          r         = dist(gen);
-                f32          g         = dist(gen);
-                f32          b         = dist(gen);
+                auto* new_light = new game_object{};
+                f32   r         = dist(gen);
+                f32   g         = dist(gen);
+                f32   b         = dist(gen);
                 new_light->add(new light_component{
                     {r, g, b}
                 });
-                new_light->set_position((f32)x, 1.f, (f32)z);
+                new_light->set_position((f32) x, 1.f, (f32) z);
                 m_lights.add(new_light);
             }
         }
@@ -157,19 +157,19 @@ public:
     {
         if (input::key_down('W'))
         {
-            m_camera->move(0, 0, 1, delta);
+            m_camera->move(0, 0, delta);
         }
         if (input::key_down('A'))
         {
-            m_camera->move(-1, 0, 0, delta);
+            m_camera->move(-delta, 0, 0);
         }
         if (input::key_down('S'))
         {
-            m_camera->move(0, 0, -1, delta);
+            m_camera->move(0, 0, -delta);
         }
         if (input::key_down('D'))
         {
-            m_camera->move(1, 0, 0, delta);
+            m_camera->move(delta, 0, 0);
         }
         if (input::button_pressed(input::button::left))
         {
@@ -199,7 +199,7 @@ public:
         }
         const f32 rotation = -15.f * delta;
 
-        m_cube2.rotate(rotation, axis::y); // TODO: Update on parent transformation update as well
+        //m_cube2.rotate(rotation, axis::y);
         m_ball1.transformation().rotate(rotation, axis::y, true);
 
         m_quad.rotate(rotation, axis::z);
