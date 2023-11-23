@@ -32,82 +32,12 @@ namespace yae::gfx
 
 namespace
 {
-//point_light light{};
-bool light_created{};
 
-//struct pl
-//{
-//    math::vec4 diffuse_color;
-//    f32        constant_factor;
-//    f32        linear_factor;
-//    f32        quadratic_factor;
-//    f32        padding{};
-//};
-
-struct pl
-{
-    math::vec4 diffuse_color;
-    f32        radius;
-    f32        intensity;
-    f32        falloff;
-};
-
-pl         to_shader{};
-math::vec3 light_pos{};
+std::vector<std::pair<game_object*, pointlight_component*>> pointlights{};
 
 ID3D11SamplerState* sampler_state{};
 } // anonymous namespace
 
-//void render3d(const model* model, const texture* tex, const math::matrix& world)
-//{
-//    if (!light_created)
-//    {
-//        light_pos               = { 3.f, 1.f, 3.f };
-//        to_shader.diffuse_color = { 0.f, 1.f, 1.f, 1.f };
-//        //to_shader.constant_factor  = 1.f;
-//        //to_shader.linear_factor    = 0.09f;
-//        //to_shader.quadratic_factor = 0.032f;
-//        to_shader.radius    = 20.f;
-//        to_shader.intensity = 4.5f;
-//        to_shader.falloff   = 15.f;
-//
-//        light_created = true;
-//    }
-//    vertex_shader* vs = shaders::light_shader()->vs;
-//    pixel_shader*  ps = shaders::light_shader()->ps;
-//
-//
-//    const auto w = XMMatrixTranspose(world);
-//    const auto p = XMMatrixTranspose(core::get_projection_matrix());
-//    const auto v = XMMatrixTranspose(app::instance()->camera()->view());
-//
-//    vs->set_matrix("worldMatrix", w);
-//    vs->set_matrix("projectionMatrix", p);
-//    vs->set_matrix("viewMatrix", v);
-//    vs->set_float3("cameraPosition", app::instance()->camera()->position());
-//    vs->set_float3("lightPosition", light_pos);
-//    vs->copy_all_buffers();
-//    vs->bind();
-//
-//
-//    ps->set_shader_resource_view("shaderTexture", tex->texture_view());
-//    ps->set_sampler_state("SampleType", tex->sampler_state());
-//
-//    ps->set_float4("ambientColor", { 0.15f, 0.15f, 0.15f, 1.0f });
-//    ps->set_float4("diffuseColor", { 1.f, 1.f, 1.f, 1.f });
-//    ps->set_float3("lightDirection", { 1.f, 0.f, 1.f });
-//    ps->set_float("specularPower", 32.f);
-//    ps->set_float4("specularColor", { 1.f, 1.f, 1.f, 1.f });
-//    ps->set_data("pointLights", &to_shader, sizeof(pl));
-//
-//
-//    ps->copy_all_buffers();
-//    ps->bind();
-//
-//    model->bind();
-//
-//    core::get_device_context()->DrawIndexed(model->index_count(), 0, 0);
-//}
 
 void init_renderer()
 {
@@ -203,14 +133,14 @@ void render_directional_light()
 
     ID3D11Buffer* nothing{};
     constexpr u32 stride = sizeof(vertex_position_normal_texture);
-    u32 offset{};
+    u32           offset{};
     core::get_device_context()->IASetVertexBuffers(0, 1, &nothing, &stride, &offset);
     core::get_device_context()->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
     core::get_device_context()->Draw(3, 0);
-
 }
 
-void render_lights(const model* model, const math::vec3& pos, const math::matrix& world, const math::vec3& light_color)
+void render_pointlight(const math::vec3& pos, const math::matrix& world, const math::vec3& light_color, f32 radius, f32 intensity,
+                       f32 falloff)
 {
     vertex_shader* vs = shaders::lighting()->vs;
     pixel_shader*  ps = shaders::lighting()->ps;
@@ -235,9 +165,9 @@ void render_lights(const model* model, const math::vec3& pos, const math::matrix
     ps->set_float3("cameraPos", app::instance()->camera()->position());
     ps->set_float3("lightColor", light_color);
     ps->set_float3("lightPos", pos);
-    ps->set_float("radius", 25.0f);
-    ps->set_float("intensity", 1.5f);
-    ps->set_float("falloff", 15.0f);
+    ps->set_float("radius", radius);
+    ps->set_float("intensity", intensity);
+    ps->set_float("falloff", falloff);
 
     ps->copy_all_buffers();
     ps->bind();
@@ -249,6 +179,23 @@ void render_lights(const model* model, const math::vec3& pos, const math::matrix
     core::get_device_context()->IASetVertexBuffers(0, 1, &nothing, &stride, &offset);
     core::get_device_context()->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
     core::get_device_context()->Draw(3, 0);
+}
+
+void add_pointlight(game_object* obj, pointlight_component* light)
+{
+    pointlights.push_back({ obj, light });
+}
+
+void render_all_pointlights()
+{
+    for (auto pl : pointlights)
+    {
+        auto* obj   = pl.first;
+        auto* light = pl.second;
+
+        render_pointlight(obj->position(), obj->world_transformation(), light->light_color(), light->radius(), light->intensity(),
+                          light->falloff());
+    }
 }
 
 } // namespace yae::gfx

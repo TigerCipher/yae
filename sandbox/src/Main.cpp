@@ -105,15 +105,17 @@ public:
         m_plane.set_position(0.f, -1.f, 0.f);
         m_plane.set_scale(10.f, 1.f, 10.f);
 
-        m_light_sphere.add(new light_component{
-            {0.f, 1.f, 0.f}
+        m_light_sphere.add(new pointlight_component{
+            {0.f, 1.f, 0.f},
+            10.f, 5.f, 4.f
         });
         m_light_sphere.set_position(3.f, 10.f, 3.f);
         m_lights.add(m_light_sphere);
 
         auto* light2 = new game_object{};
-        light2->add(new light_component{
-            {1.f, 0.f, 0.f}
+        light2->add(new pointlight_component{
+            {1.f, 0.f, 0.f},
+            10.f, 5.f, 4.f
         });
         light2->set_position(-5.f, 2.f, 0.f);
         m_lights.add(light2);
@@ -131,8 +133,9 @@ public:
                 f32   r         = dist(gen);
                 f32   g         = dist(gen);
                 f32   b         = dist(gen);
-                new_light->add(new light_component{
-                    {r, g, b}
+                new_light->add(new pointlight_component{
+                    {r, g, b},
+                    25.f, 2.5f, 15.f
                 });
                 new_light->set_position((f32) x, 1.f, (f32) z);
                 m_lights.add(new_light);
@@ -206,7 +209,7 @@ public:
 
         m_root.update(delta);
         m_quad.update(delta);
-        m_lights.update(delta);
+        //m_lights.update(delta);
     }
 
     bool render() override
@@ -225,11 +228,6 @@ public:
         return true;
     }
 
-    bool render_lights() override
-    {
-        m_lights.render();
-        return true;
-    }
 
     void shutdown() override {}
 };

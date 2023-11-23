@@ -58,7 +58,7 @@ bool model_component::render()
 
 bitmap_component::bitmap_component(u32 width, u32 height, const char* filename)
 {
-    if(!m_texture.init(filename))
+    if (!m_texture.init(filename))
     {
         LOG_ERROR("Failed to load texture file {} from bitmap component", filename);
         return;
@@ -80,23 +80,17 @@ bool bitmap_component::render()
     return true;
 }
 
-light_component::light_component(const math::vec3& light_color) : m_light_color(light_color)
-{
-    m_model = gfx::geometry::create_sphere(50.f);
-}
 
-light_component::~light_component()
+bool pointlight_component::render()
 {
-    if (m_model)
-    {
-        SAFE_DELETE(m_model);
-    }
-}
-
-bool light_component::render()
-{
-    gfx::render_lights(m_model, m_owner->position(), m_owner->world_transformation(), m_light_color);
+    // rendering now handled by renderer.cpp
+    //gfx::render_pointlight(m_owner->position(), m_owner->world_transformation(), m_light_color, m_radius, m_intensity, m_falloff);
     return true;
+}
+
+void pointlight_component::add_to_engine()
+{
+    gfx::add_pointlight(m_owner, this);
 }
 
 } // namespace yae

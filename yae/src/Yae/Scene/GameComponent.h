@@ -75,16 +75,27 @@ private:
     gfx::texture m_texture{};
 };
 
-class light_component : public game_component
+class pointlight_component : public game_component
 {
 public:
-    light_component(const math::vec3& light_color);
-    ~light_component() override;
+    pointlight_component(const math::vec3& light_color, f32 radius, f32 intensity, f32 falloff) :
+        m_light_color(light_color), m_radius(radius), m_intensity(intensity), m_falloff(falloff)
+    {}
+    ~pointlight_component() override = default;
     bool render() override;
 
+    void add_to_engine() override;
+
+    math::vec3 light_color() const { return m_light_color; }
+    f32        radius() const { return m_radius; }
+    f32        intensity() const { return m_intensity; }
+    f32        falloff() const { return m_falloff; }
+
 private:
-    gfx::model* m_model{};
-    math::vec3  m_light_color{};
+    math::vec3 m_light_color{};
+    f32        m_radius{};
+    f32        m_intensity{};
+    f32        m_falloff{};
 };
 
 } // namespace yae

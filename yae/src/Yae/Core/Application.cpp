@@ -123,10 +123,7 @@ bool application::render() const
 
     gfx::render_directional_light();
 
-    if (!m_game->render_lights())
-    {
-        return false;
-    }
+    gfx::render_all_pointlights();
 
     //gfx::core::disable_zbuffer();
     //if(!m_game->render2d())

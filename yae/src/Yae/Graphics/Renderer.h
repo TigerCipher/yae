@@ -25,6 +25,8 @@
 
 #include "Model.h"
 #include "Texture.h"
+#include "Yae/Scene/GameComponent.h"
+#include "Yae/Scene/GameObject.h"
 
 namespace yae::gfx
 {
@@ -36,6 +38,11 @@ void render2d(const model* model, const texture* tex, const math::matrix& world)
 
 void render_directional_light();
 
-void render_lights(const model* model, const math::vec3& pos, const math::matrix& world, const math::vec3& light_color);
+void render_pointlight(const math::vec3& pos, const math::matrix& world, const math::vec3& light_color, f32 radius, f32 intensity,
+                   f32 falloff);
 
-}
+void add_pointlight(game_object* obj, pointlight_component* light);
+
+void render_all_pointlights();
+
+} // namespace yae::gfx

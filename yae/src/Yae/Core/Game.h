@@ -39,7 +39,6 @@ public:
     virtual bool render()          = 0;
     virtual void shutdown()        = 0;
 
-    virtual bool render_lights() { return true; }
     virtual bool render2d() { return true; }
 
     void         set_camera(gfx::camera* cam) { m_camera = cam; }
