@@ -125,11 +125,12 @@ bool application::render() const
 
     gfx::render_all_pointlights();
 
-    //gfx::core::disable_zbuffer();
-    //if(!m_game->render2d())
-    //{
-    //    return false;
-    //}
+    
+    gfx::core::disable_zbuffer();
+    if(!m_game->render2d())
+    {
+        return false;
+    }
     //gfx::core::enable_zbuffer();
 
     gfx::core::end_scene();

@@ -560,6 +560,9 @@ void enable_zbuffer()
 
 void disable_zbuffer()
 {
+    device_context->RSSetState(nullptr);
+    device_context->OMSetBlendState(nullptr, blend_factor, 0xFFFFFFFF);
+    //device_context->OMSetDepthStencilState(nullptr, 0);
     device_context->OMSetDepthStencilState(disabled_depth_stencil_state, 1);
 }
 

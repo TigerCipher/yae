@@ -146,7 +146,7 @@ public:
 
 
         m_quad.add(new bitmap_component{ 150, 150, "./assets/textures/default.tga" });
-        m_quad.set_position(-1920.f / 2.f, -1080.f / 2.f, 0);
+        //m_quad.set_position(-1920.f / 2.f, -1080.f / 2.f, 0);
 
 
         m_root.add(m_cube);
