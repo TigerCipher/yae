@@ -26,6 +26,8 @@
 
 #include <Yae/Entrypoint.h>
 
+#include <random>
+
 const char* game_name    = "sandbox";
 const char* game_version = "1.0.0";
 
@@ -59,7 +61,6 @@ bool on_key_typed(u16 code, void* sender, void* listener, void* userdata)
 class sandbox : public game
 {
 private:
-
     game_object m_root{};
     game_object m_cube{};
     game_object m_cube2{};
@@ -68,6 +69,8 @@ private:
     game_object m_quad{};
     game_object m_plane{};
     game_object m_cam{};
+
+    game_object m_lights{};
     game_object m_light_sphere{};
 
 
@@ -88,8 +91,8 @@ public:
         m_cube.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/bricks.tga" });
         m_cube.set_position(3.f, 9.f, 3.f);
 
-        m_cube2.add(new model_component{gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/default.tga"});
-        m_ball1.add(new model_component{gfx::geometry::create_sphere(1.5f, 36, 36), "./assets/textures/bricks.tga"});
+        m_cube2.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/default.tga" });
+        m_ball1.add(new model_component{ gfx::geometry::create_sphere(1.5f, 36, 36), "./assets/textures/bricks.tga" });
         m_ball1.add(m_cube2);
         m_cube2.set_position(3.f, 1.f, 0.f);
         m_cube2.rotate(45.f, axis::x);
@@ -97,20 +100,50 @@ public:
         m_ball1.set_position(-3.f, 5.f, -3.f);
 
         //m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{gfx::geometry::create_plane(32, 32)});
-        m_plane.add(new model_component{"./assets/models/plane.txt", "./assets/textures/stone01.tga"});
+        m_plane.add(new model_component{ "./assets/models/plane.txt", "./assets/textures/stone01.tga" });
         //m_plane.rotate(90.f, axis::x);
         m_plane.set_position(0.f, -1.f, 0.f);
         m_plane.set_scale(10.f, 1.f, 10.f);
 
-        m_light_sphere.add(new model_component{ gfx::geometry::create_sphere(0.5f), "./assets/textures/default.tga" });
+        m_light_sphere.add(new light_component{
+            {0.f, 1.f, 0.f}
+        });
         m_light_sphere.set_position(3.f, 10.f, 3.f);
+        m_lights.add(m_light_sphere);
 
-        m_root.add(m_light_sphere);
+        game_object* light2 = new game_object{};
+        light2->add(new light_component{
+            {1.f, 0.f, 0.f}
+        });
+        light2->set_position(-5.f, 2.f, 0.f);
+        m_lights.add(light2);
+
+        std::random_device                  rd{};
+        std::mt19937                        gen(rd());
+        std::uniform_real_distribution<f32> dist(0.2f, 1.0f);
+        u32 count = 0;
+        for (i32 x = -50; x < 50; x += 10)
+        {
+            for (i32 z = -50; z < 50; z += 10)
+            {
+                LOG_DEBUG("Adding light {}", ++count);
+                game_object* new_light = new game_object{};
+                f32          r         = dist(gen);
+                f32          g         = dist(gen);
+                f32          b         = dist(gen);
+                new_light->add(new light_component{
+                    {r, g, b}
+                });
+                new_light->set_position((f32)x, 1.f, (f32)z);
+                m_lights.add(new_light);
+            }
+        }
+
+        //m_root.add(m_light_sphere);
 
 
-        m_quad.add(new bitmap_component{150, 150, "./assets/textures/default.tga"});
+        m_quad.add(new bitmap_component{ 150, 150, "./assets/textures/default.tga" });
         m_quad.set_position(-1920.f / 2.f, -1080.f / 2.f, 0);
-
 
 
         m_root.add(m_cube);
@@ -173,11 +206,12 @@ public:
 
         m_root.update(delta);
         m_quad.update(delta);
+        m_lights.update(delta);
     }
 
     bool render() override
     {
-        if(!m_root.render())
+        if (!m_root.render())
         {
             return false;
         }
@@ -191,9 +225,13 @@ public:
         return true;
     }
 
-    void shutdown() override
+    bool render_lights() override
     {
+        m_lights.render();
+        return true;
     }
+
+    void shutdown() override {}
 };
 
 

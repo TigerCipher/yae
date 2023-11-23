@@ -40,6 +40,12 @@ void shutdown();
 
 shader_obj* texture_shader();
 
-shader_obj* light_shader();
+//shader_obj* light_shader();
+
+shader_obj* deferred();
+
+shader_obj* directional_light();
+
+shader_obj* lighting();
 
 }

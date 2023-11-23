@@ -30,6 +30,8 @@ namespace
 {
 shader_obj tex{};
 shader_obj lights{};
+shader_obj dr{};
+shader_obj dir{};
 
 } // anonymous namespace
 
@@ -39,6 +41,10 @@ bool init()
     tex.ps    = new pixel_shader{};
     lights.vs = new vertex_shader{};
     lights.ps = new pixel_shader{};
+    dr.vs     = new vertex_shader{};
+    dr.ps     = new pixel_shader{};
+    dir.vs    = new vertex_shader{};
+    dir.ps    = new pixel_shader{};
 
     if (!tex.vs->load_from_file("../bin/Debug/TextureVertexShader.cso"))
     {
@@ -52,13 +58,37 @@ bool init()
         return false;
     }
 
-    if (!lights.vs->load_from_file("../bin/Debug/LightsVertexShader.cso"))
+    if (!lights.vs->load_from_file("../bin/Debug/LightVertexShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!lights.ps->load_from_file("../bin/Debug/LightsPixelShader.cso"))
+    if (!lights.ps->load_from_file("../bin/Debug/LightPixelShader.cso"))
+    {
+        shutdown();
+        return false;
+    }
+
+    if (!dr.vs->load_from_file("../bin/Debug/DeferredVertexShader.cso"))
+    {
+        shutdown();
+        return false;
+    }
+
+    if (!dr.ps->load_from_file("../bin/Debug/DeferredPixelShader.cso"))
+    {
+        shutdown();
+        return false;
+    }
+
+    if (!dir.vs->load_from_file("../bin/Debug/DirectionLightVertexShader.cso"))
+    {
+        shutdown();
+        return false;
+    }
+
+    if (!dir.ps->load_from_file("../bin/Debug/DirectionLightPixelShader.cso"))
     {
         shutdown();
         return false;
@@ -73,13 +103,32 @@ void shutdown()
     SAFE_DELETE(tex.ps);
     SAFE_DELETE(lights.vs);
     SAFE_DELETE(lights.ps);
+    SAFE_DELETE(dr.vs);
+    SAFE_DELETE(dr.ps);
+    SAFE_DELETE(dir.vs);
+    SAFE_DELETE(dir.ps);
 }
 
 shader_obj* texture_shader()
 {
     return &tex;
 }
-shader_obj* light_shader()
+//shader_obj* light_shader()
+//{
+//    return &lights;
+//}
+
+shader_obj* deferred()
+{
+    return &dr;
+}
+
+shader_obj* directional_light()
+{
+    return &dir;
+}
+
+shader_obj* lighting()
 {
     return &lights;
 }

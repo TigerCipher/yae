@@ -192,4 +192,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\Yae\Graphics\Shaders\DirectionLightVertexShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\DirectionLightPixelShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\DeferredVertexShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\DeferredPixelShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\LightVertexShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\LightPixelShader.hlsl" />
+  </ItemGroup>
 </Project>

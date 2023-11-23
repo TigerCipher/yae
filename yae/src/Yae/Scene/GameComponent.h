@@ -37,13 +37,13 @@ public:
     game_component()          = default;
     virtual ~game_component() = default;
 
-    void set_owner(game_object* owner) { m_owner = owner; }
+    void                   set_owner(game_object* owner) { m_owner = owner; }
     constexpr game_object* owner() const { return m_owner; }
 
     virtual void update(f32 delta) {}
     virtual bool render() { return true; }
 
-    virtual void add_to_engine(){}
+    virtual void add_to_engine() {}
 
 protected:
     game_object* m_owner{};
@@ -53,15 +53,12 @@ class model_component : public game_component
 {
 public:
     model_component(const std::string_view filename, const char* texture_filename);
-    model_component(gfx::model* model, const char* texture) : m_model{model}
-    {
-        m_texture.init(texture);
-    } 
+    model_component(gfx::model* model, const char* texture) : m_model{ model } { m_texture.init(texture); }
     ~model_component() override;
     bool render() override;
 
 private:
-    gfx::model* m_model{};
+    gfx::model*  m_model{};
     gfx::texture m_texture{};
 };
 
@@ -74,8 +71,20 @@ public:
     bool render() override;
 
 private:
-    gfx::model* m_model{};
+    gfx::model*  m_model{};
     gfx::texture m_texture{};
+};
+
+class light_component : public game_component
+{
+public:
+    light_component(const math::vec3& light_color);
+    ~light_component() override;
+    bool render() override;
+
+private:
+    gfx::model* m_model{};
+    math::vec3  m_light_color{};
 };
 
 } // namespace yae

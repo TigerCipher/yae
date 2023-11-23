@@ -29,7 +29,13 @@
 namespace yae::gfx
 {
 
+void init_renderer();
+void shutdown_renderer();
 void render3d(const model* model, const texture* tex, const math::matrix& world);
 void render2d(const model* model, const texture* tex, const math::matrix& world);
+
+void render_directional_light();
+
+void render_lights(const model* model, const math::vec3& pos, const math::matrix& world, const math::vec3& light_color);
 
 }

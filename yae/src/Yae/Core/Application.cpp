@@ -25,6 +25,7 @@
 
 #include "Input.h"
 #include "Yae/Graphics/D3D11Core.h"
+#include "Yae/Graphics/Renderer.h"
 
 namespace yae
 {
@@ -111,18 +112,28 @@ bool application::frame()
 bool application::render() const
 {
     gfx::core::begin_scene(0.f, 0.f, 0.f, 1.f);
+    gfx::core::clear_first_stage();
 
     if (!m_game->render())
     {
         return false;
     }
 
-    gfx::core::disable_zbuffer();
-    if(!m_game->render2d())
+    gfx::core::clear_second_stage();
+
+    gfx::render_directional_light();
+
+    if (!m_game->render_lights())
     {
         return false;
     }
-    gfx::core::enable_zbuffer();
+
+    //gfx::core::disable_zbuffer();
+    //if(!m_game->render2d())
+    //{
+    //    return false;
+    //}
+    //gfx::core::enable_zbuffer();
 
     gfx::core::end_scene();
     return true;

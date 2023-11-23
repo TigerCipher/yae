@@ -80,4 +80,23 @@ bool bitmap_component::render()
     return true;
 }
 
+light_component::light_component(const math::vec3& light_color) : m_light_color(light_color)
+{
+    m_model = gfx::geometry::create_sphere(50.f);
+}
+
+light_component::~light_component()
+{
+    if (m_model)
+    {
+        SAFE_DELETE(m_model);
+    }
+}
+
+bool light_component::render()
+{
+    gfx::render_lights(m_model, m_owner->position(), m_owner->world_transformation(), m_light_color);
+    return true;
+}
+
 } // namespace yae
