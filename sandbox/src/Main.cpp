@@ -73,6 +73,8 @@ private:
     game_object m_lights{};
     game_object m_light_sphere{};
 
+    gfx::bitmap_font m_font{ };
+    gfx::text_string       m_text{};
 
 public:
     ~sandbox() override = default;
@@ -80,6 +82,9 @@ public:
     {
         events::register_listener(events::app_quit, nullptr, on_app_quit);
         events::register_listener(events::key_pressed, nullptr, on_key_typed);
+
+        m_font.load_font("./assets/fonts/Coolvetica");
+        m_text.init(m_font, "Hello World!", 10, 10);
 
         m_camera->set_position(0.f, 1.f, -12.f);
         m_camera->set_sensitivity(25.f);
@@ -225,6 +230,7 @@ public:
     {
         m_quad.render();
 
+        m_text.draw();
         return true;
     }
 

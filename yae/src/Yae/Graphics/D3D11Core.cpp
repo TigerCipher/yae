@@ -50,6 +50,7 @@ struct video_card_info
 // Deferred rendering stuff
 constexpr f32 clear_color[4]  = { 0.f, 0.f, 0.f, 1.f };
 constexpr f32 blend_factor[4] = { 1.f, 1.f, 1.f, 1.f };
+constexpr f32 blend_factor_nil[4] = { 0.f, 0.f, 0.f, 0.f };
 constexpr u32 buffer_count    = 3;
 
 ID3D11RenderTargetView*   rtv_array[buffer_count];
@@ -76,6 +77,9 @@ math::matrix             projection_matrix{};
 math::matrix             world_matrix{};
 math::matrix             ortho_matrix{};
 D3D11_VIEWPORT           viewport{};
+
+ID3D11BlendState* blend_state{};
+ID3D11BlendState* disabled_blend_state{};
 
 bool initialized{};
 
@@ -397,6 +401,21 @@ bool init(i32 width, i32 height, HWND hwnd, bool fullscreen, f32 screen_depth, f
 
     DX_CALL(device->CreateDepthStencilState(&disabled_desc, &disabled_depth_stencil_state));
 
+    D3D11_BLEND_DESC blend_desc{};
+    blend_desc.RenderTarget[0].BlendEnable           = true;
+    blend_desc.RenderTarget[0].SrcBlend              = D3D11_BLEND_ONE;
+    blend_desc.RenderTarget[0].DestBlend             = D3D11_BLEND_INV_SRC_ALPHA;
+    blend_desc.RenderTarget[0].BlendOp               = D3D11_BLEND_OP_ADD;
+    blend_desc.RenderTarget[0].SrcBlendAlpha         = D3D11_BLEND_ONE;
+    blend_desc.RenderTarget[0].DestBlendAlpha        = D3D11_BLEND_ZERO;
+    blend_desc.RenderTarget[0].BlendOpAlpha          = D3D11_BLEND_OP_ADD;
+    blend_desc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+
+    DX_CALL(device->CreateBlendState(&blend_desc, &blend_state));
+
+    blend_desc.RenderTarget[0].BlendEnable = false;
+    DX_CALL(device->CreateBlendState(&blend_desc, &disabled_blend_state));
+
     if (!init_deferred_renderer(device))
     {
         LOG_FATAL("Failed to initialize deferred renderer");
@@ -410,6 +429,7 @@ bool init(i32 width, i32 height, HWND hwnd, bool fullscreen, f32 screen_depth, f
     }
 
     init_renderer();
+
 
     initialized = true;
     return true;
@@ -427,6 +447,8 @@ void shutdown()
         swapchain->SetFullscreenState(false, nullptr);
     }
 
+    release(blend_state);
+    release(disabled_blend_state);
     shutdown_renderer();
     release(dr_depth_stencil_buffer);
     release(dr_depth_stencil_view);
@@ -564,6 +586,16 @@ void disable_zbuffer()
     device_context->OMSetBlendState(nullptr, blend_factor, 0xFFFFFFFF);
     //device_context->OMSetDepthStencilState(nullptr, 0);
     device_context->OMSetDepthStencilState(disabled_depth_stencil_state, 1);
+}
+
+void enable_alpha_blending()
+{
+    device_context->OMSetBlendState(blend_state, blend_factor_nil, 0xffffffff);
+}
+
+void disable_alpha_blending()
+{
+    device_context->OMSetBlendState(disabled_blend_state, blend_factor_nil, 0xffffffff);
 }
 
 

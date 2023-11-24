@@ -198,4 +198,9 @@ void render_all_pointlights()
     }
 }
 
+ID3D11SamplerState* default_sampler_state()
+{
+    return sampler_state;
+}
+
 } // namespace yae::gfx

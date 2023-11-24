@@ -45,4 +45,6 @@ void add_pointlight(game_object* obj, pointlight_component* light);
 
 void render_all_pointlights();
 
+ID3D11SamplerState* default_sampler_state();
+
 } // namespace yae::gfx

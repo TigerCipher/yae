@@ -84,4 +84,7 @@ void reset_viewport();
 void enable_zbuffer();
 void disable_zbuffer();
 
+void enable_alpha_blending();
+void disable_alpha_blending();
+
 } // namespace yae::gfx::core

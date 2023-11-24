@@ -32,6 +32,7 @@ shader_obj tex{};
 shader_obj lights{};
 shader_obj dr{};
 shader_obj dir{};
+shader_obj fonts{};
 
 } // anonymous namespace
 
@@ -45,6 +46,8 @@ bool init()
     dr.ps     = new pixel_shader{};
     dir.vs    = new vertex_shader{};
     dir.ps    = new pixel_shader{};
+    fonts.vs  = new vertex_shader{};
+    fonts.ps  = new pixel_shader{};
 
     if (!tex.vs->load_from_file("../bin/Debug/TextureVertexShader.cso"))
     {
@@ -94,6 +97,18 @@ bool init()
         return false;
     }
 
+    if (!fonts.vs->load_from_file("../bin/Debug/FontVertexShader.cso"))
+    {
+        shutdown();
+        return false;
+    }
+
+    if (!fonts.ps->load_from_file("../bin/Debug/FontPixelShader.cso"))
+    {
+        shutdown();
+        return false;
+    }
+
     return true;
 }
 
@@ -107,6 +122,8 @@ void shutdown()
     SAFE_DELETE(dr.ps);
     SAFE_DELETE(dir.vs);
     SAFE_DELETE(dir.ps);
+    SAFE_DELETE(fonts.vs);
+    SAFE_DELETE(fonts.ps);
 }
 
 shader_obj* texture_shader()
@@ -131,6 +148,11 @@ shader_obj* directional_light()
 shader_obj* lighting()
 {
     return &lights;
+}
+
+shader_obj* font()
+{
+    return &fonts;
 }
 
 } // namespace yae::gfx::shaders

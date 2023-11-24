@@ -42,6 +42,7 @@
 #include "Graphics/Model.h"
 #include "Graphics/Vertex.h"
 #include "Graphics/Shaders/Shader.h"
+#include "Graphics/BitmapFont.h"
 
 // Scene
 #include "Scene/GameObject.h"

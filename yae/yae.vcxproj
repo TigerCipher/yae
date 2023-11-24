@@ -95,6 +95,7 @@
     <ClInclude Include="src\Yae\Core\Win32Header.h" />
     <ClInclude Include="src\Yae\Entrypoint.h" />
     <ClInclude Include="src\Yae\Globals.h" />
+    <ClInclude Include="src\Yae\Graphics\BitmapFont.h" />
     <ClInclude Include="src\Yae\Graphics\Camera.h" />
     <ClInclude Include="src\Yae\Graphics\D3D11Common.h" />
     <ClInclude Include="src\Yae\Graphics\D3D11Core.h" />
@@ -126,6 +127,7 @@
     <ClCompile Include="src\Yae\Core\Settings.cpp" />
     <ClCompile Include="src\Yae\Core\System.cpp" />
     <ClCompile Include="src\Yae\Core\Timer.cpp" />
+    <ClCompile Include="src\Yae\Graphics\BitmapFont.cpp" />
     <ClCompile Include="src\Yae\Graphics\Camera.cpp" />
     <ClCompile Include="src\Yae\Graphics\D3D11Core.cpp" />
     <ClCompile Include="src\Yae\Graphics\Geometry.cpp" />
@@ -170,6 +172,18 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="src\Yae\Graphics\Shaders\FontPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="src\Yae\Graphics\Shaders\FontVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="src\Yae\Graphics\Shaders\LightPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
@@ -184,6 +198,5 @@
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

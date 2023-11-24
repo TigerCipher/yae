@@ -69,7 +69,7 @@ bool utf16_to_utf8(const wchar_t* utf16, std::string& utf8)
     }
 
     utf8 = std::string((size_t) count, '\0');
-    return WideCharToMultiByte(CP_UTF8, 0, utf16, -1, utf8.data(), utf8.size(), nullptr, nullptr) > 0;
+    return WideCharToMultiByte(CP_UTF8, 0, utf16, -1, utf8.data(), (i32)utf8.size(), nullptr, nullptr) > 0;
 }
 
 } // namespace yae::utl

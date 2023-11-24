@@ -127,13 +127,16 @@ bool application::render() const
 
     
     gfx::core::disable_zbuffer();
+    gfx::core::enable_alpha_blending();
     if(!m_game->render2d())
     {
         return false;
     }
+    //gfx::core::disable_alpha_blending();
     //gfx::core::enable_zbuffer();
 
     gfx::core::end_scene();
+
     return true;
 }
 } // namespace yae

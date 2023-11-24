@@ -117,6 +117,9 @@
     <ClInclude Include="src\Yae\Graphics\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Yae\Graphics\BitmapFont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Yae\Yae.cpp">
@@ -191,6 +194,9 @@
     <ClCompile Include="src\Yae\Graphics\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Yae\Graphics\BitmapFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Yae\Graphics\Shaders\DirectionLightVertexShader.hlsl" />
@@ -199,5 +205,7 @@
     <FxCompile Include="src\Yae\Graphics\Shaders\DeferredPixelShader.hlsl" />
     <FxCompile Include="src\Yae\Graphics\Shaders\LightVertexShader.hlsl" />
     <FxCompile Include="src\Yae\Graphics\Shaders\LightPixelShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\FontVertexShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\FontPixelShader.hlsl" />
   </ItemGroup>
 </Project>
