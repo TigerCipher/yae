@@ -15,8 +15,8 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Application.h
-//  Date File Created: 11/11/2023
+//  File Name: FpsHelper.h
+//  Date File Created: 11/23/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
@@ -25,46 +25,21 @@
 
 #include "Yae/Common.h"
 
-#include "Win32Header.h"
-
-#include "Yae/Scene/GameObject.h"
-#include "Yae/Graphics/Model.h"
-#include "Yae/Graphics/Texture.h"
-#include "Yae/Graphics/BitmapFont.h"
-#include "Yae/Graphics/Shaders/Shader.h"
-#include "Yae/Graphics/Camera.h"
-#include "Yae/Util/FpsHelper.h"
-#include "Game.h"
-#include "Timer.h"
-
 namespace yae
 {
-
-namespace app
-{
-void  set(game* game);
-game* instance();
-} // namespace app
-
-class application
+class fps_counter
 {
 public:
-    application(game* game) : m_game{ game } {}
-    ~application() = default;
+    fps_counter() = default;
+    ~fps_counter() = default;
 
-    bool init(i32 width, i32 height, HWND hwnd);
-    void shutdown();
-    bool frame();
+    void start();
+    void frame();
 
+    constexpr u32 fps() const { return m_fps; }
 private:
-    bool render();
-    void update_fps();
-
-    game*            m_game{};
-    timer            m_timer{};
-    gfx::camera*     m_camera{};
-    fps_counter      m_fps{};
-    gfx::text_string m_fps_string{};
-    gfx::bitmap_font m_font{}; // TODO make font library
+    u32 m_fps{};
+    u32 m_count{};
+    u32 m_start{};
 };
 } // namespace yae

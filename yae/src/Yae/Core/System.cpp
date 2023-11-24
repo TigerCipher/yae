@@ -210,6 +210,7 @@ void shutdown()
         app = nullptr;
     }
 
+    gfx::core::shutdown();
     shutdown_windows();
     events::shutdown();
     LOG_INFO("YAE system shutdown");

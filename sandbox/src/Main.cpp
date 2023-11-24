@@ -73,8 +73,8 @@ private:
     game_object m_lights{};
     game_object m_light_sphere{};
 
-    gfx::bitmap_font m_font{ };
-    gfx::text_string       m_text{};
+    //gfx::bitmap_font m_font{ };
+    //gfx::text_string       m_text{};
 
 public:
     ~sandbox() override = default;
@@ -83,8 +83,8 @@ public:
         events::register_listener(events::app_quit, nullptr, on_app_quit);
         events::register_listener(events::key_pressed, nullptr, on_key_typed);
 
-        m_font.load_font("./assets/fonts/Coolvetica");
-        m_text.init(m_font, "Hello World!", 10, 10);
+        //m_font.load_font("./assets/fonts/Coolvetica");
+        //m_text.init(m_font, "Hello World!", 10, 10);
 
         m_camera->set_position(0.f, 1.f, -12.f);
         m_camera->set_sensitivity(25.f);
@@ -129,9 +129,9 @@ public:
         std::mt19937                        gen(rd());
         std::uniform_real_distribution<f32> dist(0.2f, 1.0f);
         u32                                 count = 0;
-        for (i32 x = -50; x < 50; x += 10)
+        for (i32 x = -40; x < 50; x += 20)
         {
-            for (i32 z = -50; z < 50; z += 10)
+            for (i32 z = -40; z < 50; z += 20)
             {
                 LOG_DEBUG("Adding light {}", ++count);
                 auto* new_light = new game_object{};
@@ -230,7 +230,7 @@ public:
     {
         m_quad.render();
 
-        m_text.draw();
+        //m_text.draw();
         return true;
     }
 

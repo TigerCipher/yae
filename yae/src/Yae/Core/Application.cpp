@@ -78,6 +78,12 @@ bool application::init(i32 width, i32 height, HWND hwnd)
     }
     LOG_INFO("Game initialized");
 
+    m_font.load_font("./assets/fonts/Coolvetica");
+    m_fps_string.init(m_font, "FPS: 0", 10, 10);
+    m_fps_string.set_color(0.f, 1.f, 0.f);
+
+    m_fps.start();
+
     LOG_INFO("Application initialized");
     m_timer.start();
     return true;
@@ -94,12 +100,12 @@ void application::shutdown()
 
     SAFE_DELETE(m_camera);
 
-    gfx::core::shutdown();
     LOG_INFO("Application shutdown");
 }
 
 bool application::frame()
 {
+    update_fps();
     m_timer.frame();
     //m_camera->calculate_view();
     //m_camera->update(m_timer.frame_time());
@@ -109,7 +115,7 @@ bool application::frame()
     return render();
 }
 
-bool application::render() const
+bool application::render()
 {
     gfx::core::begin_scene(0.f, 0.f, 0.f, 1.f);
     gfx::core::clear_first_stage();
@@ -125,13 +131,15 @@ bool application::render() const
 
     gfx::render_all_pointlights();
 
-    
+
     gfx::core::disable_zbuffer();
     gfx::core::enable_alpha_blending();
-    if(!m_game->render2d())
+    if (!m_game->render2d())
     {
         return false;
     }
+    const std::string fps = std::format("FPS: {}", m_fps.fps());
+    m_fps_string.draw(fps);
     //gfx::core::disable_alpha_blending();
     //gfx::core::enable_zbuffer();
 
@@ -139,4 +147,25 @@ bool application::render() const
 
     return true;
 }
+
+void application::update_fps()
+{
+    m_fps.frame();
+
+    const u32 fps = m_fps.fps();
+
+    if (fps >= 60)
+    {
+        m_fps_string.set_color(0.f, 1.f, 0.f);
+    }
+    if (fps < 60)
+    {
+        m_fps_string.set_color(1.f, 1.f, 0.f);
+    }
+    if (fps < 30)
+    {
+        m_fps_string.set_color(1.f, 0.f, 0.f);
+    }
+}
+
 } // namespace yae
