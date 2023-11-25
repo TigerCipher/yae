@@ -65,6 +65,5 @@ private:
     gfx::camera*     m_camera{};
     fps_counter      m_fps{};
     gfx::text_string m_fps_string{};
-    gfx::bitmap_font m_font{}; // TODO make font library
 };
 } // namespace yae

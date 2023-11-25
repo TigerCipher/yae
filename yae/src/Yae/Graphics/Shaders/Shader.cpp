@@ -471,7 +471,7 @@ bool vertex_shader::create_shader(ID3D10Blob* blob)
 
         std::string per_instance_str = "_PER_INSTANCE";
         std::string sem              = param_desc.SemanticName;
-        const i32   len_diff         = sem.size() - per_instance_str.size();
+        const i32   len_diff         = (i32)sem.size() - (i32)per_instance_str.size();
         bool        per_instance     = len_diff >= 0 && sem.compare(len_diff, per_instance_str.size(), per_instance_str) == 0;
         LOG_DEBUG("Found parameter '{}' - per instance? {}", sem, per_instance ? "Yes" : "No");
 
@@ -529,7 +529,7 @@ bool vertex_shader::create_shader(ID3D10Blob* blob)
         layout_desc.push_back(elem_desc);
     }
 
-    DX_CALL(m_device->CreateInputLayout(layout_desc.data(), layout_desc.size(), blob->GetBufferPointer(), blob->GetBufferSize(),
+    DX_CALL(m_device->CreateInputLayout(layout_desc.data(), (u32)layout_desc.size(), blob->GetBufferPointer(), blob->GetBufferSize(),
                                         &m_input_layout));
 
     refl->Release();
@@ -873,7 +873,7 @@ bool geometry_shader::create_shader_stream_out(ID3D10Blob* blob)
     const u32 rast = m_allow_stream_out_rasterization ? 0 : D3D11_SO_NO_RASTERIZED_STREAM;
 
     DX_CALL(m_device->CreateGeometryShaderWithStreamOutput(blob->GetBufferPointer(), blob->GetBufferSize(), sodecl.data(),
-                                                           sodecl.size(), nullptr, 0, rast, nullptr, &m_shader));
+                                                           (u32)sodecl.size(), nullptr, 0, rast, nullptr, &m_shader));
 
     return true;
 }

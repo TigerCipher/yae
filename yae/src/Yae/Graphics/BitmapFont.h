@@ -108,4 +108,19 @@ private:
     f32                                  m_absolute_y{ FLT_MIN };
 };
 
+
+// Font library
+
+namespace fonts
+{
+
+void init();
+void unload();
+
+
+
+bitmap_font& coolvetica();
+
+}
+
 } // namespace yae::gfx

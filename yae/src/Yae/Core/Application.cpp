@@ -71,6 +71,8 @@ bool application::init(i32 width, i32 height, HWND hwnd)
     app::set(m_game);
     m_game->set_camera(m_camera);
 
+    gfx::fonts::init();
+
     LOG_INFO("Initializing game");
     if (!m_game->init())
     {
@@ -78,8 +80,7 @@ bool application::init(i32 width, i32 height, HWND hwnd)
     }
     LOG_INFO("Game initialized");
 
-    m_font.load_font("./assets/fonts/Coolvetica");
-    m_fps_string.init(m_font, "FPS: 0", 10, 10);
+    m_fps_string.init(gfx::fonts::coolvetica(), "FPS: 0", 10, 10);
     m_fps_string.set_color(0.f, 1.f, 0.f);
 
     m_fps.start();
@@ -92,7 +93,7 @@ bool application::init(i32 width, i32 height, HWND hwnd)
 void application::shutdown()
 {
     LOG_INFO("Shutting down application");
-
+    gfx::fonts::unload();
     LOG_INFO("Shutting down game");
     m_game->shutdown();
     SAFE_DELETE(m_game);
