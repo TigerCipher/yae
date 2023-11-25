@@ -92,8 +92,7 @@ public:
         //m_cam.add(new camera_component{})->add(new move_component{})->add(new freelook_component{});
         //m_cam.set_position(0.f, 1.f, -12.f);
         //m_root.add(m_cam);
-
-        m_cube.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/bricks.tga" });
+        m_cube.add(new model_component{ gfx::geometry::create_box(3.f, 3.f, 1.f), "./assets/textures/bricks.tga", new gfx::texture{"./assets/textures/dirt.tga"} });
         m_cube.set_position(3.f, 9.f, 3.f);
 
         m_cube2.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/default.tga" });
@@ -105,7 +104,7 @@ public:
         m_ball1.set_position(-3.f, 5.f, -3.f);
 
         //m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{gfx::geometry::create_plane(32, 32)});
-        m_plane.add(new model_component{ "./assets/models/plane.txt", "./assets/textures/stone01.tga" });
+        m_plane.add(new model_component{ "./assets/models/plane.txt", "./assets/textures/stone01.tga", "./assets/textures/dirt.tga" });
         //m_plane.rotate(90.f, axis::x);
         m_plane.set_position(0.f, -1.f, 0.f);
         m_plane.set_scale(10.f, 1.f, 10.f);
@@ -241,7 +240,7 @@ public:
 
 game* create_game()
 {
-    return DBG_NEW sandbox{};
+    return new sandbox{};
 }
 
 void pre_init()

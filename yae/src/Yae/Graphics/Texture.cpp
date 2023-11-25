@@ -29,6 +29,11 @@
 namespace yae::gfx
 {
 
+texture::texture(const char* filename)
+{
+    init(filename);
+}
+
 bool texture::init(const char* filename)
 {
     if (!load_targa_32bit(filename))

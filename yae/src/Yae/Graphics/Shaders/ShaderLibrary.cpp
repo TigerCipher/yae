@@ -33,7 +33,7 @@ shader_obj lights{};
 shader_obj dr{};
 shader_obj dir{};
 shader_obj fonts{};
-
+shader_obj multitex{};
 } // anonymous namespace
 
 bool init()
@@ -48,6 +48,8 @@ bool init()
     dir.ps    = new pixel_shader{};
     fonts.vs  = new vertex_shader{};
     fonts.ps  = new pixel_shader{};
+    multitex.vs = dr.vs;
+    multitex.ps = new pixel_shader{};
 
     if (!tex.vs->load_from_file("../bin/Debug/TextureVertexShader.cso"))
     {
@@ -109,6 +111,12 @@ bool init()
         return false;
     }
 
+    if(!multitex.ps->load_from_file("../bin/Debug/MultitexturePixelShader.cso"))
+    {
+        shutdown();
+        return false;
+    }
+
     return true;
 }
 
@@ -124,6 +132,7 @@ void shutdown()
     SAFE_DELETE(dir.ps);
     SAFE_DELETE(fonts.vs);
     SAFE_DELETE(fonts.ps);
+    SAFE_DELETE(multitex.ps);
 }
 
 shader_obj* texture_shader()
@@ -153,6 +162,11 @@ shader_obj* lighting()
 shader_obj* font()
 {
     return &fonts;
+}
+
+shader_obj* multitexture()
+{
+    return &multitex;
 }
 
 } // namespace yae::gfx::shaders

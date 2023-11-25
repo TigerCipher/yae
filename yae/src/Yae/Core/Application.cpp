@@ -66,7 +66,7 @@ bool application::init(i32 width, i32 height, HWND hwnd)
     }
 
     gfx::create_default_view_matrix();
-    m_camera = DBG_NEW gfx::camera{};
+    m_camera = new gfx::camera{};
 
     app::set(m_game);
     m_game->set_camera(m_camera);

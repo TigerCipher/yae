@@ -50,4 +50,6 @@ shader_obj* lighting();
 
 shader_obj* font();
 
+shader_obj* multitexture();
+
 }

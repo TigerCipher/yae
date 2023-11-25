@@ -230,7 +230,7 @@ u32 bitmap_font::get_sentence_pixel_length(const std::string& text)
     for (u32 i = 0; i < num_letters; ++i)
     {
         i32 letter = (i32) text[i];
-        if (letter == (i32) ' ')
+        if (text[i] == ' ')
         {
             pixel_len += m_space_size;
             continue;

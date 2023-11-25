@@ -213,5 +213,6 @@
     <FxCompile Include="src\Yae\Graphics\Shaders\LightPixelShader.hlsl" />
     <FxCompile Include="src\Yae\Graphics\Shaders\FontVertexShader.hlsl" />
     <FxCompile Include="src\Yae\Graphics\Shaders\FontPixelShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\MultitexturePixelShader.hlsl" />
   </ItemGroup>
 </Project>

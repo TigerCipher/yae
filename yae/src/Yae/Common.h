@@ -27,10 +27,9 @@
 #define STRINGIFY_MACRO(x) #x
 #define BIT(x)             (1 << (x))
 
+
 #ifdef _DEBUG
-    #define DBG_NEW new (_NORMAL_BLOCK, __FILE__, __LINE__)
-#else
-    #define DBG_NEW new
+    #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
 
 #define SAFE_DELETE(x)                                                                                                           \

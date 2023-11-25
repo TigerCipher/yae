@@ -52,14 +52,19 @@ protected:
 class model_component : public game_component
 {
 public:
-    model_component(const std::string_view filename, const char* texture_filename);
-    model_component(gfx::model* model, const char* texture) : m_model{ model } { m_texture.init(texture); }
+    model_component(const std::string_view model, const char* texture, const char* blendtex = nullptr);
+    model_component(gfx::model* model, const char* texture, gfx::texture* blendtex = nullptr) :
+        m_model{ model }, m_blendtex(blendtex)
+    {
+        m_texture.init(texture);
+    }
     ~model_component() override;
     bool render() override;
 
 private:
-    gfx::model*  m_model{};
-    gfx::texture m_texture{};
+    gfx::model*   m_model{};
+    gfx::texture  m_texture{};
+    gfx::texture* m_blendtex{};
 };
 
 

@@ -55,10 +55,17 @@ void shutdown_renderer()
     core::release(sampler_state);
 }
 
-void render3d(const model* model, const texture* tex, const math::matrix& world)
+void render3d(const model* model, const texture* tex, const math::matrix& world, const texture* blendtex)
 {
     vertex_shader* vs = shaders::deferred()->vs;
-    pixel_shader*  ps = shaders::deferred()->ps;
+    pixel_shader*  ps;
+    if(!blendtex)
+    {
+        ps = shaders::deferred()->ps;
+    }else
+    {
+        ps = shaders::multitexture()->ps;
+    }
 
     const auto w = XMMatrixTranspose(world);
     const auto p = XMMatrixTranspose(core::get_projection_matrix());
@@ -71,6 +78,10 @@ void render3d(const model* model, const texture* tex, const math::matrix& world)
     vs->bind();
 
     ps->set_shader_resource_view("textureSRV", tex->texture_view());
+    if(blendtex)
+    {
+        ps->set_shader_resource_view("textureSRVBlend", blendtex->texture_view());
+    }
     ps->set_sampler_state("Sampler", tex->sampler_state());
 
     //ps->set_float3("lightDirection", { 1.f, -1.f, 0.f });
@@ -89,6 +100,7 @@ void render2d(const model* model, const texture* tex, const math::matrix& world)
 {
     vertex_shader* vs = shaders::texture_shader()->vs;
     pixel_shader*  ps = shaders::texture_shader()->ps;
+
 
     const auto w = XMMatrixTranspose(world);
     const auto p = XMMatrixTranspose(core::get_orthographic_matrix());
