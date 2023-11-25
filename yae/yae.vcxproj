@@ -113,6 +113,7 @@
     <ClInclude Include="src\Yae\Scene\GameObject.h" />
     <ClInclude Include="src\Yae\Scene\MoveComponent.h" />
     <ClInclude Include="src\Yae\Types.h" />
+    <ClInclude Include="src\Yae\Util\AssetManager.h" />
     <ClInclude Include="src\Yae\Util\FpsHelper.h" />
     <ClInclude Include="src\Yae\Util\Logger.h" />
     <ClInclude Include="src\Yae\Util\MathUtil.h" />
@@ -142,6 +143,7 @@
     <ClCompile Include="src\Yae\Scene\GameComponent.cpp" />
     <ClCompile Include="src\Yae\Scene\GameObject.cpp" />
     <ClCompile Include="src\Yae\Scene\MoveComponent.cpp" />
+    <ClCompile Include="src\Yae\Util\AssetManager.cpp" />
     <ClCompile Include="src\Yae\Util\FpsHelper.cpp" />
     <ClCompile Include="src\Yae\Util\Logger.cpp" />
     <ClCompile Include="src\Yae\Util\PathUtil.cpp" />

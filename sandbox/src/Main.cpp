@@ -92,7 +92,7 @@ public:
         //m_cam.add(new camera_component{})->add(new move_component{})->add(new freelook_component{});
         //m_cam.set_position(0.f, 1.f, -12.f);
         //m_root.add(m_cam);
-        m_cube.add(new model_component{ gfx::geometry::create_box(3.f, 3.f, 1.f), "./assets/textures/bricks.tga", new gfx::texture{"./assets/textures/dirt.tga"} });
+        m_cube.add(new model_component{ gfx::geometry::create_box(3.f, 3.f, 1.f), "./assets/textures/bricks.tga", "./assets/textures/dirt.tga" });
         m_cube.set_position(3.f, 9.f, 3.f);
 
         m_cube2.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/default.tga" });
@@ -147,8 +147,6 @@ public:
         }
 
         //m_root.add(m_light_sphere);
-
-
         m_quad.add(new bitmap_component{ 150, 150, "./assets/textures/default.tga" });
         //m_quad.set_position(-1920.f / 2.f, -1080.f / 2.f, 0);
 

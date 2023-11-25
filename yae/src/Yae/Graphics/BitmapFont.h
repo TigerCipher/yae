@@ -57,7 +57,7 @@ public:
     char_desc operator[](i32 id) const;
     char_desc operator[](char c) const { return operator[]((i32) c); }
 
-    constexpr ID3D11ShaderResourceView* texture_view() const { return m_texture.texture_view(); }
+    constexpr ID3D11ShaderResourceView* texture_view() const { return m_texture->texture_view(); }
 
     void build_vertex_array(std::vector<vertex_position_texture>& vertices, const std::string& text, f32 x, f32 y);
 
@@ -69,7 +69,7 @@ public:
     void          set_space_size(u32 size) { m_space_size = size; }
 
 private:
-    texture                            m_texture{};
+    texture*                           m_texture{};
     std::unordered_map<i32, char_desc> m_chars{};
     i32                                m_size{};
     u32                                m_space_size{ 30 };
@@ -118,9 +118,8 @@ void init();
 void unload();
 
 
-
 bitmap_font& coolvetica();
 
-}
+} // namespace fonts
 
 } // namespace yae::gfx

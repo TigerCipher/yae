@@ -27,6 +27,7 @@
 #include "GameObject.h"
 #include "Yae/Graphics/Model.h"
 #include "Yae/Graphics/Texture.h"
+#include "Yae/Util/AssetManager.h"
 
 namespace yae
 {
@@ -53,17 +54,22 @@ class model_component : public game_component
 {
 public:
     model_component(const std::string_view model, const char* texture, const char* blendtex = nullptr);
-    model_component(gfx::model* model, const char* texture, gfx::texture* blendtex = nullptr) :
-        m_model{ model }, m_blendtex(blendtex)
+    model_component(gfx::model* model, const char* texture, const char* blendtex = nullptr) : m_model{ model }
     {
-        m_texture.init(texture);
+        m_model_managed = true;
+        m_texture = assets::load_texture(texture);
+        if (blendtex)
+        {
+            m_blendtex = assets::load_texture(blendtex);
+        }
     }
     ~model_component() override;
     bool render() override;
 
 private:
+    bool          m_model_managed{};
     gfx::model*   m_model{};
-    gfx::texture  m_texture{};
+    gfx::texture* m_texture{};
     gfx::texture* m_blendtex{};
 };
 
@@ -76,8 +82,8 @@ public:
     bool render() override;
 
 private:
-    gfx::model*  m_model{};
-    gfx::texture m_texture{};
+    gfx::model*   m_model{};
+    gfx::texture* m_texture{};
 };
 
 class pointlight_component : public game_component

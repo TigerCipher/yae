@@ -42,9 +42,10 @@ bitmap_font::bitmap_font(const std::string& fontname)
 
 void bitmap_font::load_font(const std::string& fontname)
 {
-    if (!m_texture.init(std::format("{}.tga", fontname).c_str()))
+    m_texture = assets::load_texture(std::format("{}.tga", fontname).c_str());
+    if(!m_texture)
     {
-        LOG_ERROR("Failed to load texture file for font {}", fontname);
+        LOG_ERROR("Failed to load font texture for font {}", fontname);
     }
     std::ifstream fin{ std::format("{}.fnt", fontname) };
 
@@ -127,10 +128,10 @@ void bitmap_font::load_font(const std::string& fontname)
                 // Add more conditions for other attributes if needed
             }
 
-            character.u1 = character.x / m_texture.width();
-            character.v1 = character.y / m_texture.height();
-            character.u2 = (character.x + character.width) / m_texture.width();
-            character.v2 = (character.y + character.height) / m_texture.height();
+            character.u1 = character.x / m_texture->width();
+            character.v1 = character.y / m_texture->height();
+            character.u2 = (character.x + character.width) / m_texture->width();
+            character.v2 = (character.y + character.height) / m_texture->height();
 
             m_chars[character.id] = character;
         }
@@ -158,7 +159,7 @@ char_desc bitmap_font::operator[](i32 id) const
 
 void bitmap_font::build_vertex_array(std::vector<vertex_position_texture>& vertices, const std::string& text, f32 x, f32 y)
 {
-    const u32 num_letters = (u32)text.size();
+    const u32 num_letters = (u32) text.size();
     u32       index{};
     i32       letter{};
 
@@ -225,7 +226,7 @@ u32 bitmap_font::get_sentence_pixel_length(const std::string& text)
 {
     u32 pixel_len{};
 
-    const u32 num_letters = (u32)text.size();
+    const u32 num_letters = (u32) text.size();
 
     for (u32 i = 0; i < num_letters; ++i)
     {
@@ -236,7 +237,7 @@ u32 bitmap_font::get_sentence_pixel_length(const std::string& text)
             continue;
         }
 
-        pixel_len += (u32)m_chars[letter].width + 1;
+        pixel_len += (u32) m_chars[letter].width + 1;
     }
 
     return pixel_len;
@@ -271,7 +272,7 @@ bool text_string::init(const bitmap_font& font, const std::string& initial_text,
     }
 
     vtx_desc.Usage               = D3D11_USAGE_DYNAMIC;
-    vtx_desc.ByteWidth           = sizeof(vertex_position_texture) * (u32)m_vertices.size();
+    vtx_desc.ByteWidth           = sizeof(vertex_position_texture) * (u32) m_vertices.size();
     vtx_desc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
     vtx_desc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
     vtx_desc.MiscFlags           = 0;
@@ -284,7 +285,7 @@ bool text_string::init(const bitmap_font& font, const std::string& initial_text,
     DX_CALL(core::get_device()->CreateBuffer(&vtx_desc, &vtx_data, &m_vertex_buffer));
 
     idx_desc.Usage               = D3D11_USAGE_DEFAULT;
-    idx_desc.ByteWidth           = sizeof(u32) * (u32)m_indices.size();
+    idx_desc.ByteWidth           = sizeof(u32) * (u32) m_indices.size();
     idx_desc.BindFlags           = D3D11_BIND_INDEX_BUFFER;
     idx_desc.CPUAccessFlags      = 0;
     idx_desc.MiscFlags           = 0;
@@ -297,7 +298,7 @@ bool text_string::init(const bitmap_font& font, const std::string& initial_text,
     DX_CALL(core::get_device()->CreateBuffer(&idx_desc, &idx_data, &m_index_buffer));
 
     m_font = font;
-    return update_text(initial_text, (f32)x, (f32)y);
+    return update_text(initial_text, (f32) x, (f32) y);
 }
 
 void text_string::draw() const
@@ -327,7 +328,7 @@ void text_string::draw() const
     core::get_device_context()->IASetIndexBuffer(m_index_buffer, DXGI_FORMAT_R32_UINT, 0);
     core::get_device_context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    core::get_device_context()->DrawIndexed((u32)m_indices.size(), 0, 0);
+    core::get_device_context()->DrawIndexed((u32) m_indices.size(), 0, 0);
 }
 
 void text_string::draw(f32 x, f32 y)

@@ -29,7 +29,7 @@
 
 
 #ifdef _DEBUG
-    #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
+    #define DBG_NEW new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
 
 #define SAFE_DELETE(x)                                                                                                           \

@@ -32,44 +32,32 @@ namespace yae
 {
 model_component::model_component(const std::string_view filename, const char* tex_file, const char* blendtex)
 {
-    m_model = new gfx::model{};
-    if (!m_model->init(filename))
-    {
-        LOG_ERROR("Failed to load model file {} from component", filename);
-        // TODO: Throw exception?
-    }
-
-    m_texture.init(tex_file);
-
+    m_model = assets::load_model(filename.data());
+    m_texture = assets::load_texture(tex_file);
     if(blendtex)
     {
-        m_blendtex = new gfx::texture{};
-        m_blendtex->init(blendtex);
+        m_blendtex = assets::load_texture(blendtex);
     }
 }
 
 model_component::~model_component()
 {
-    if (m_model)
+    if (m_model_managed)
     {
         SAFE_DELETE(m_model);
-    }
-
-    if(m_blendtex)
-    {
-        SAFE_DELETE(m_blendtex);
     }
 }
 
 bool model_component::render()
 {
-    gfx::render3d(m_model, &m_texture, m_owner->world_transformation(), m_blendtex);
+    gfx::render3d(m_model, m_texture, m_owner->world_transformation(), m_blendtex);
     return true;
 }
 
 bitmap_component::bitmap_component(u32 width, u32 height, const char* filename)
 {
-    if (!m_texture.init(filename))
+    m_texture = assets::load_texture(filename);
+    if (!m_texture)
     {
         LOG_ERROR("Failed to load texture file {} from bitmap component", filename);
         return;
@@ -87,7 +75,7 @@ bitmap_component::~bitmap_component()
 
 bool bitmap_component::render()
 {
-    gfx::render2d(m_model, &m_texture, m_owner->world_transformation());
+    gfx::render2d(m_model, m_texture, m_owner->world_transformation());
     return true;
 }
 

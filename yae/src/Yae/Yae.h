@@ -34,6 +34,7 @@
 
 // Util
 #include "Util/PathUtil.h"
+#include "Util/AssetManager.h"
 
 // Graphics
 #include "Graphics/D3D11Common.h"

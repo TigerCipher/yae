@@ -26,6 +26,7 @@
 #include "Input.h"
 #include "Yae/Graphics/D3D11Core.h"
 #include "Yae/Graphics/Renderer.h"
+#include "Yae/Util/AssetManager.h"
 
 namespace yae
 {
@@ -95,6 +96,7 @@ void application::shutdown()
     LOG_INFO("Shutting down application");
     gfx::fonts::unload();
     LOG_INFO("Shutting down game");
+    assets::destroy();
     m_game->shutdown();
     SAFE_DELETE(m_game);
     LOG_INFO("Game shutdown");
