@@ -72,7 +72,7 @@ private:
     texture                            m_texture{};
     std::unordered_map<i32, char_desc> m_chars{};
     i32                                m_size{};
-    u32                                m_space_size{ 3 };
+    u32                                m_space_size{ 30 };
 };
 
 class text_string
