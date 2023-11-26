@@ -32,6 +32,7 @@ namespace yae::gfx
 struct material
 {
     ID3D11ShaderResourceView* diffuse{};
+    ID3D11ShaderResourceView* normal{};
     ID3D11ShaderResourceView* blend{};
     math::vec4                tint{ 1.f, 1.f, 1.f, 1.f };
     f32                       specular_power{ 32.f }; // TODO: Currently useless

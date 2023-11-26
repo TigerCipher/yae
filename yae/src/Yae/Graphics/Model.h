@@ -39,17 +39,19 @@ class model
 {
 public:
     model();
-    virtual ~model()
-    {
-        shutdown();
-    }
+    virtual ~model() { shutdown(); }
 
     template<vertex_type VertexType>
-    bool init(const std::vector<VertexType>& vertices, const std::vector<u32> indices)
+    bool init(std::vector<VertexType>& vertices, const std::vector<u32> indices)
     {
         m_stride       = sizeof(VertexType);
         m_vertex_count = (u32) vertices.size();
         m_index_count  = (u32) indices.size();
+
+        if constexpr (std::is_same_v<VertexType, vertex_pos_norm_tex_tang>)
+        {
+            calculate_vectors(vertices);
+        }
 
         D3D11_BUFFER_DESC      vertex_buffer_desc{};
         D3D11_BUFFER_DESC      index_buffer_desc{};
@@ -95,6 +97,10 @@ public:
     constexpr u32 index_count() const { return m_index_count; }
 
 private:
+    void calculate_vectors(std::vector<vertex_pos_norm_tex_tang>& vertices);
+    void calculate_tangents(const vertex_position_normal_texture& vtx1, const vertex_position_normal_texture& vtx2,
+                            const vertex_position_normal_texture& vtx3, math::vec3& tangent, math::vec3& binormal);
+
     ID3D11Buffer* m_vertex_buffer{};
     ID3D11Buffer* m_index_buffer{};
     u32           m_vertex_count{};

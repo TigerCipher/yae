@@ -36,6 +36,9 @@ namespace
 std::vector<std::pair<game_object*, pointlight_component*>> pointlights{};
 
 ID3D11SamplerState* sampler_state{};
+
+math::vec4 ambient{0.95f, 0.95f, 0.95f, 1.f};
+math::vec3 light_direction{1.f, 0.f, -1.f};
 } // anonymous namespace
 
 
@@ -92,13 +95,24 @@ void render3d(const model* model, const math::matrix& world, const material& mat
     {
         ps->set_shader_resource_view("textureSRV", assets::load_texture("./assets/textures/default.tga")->texture_view());
     }
-    if (mat.blend)
+    if (mat.blend && ps == shaders::multitexture()->ps)
     {
         ps->set_shader_resource_view("textureSRVBlend", mat.blend);
     }
+
+    if(mat.normal)
+    {
+        ps->set_shader_resource_view("textureSRVBump", mat.normal);
+    }else
+    {
+        ps->set_shader_resource_view("textureSRVBump", assets::load_texture("./assets/textures/default_normal.tga")->texture_view());
+    }
+
     ps->set_sampler_state("Sampler", sampler);
 
     ps->set_float4("tintColor", mat.tint);
+    ps->set_float4("ambientColor", ambient);
+    ps->set_float3("lightDirection", light_direction);
 
     //ps->set_float3("lightDirection", { 1.f, -1.f, 0.f });
     //ps->set_float3("cameraPos", app::instance()->camera()->position());
@@ -154,9 +168,9 @@ void render_directional_light()
     ps->set_shader_resource_view("diffuseGB", core::diffuse_gbuffer());
     ps->set_sampler_state("Sampler", sampler_state);
 
-    ps->set_float3("ambientColor", { 0.15f, 0.15f, 0.15f });
-    ps->set_float3("lightColor", { 1.f, 1.f, 1.f });
-    ps->set_float3("lightDirection", { 1.f, 0.f, 1.f });
+    ps->set_float3("ambientColor", { 0.05f, 0.05f, 0.05f });
+    ps->set_float3("lightColor", { .3f, .3f, .3f });
+    ps->set_float3("lightDirection", { 1.f, -0.4f, 1.f });
     ps->set_float3("cameraPos", app::instance()->camera()->position());
 
     ps->copy_all_buffers();

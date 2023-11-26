@@ -25,4 +25,7 @@
     <FxCompile Include="assets\LightsVertexShader.hlsl" />
     <FxCompile Include="assets\LightsPixelShader.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="assets\models\plane2.txt" />
+  </ItemGroup>
 </Project>

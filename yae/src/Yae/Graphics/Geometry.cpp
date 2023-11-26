@@ -200,7 +200,7 @@ void create_box(std::vector<vertex_position_normal_texture>& vertices, std::vect
 
 	vertices.assign(&v[0], &v[24]);
 
-	UINT i[36];
+	u32 i[36];
 
 	// Fill in the front face index data
 	i[0] = 0; i[1] = 1; i[2] = 2;
@@ -236,6 +236,8 @@ ref<model> create_sphere(f32 radius, u32 slice_count, u32 stack_count)
     std::vector<vertex_position_normal_texture> verts{};
     std::vector<u32>                            ints{};
     create_sphere(verts, ints, radius, slice_count, stack_count);
+
+
     ret->init(verts, ints);
 
     return ret;
@@ -258,6 +260,7 @@ ref<model> create_plane(u32 width, u32 height)
     std::vector<vertex_position_normal_texture> verts{};
     std::vector<u32>                            ints{};
     create_plane(verts, ints, width, height);
+
     ret->init(verts, ints);
     return ret;
 }

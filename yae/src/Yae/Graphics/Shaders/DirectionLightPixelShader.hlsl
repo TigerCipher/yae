@@ -29,16 +29,19 @@ float4 main(PixelInput input) : SV_TARGET
     float4 diff = diffuseGB.Load(sampleIndices);
 
     float3 lightDir = normalize(-lightDirection);
-    float amnt = max(dot(normal, lightDir), 0.0f);
+    //float amnt = max(dot(normal, lightDir), 0.0f);
     float3 reflectDir = reflect(-lightDir, normal);
     float3 viewDir = normalize(cameraPos - pos);
+
+    float3 ldir = -lightDirection;
+    float lightIntensity = saturate(dot(normal, ldir));
 
     float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 32.0f);
 
     float4 color = float4(ambientColor, 1.0f) * diff;
-    color += float4(lightColor, 1.0f) * amnt * diff;
+    color += float4(lightColor, 1.0f) * lightIntensity * diff;
     color += float4(1, 1, 1, 1) * spec * diff;
 
 
-    return color;
+    return saturate(color);
 }

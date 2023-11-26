@@ -29,8 +29,7 @@ namespace yae::gfx
 {
 
 struct vertex
-{
-};
+{};
 
 struct vertex_position_color : vertex
 {
@@ -70,6 +69,21 @@ struct vertex_position_normal_texture : vertex
     vertex_position_normal_texture() = default;
     vertex_position_normal_texture(const math::vec3& position, const math::vec3& normal, const math::vec2& texture) :
         position(position), normal(normal), texture(texture)
+    {}
+};
+
+struct vertex_pos_norm_tex_tang : vertex
+{
+    math::vec3 position{};
+    math::vec3 normal{};
+    math::vec2 texture{};
+    math::vec3 tangent{};
+    math::vec3 binormal{};
+
+    vertex_pos_norm_tex_tang() = default;
+    vertex_pos_norm_tex_tang(const math::vec3& position, const math::vec3& normal, const math::vec2& texture,
+                             const math::vec3& tangent, const math::vec3& binormal) :
+        position(position), normal(normal), texture(texture), tangent(tangent), binormal(binormal)
     {}
 };
 

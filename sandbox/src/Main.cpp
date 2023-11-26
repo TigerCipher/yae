@@ -85,7 +85,7 @@ private:
     game_object m_light_sphere{};
 
     //gfx::bitmap_font m_font{ };
-    //gfx::text_string       m_text{};
+    gfx::text_string       m_text{};
     ref<shared_test> m_t{};
 
 public:
@@ -96,7 +96,7 @@ public:
         events::register_listener(events::key_pressed, nullptr, on_key_typed);
 
         //m_font.load_font("./assets/fonts/Coolvetica");
-        //m_text.init(m_font, "Hello World!", 10, 10);
+        m_text.init(gfx::fonts::coolvetica(), "Apple Monkey googly quack", 10, 500);
 
         ref<shared_test> t = create_ref<shared_test>(0);
 
@@ -112,19 +112,30 @@ public:
         gfx::material dirty_bricks{};
         dirty_bricks.diffuse = assets::load_texture("./assets/textures/bricks.tga")->texture_view();
         dirty_bricks.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
+        dirty_bricks.normal  = assets::load_texture("./assets/textures/bricks_normal.tga")->texture_view();
 
         gfx::material dirty_stone{};
         dirty_stone.diffuse = assets::load_texture("./assets/textures/stone01.tga")->texture_view();
-        dirty_stone.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
+        //dirty_stone.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
+        dirty_stone.normal  = assets::load_texture("./assets/textures/normal01.tga")->texture_view();
 
         gfx::material bricks{};
         bricks.diffuse = assets::load_texture("./assets/textures/bricks.tga")->texture_view();
-        bricks.tint    = { 0.6f, 0.f, 0.3f, 1.f };
+        //bricks.tint    = { 0.6f, 0.f, 0.3f, 1.f };
+        bricks.normal = assets::load_texture("./assets/textures/bricks_normal.tga")->texture_view();
 
-        m_cube.add(new model_component{ gfx::geometry::create_box(3.f, 3.f, 1.f) })->set_material(dirty_bricks);
-        m_cube.set_position(3.f, 9.f, 3.f);
+        //m_cube.add(new model_component{ gfx::geometry::create_box(3.f, 3.f, 1.f) })->set_material(dirty_bricks);
+        m_cube.add(new model_component{"./assets/models/cube.txt"})->set_material(dirty_stone);
+        m_cube.set_scale(3.f, 3.f, 1.f);
+        m_cube.set_position(73.f, 3.f, 73.f);
 
-        m_cube2.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f) });
+        game_object* sphere = new game_object{};
+        sphere->add(new model_component{"./assets/models/sphere.txt"})->set_material(dirty_bricks);
+        sphere->set_position(3.f, 9.f, 6.f);
+        m_root.add(sphere);
+
+        //m_cube2.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f) });
+        m_cube2.add(new model_component{ "./assets/models/cube.txt" });
         m_ball1.add(new model_component{ gfx::geometry::create_sphere(1.5f, 36, 36) });
         m_ball1.add(m_cube2);
         m_cube2.set_position(3.f, 1.f, 0.f);
@@ -134,10 +145,10 @@ public:
         m_ball1.set_position(-3.f, 5.f, -3.f);
 
         //m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{gfx::geometry::create_plane(32, 32)});
-        m_plane.add(new model_component{ "./assets/models/plane.txt" })->set_material(dirty_stone);
-        //m_plane.rotate(90.f, axis::x);
+        m_plane.add(new model_component{ "./assets/models/plane2.txt" })->set_material(bricks);
+        m_plane.rotate(90.f, axis::x);
         m_plane.set_position(0.f, -1.f, 0.f);
-        m_plane.set_scale(10.f, 1.f, 10.f);
+        m_plane.set_scale(100.f, 100.f, 1.f);
 
         m_light_sphere.add(new pointlight_component{
             {0.f, 1.f, 0.f},
@@ -177,7 +188,7 @@ public:
         }
 
         //m_root.add(m_light_sphere);
-        m_quad.add(new bitmap_component{ 150, 150, "./assets/textures/default.tga" });
+        //m_quad.add(new bitmap_component{ 150, 150, "./assets/textures/default.tga" });
         //m_quad.set_position(-1920.f / 2.f, -1080.f / 2.f, 0);
 
 
@@ -237,10 +248,10 @@ public:
         //m_cube2.rotate(rotation, axis::y);
         m_ball1.transformation().rotate(rotation, axis::y, true);
 
-        m_quad.rotate(rotation, axis::z);
+        //m_quad.rotate(rotation, axis::z);
 
         m_root.update(delta);
-        m_quad.update(delta);
+        //m_quad.update(delta);
         //m_lights.update(delta);
     }
 
@@ -255,7 +266,7 @@ public:
 
     bool render2d() override
     {
-        m_quad.render();
+        //m_quad.render();
 
         //m_text.draw();
         return true;
