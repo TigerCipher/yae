@@ -56,6 +56,17 @@ bool on_key_typed(u16 code, void* sender, void* listener, void* userdata)
     return false;
 }
 
+
+class shared_test
+{
+public:
+    shared_test(u32 id) : m_id(id) {}
+    ~shared_test() { LOG_DEBUG("Shared test destructor, id: {}", m_id); }
+
+private:
+    u32 m_id{};
+};
+
 } // anonymous namespace
 
 class sandbox : public game
@@ -75,6 +86,7 @@ private:
 
     //gfx::bitmap_font m_font{ };
     //gfx::text_string       m_text{};
+    ref<shared_test> m_t{};
 
 public:
     ~sandbox() override = default;
@@ -85,6 +97,11 @@ public:
 
         //m_font.load_font("./assets/fonts/Coolvetica");
         //m_text.init(m_font, "Hello World!", 10, 10);
+
+        ref<shared_test> t = create_ref<shared_test>(0);
+
+        m_t = create_ref<shared_test>(1);
+        m_t = nullptr;
 
         m_camera->set_position(0.f, 1.f, -12.f);
         m_camera->set_sensitivity(25.f);

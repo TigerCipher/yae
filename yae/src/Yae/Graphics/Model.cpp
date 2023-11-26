@@ -77,7 +77,14 @@ std::vector<vertex_position_normal_texture> load_model(const char* filename)
     return model;
 }
 
+u32 total_models{};
+
 } // anonymous namespace
+
+model::model()
+{
+    total_models++;
+}
 
 bool model::init(const std::string_view filename)
 {
@@ -138,6 +145,7 @@ void model::shutdown()
 {
     core::release(m_index_buffer);
     core::release(m_vertex_buffer);
+    LOG_DEBUG("Shutting down model, {} models remaining", --total_models);
 }
 
 void model::bind() const

@@ -54,16 +54,13 @@ class model_component : public game_component
 {
 public:
     model_component(const std::string_view model);
-    model_component(gfx::model* model) : m_model{ model }
-    {
-        m_model_managed = true;
-    }
-    ~model_component() override;
+    model_component(gfx::model* model) : m_model{ model } {}
+    model_component(const ref<gfx::model>& model) : m_model{ model } {}
+    ~model_component() override = default;
     bool render() override;
 
 private:
-    bool          m_model_managed{};
-    gfx::model*   m_model{};
+    ref<gfx::model> m_model{};
 };
 
 
@@ -71,12 +68,12 @@ class bitmap_component : public game_component
 {
 public:
     bitmap_component(u32 width, u32 height, const char* filename);
-    ~bitmap_component() override;
+    ~bitmap_component() override = default;
     bool render() override;
 
 private:
-    gfx::model*   m_model{};
-    gfx::texture* m_texture{};
+    ref<gfx::model>   m_model{};
+    ref<gfx::texture> m_texture{};
 };
 
 class pointlight_component : public game_component

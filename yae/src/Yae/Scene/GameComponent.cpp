@@ -35,17 +35,9 @@ model_component::model_component(const std::string_view filename)
     m_model = assets::load_model(filename.data());
 }
 
-model_component::~model_component()
-{
-    if (m_model_managed)
-    {
-        SAFE_DELETE(m_model);
-    }
-}
-
 bool model_component::render()
 {
-    gfx::render3d(m_model, m_owner->world_transformation(), m_owner->material());
+    gfx::render3d(m_model.get(), m_owner->world_transformation(), m_owner->material());
     return true;
 }
 
@@ -60,17 +52,10 @@ bitmap_component::bitmap_component(u32 width, u32 height, const char* filename)
     m_model = gfx::geometry::create_quad(width, height);
 }
 
-bitmap_component::~bitmap_component()
-{
-    if (m_model)
-    {
-        SAFE_DELETE(m_model);
-    }
-}
 
 bool bitmap_component::render()
 {
-    gfx::render2d(m_model, m_texture, m_owner->world_transformation());
+    gfx::render2d(m_model.get(), m_texture.get(), m_owner->world_transformation());
     return true;
 }
 

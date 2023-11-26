@@ -38,7 +38,7 @@ class shader;
 class model
 {
 public:
-    model()          = default;
+    model();
     virtual ~model()
     {
         shutdown();

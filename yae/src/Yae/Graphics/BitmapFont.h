@@ -69,7 +69,7 @@ public:
     void          set_space_size(u32 size) { m_space_size = size; }
 
 private:
-    texture*                           m_texture{};
+    ref<texture>                       m_texture{};
     std::unordered_map<i32, char_desc> m_chars{};
     i32                                m_size{};
     u32                                m_space_size{ 30 };

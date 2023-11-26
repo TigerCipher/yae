@@ -230,9 +230,9 @@ void create_box(std::vector<vertex_position_normal_texture>& vertices, std::vect
 
     indices.assign(&i[0], &i[36]);
 }
-model* create_sphere(f32 radius, u32 slice_count, u32 stack_count)
+ref<model> create_sphere(f32 radius, u32 slice_count, u32 stack_count)
 {
-    auto* ret = DBG_NEW                         model{};
+    auto                                        ret = create_ref<model>();
     std::vector<vertex_position_normal_texture> verts{};
     std::vector<u32>                            ints{};
     create_sphere(verts, ints, radius, slice_count, stack_count);
@@ -241,9 +241,9 @@ model* create_sphere(f32 radius, u32 slice_count, u32 stack_count)
     return ret;
 }
 
-model* create_box(f32 width, f32 height, f32 depth)
+ref<model> create_box(f32 width, f32 height, f32 depth)
 {
-    auto* ret = DBG_NEW                         model{};
+    auto                                        ret = create_ref<model>();
     std::vector<vertex_position_normal_texture> verts{};
     std::vector<u32>                            ints{};
     create_box(verts, ints, width, height, depth);
@@ -252,9 +252,9 @@ model* create_box(f32 width, f32 height, f32 depth)
     return ret;
 }
 
-model* create_plane(u32 width, u32 height)
+ref<model> create_plane(u32 width, u32 height)
 {
-    auto* ret = DBG_NEW                         model{};
+    auto                                        ret = create_ref<model>();
     std::vector<vertex_position_normal_texture> verts{};
     std::vector<u32>                            ints{};
     create_plane(verts, ints, width, height);
@@ -262,9 +262,9 @@ model* create_plane(u32 width, u32 height)
     return ret;
 }
 
-model* create_quad(u32 width, u32 height)
+ref<model> create_quad(u32 width, u32 height)
 {
-    auto*                                ret = new model{};
+    auto                                 ret = create_ref<model>();
     std::vector<vertex_position_texture> verts{};
     std::vector<u32>                     ints{};
     create_quad(verts, ints, width, height);

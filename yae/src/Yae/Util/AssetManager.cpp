@@ -26,36 +26,17 @@ namespace yae::assets
 {
 namespace
 {
-std::unordered_map<std::string, gfx::texture*> tex_map{};
-std::unordered_map<std::string, gfx::model*>   model_map{};
+std::unordered_map<std::string, ref<gfx::texture>> tex_map{};
+std::unordered_map<std::string, ref<gfx::model>>   model_map{};
 } // anonymous namespace
 
 void destroy()
 {
-    for (auto it = tex_map.begin(); it != tex_map.end(); ++it)
-    {
-        if (it->second)
-        {
-            delete it->second;
-            it->second = nullptr;
-        }
-    }
-
     tex_map.clear();
-
-    for (auto it = model_map.begin(); it != model_map.end(); ++it)
-    {
-        if (it->second)
-        {
-            delete it->second;
-            it->second = nullptr;
-        }
-    }
-
     model_map.clear();
 }
 
-gfx::texture* load_texture(const char* filename)
+ref<gfx::texture> load_texture(const char* filename)
 {
     const auto it = tex_map.find(filename);
     if (it != tex_map.end())
@@ -63,12 +44,12 @@ gfx::texture* load_texture(const char* filename)
         return it->second;
     }
 
-    auto tex          = new gfx::texture{ filename };
+    auto tex          = create_ref<gfx::texture>(filename);
     tex_map[filename] = tex;
     return tex;
 }
 
-gfx::model* load_model(const char* filename)
+ref<gfx::model> load_model(const char* filename)
 {
     const auto it = model_map.find(filename);
     if (it != model_map.end())
@@ -76,7 +57,7 @@ gfx::model* load_model(const char* filename)
         return it->second;
     }
 
-    auto mdl = new gfx::model{};
+    auto mdl = create_ref<gfx::model>();
     mdl->init(filename);
     model_map[filename] = mdl;
     return mdl;

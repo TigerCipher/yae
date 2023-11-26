@@ -40,8 +40,8 @@ void create_sphere(std::vector<vertex_position_normal_texture>& vertices, std::v
 void create_box(std::vector<vertex_position_normal_texture>& vertices, std::vector<u32>& indices, f32 width, f32 height,
                 f32 depth);
 
-model* create_sphere(f32 radius, u32 slice_count = 36, u32 stack_count = 36);
-model* create_box(f32 width, f32 height, f32 depth);
-model* create_plane(u32 width = 1, u32 height = 1);
-model* create_quad(u32 width, u32 height);
+ref<model> create_sphere(f32 radius, u32 slice_count = 36, u32 stack_count = 36);
+ref<model> create_box(f32 width, f32 height, f32 depth);
+ref<model> create_plane(u32 width = 1, u32 height = 1);
+ref<model> create_quad(u32 width, u32 height);
 } // namespace yae::gfx::geometry

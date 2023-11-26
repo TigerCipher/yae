@@ -32,6 +32,6 @@ namespace yae::assets
 
 void destroy();
 
-gfx::texture* load_texture(const char* filename);
-gfx::model* load_model(const char* filename);
-}
+ref<gfx::texture> load_texture(const char* filename);
+ref<gfx::model>   load_model(const char* filename);
+} // namespace yae::assets
