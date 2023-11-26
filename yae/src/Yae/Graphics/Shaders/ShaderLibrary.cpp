@@ -38,80 +38,86 @@ shader_obj multitex{};
 
 bool init()
 {
-    tex.vs    = new vertex_shader{};
-    tex.ps    = new pixel_shader{};
-    lights.vs = new vertex_shader{};
-    lights.ps = new pixel_shader{};
-    dr.vs     = new vertex_shader{};
-    dr.ps     = new pixel_shader{};
-    dir.vs    = new vertex_shader{};
-    dir.ps    = new pixel_shader{};
-    fonts.vs  = new vertex_shader{};
-    fonts.ps  = new pixel_shader{};
+    tex.vs      = new vertex_shader{};
+    tex.ps      = new pixel_shader{};
+    lights.vs   = new vertex_shader{};
+    lights.ps   = new pixel_shader{};
+    dr.vs       = new vertex_shader{};
+    dr.ps       = new pixel_shader{};
+    dir.vs      = new vertex_shader{};
+    dir.ps      = new pixel_shader{};
+    fonts.vs    = new vertex_shader{};
+    fonts.ps    = new pixel_shader{};
     multitex.vs = dr.vs;
     multitex.ps = new pixel_shader{};
 
-    if (!tex.vs->load_from_file("../bin/Debug/TextureVertexShader.cso"))
+#ifdef _DEBUG
+    std::string firstbit = "../bin/Debug/";
+#else
+    std::string firstbit = "../bin/Release/";
+#endif
+
+    if (!tex.vs->load_from_file(firstbit + "TextureVertexShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!tex.ps->load_from_file("../bin/Debug/TexturePixelShader.cso"))
+    if (!tex.ps->load_from_file(firstbit + "TexturePixelShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!lights.vs->load_from_file("../bin/Debug/LightVertexShader.cso"))
+    if (!lights.vs->load_from_file(firstbit + "LightVertexShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!lights.ps->load_from_file("../bin/Debug/LightPixelShader.cso"))
+    if (!lights.ps->load_from_file(firstbit + "LightPixelShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!dr.vs->load_from_file("../bin/Debug/DeferredVertexShader.cso"))
+    if (!dr.vs->load_from_file(firstbit + "DeferredVertexShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!dr.ps->load_from_file("../bin/Debug/DeferredPixelShader.cso"))
+    if (!dr.ps->load_from_file(firstbit + "DeferredPixelShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!dir.vs->load_from_file("../bin/Debug/DirectionLightVertexShader.cso"))
+    if (!dir.vs->load_from_file(firstbit + "DirectionLightVertexShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!dir.ps->load_from_file("../bin/Debug/DirectionLightPixelShader.cso"))
+    if (!dir.ps->load_from_file(firstbit + "DirectionLightPixelShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!fonts.vs->load_from_file("../bin/Debug/FontVertexShader.cso"))
+    if (!fonts.vs->load_from_file(firstbit + "FontVertexShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!fonts.ps->load_from_file("../bin/Debug/FontPixelShader.cso"))
+    if (!fonts.ps->load_from_file(firstbit + "FontPixelShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if(!multitex.ps->load_from_file("../bin/Debug/MultitexturePixelShader.cso"))
+    if (!multitex.ps->load_from_file(firstbit + "MultitexturePixelShader.cso"))
     {
         shutdown();
         return false;

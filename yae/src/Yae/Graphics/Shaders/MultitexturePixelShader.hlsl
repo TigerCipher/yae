@@ -2,6 +2,10 @@ Texture2D textureSRV : register(t0);
 Texture2D textureSRVBlend : register(t1);
 SamplerState Sampler : register(s0);
 
+cbuffer Data : register(b0)
+{
+    float4 tintColor;
+}
 
 struct PixelInput
 {
@@ -22,12 +26,12 @@ PixelOutput main(PixelInput input)
 {
     PixelOutput output;
 
-    float4 diffuse = textureSRV.Sample(Sampler, input.uv);
-    float4 blend = textureSRVBlend.Sample(Sampler, input.uv);
+    const float4 diffuse = textureSRV.Sample(Sampler, input.uv);
+    const float4 blend = textureSRVBlend.Sample(Sampler, input.uv);
 
     output.position = float4(input.worldPos, 1.0f);
     output.normal = float4(input.normal, 1.0f);
-    output.diffuse = saturate(diffuse * blend * 2.0f);
+    output.diffuse = saturate(diffuse * blend * 2.0f) * tintColor;
 
     return output;
 }

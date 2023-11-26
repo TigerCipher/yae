@@ -1,6 +1,10 @@
 Texture2D textureSRV : register(t0);
 SamplerState Sampler : register(s0);
 
+cbuffer Data : register(b0)
+{
+    float4 tintColor;
+}
 
 struct PixelInput
 {
@@ -21,11 +25,11 @@ PixelOutput main(PixelInput input)
 {
     PixelOutput output;
 
-    float4 diffuse = textureSRV.Sample(Sampler, input.uv);
+    const float4 diffuse = textureSRV.Sample(Sampler, input.uv);
 
     output.position = float4(input.worldPos, 1.0f);
     output.normal = float4(input.normal, 1.0f);
-    output.diffuse = diffuse;
+    output.diffuse = saturate(diffuse * tintColor);
 
     return output;
 }

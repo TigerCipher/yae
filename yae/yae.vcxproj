@@ -59,6 +59,9 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>src;$(SolutionDir)vendor</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -75,6 +78,9 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>src;$(SolutionDir)vendor</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -101,6 +107,7 @@
     <ClInclude Include="src\Yae\Graphics\D3D11Core.h" />
     <ClInclude Include="src\Yae\Graphics\Geometry.h" />
     <ClInclude Include="src\Yae\Graphics\Light.h" />
+    <ClInclude Include="src\Yae\Graphics\Material.h" />
     <ClInclude Include="src\Yae\Graphics\Model.h" />
     <ClInclude Include="src\Yae\Graphics\Renderer.h" />
     <ClInclude Include="src\Yae\Graphics\Shaders\Shader.h" />

@@ -55,14 +55,22 @@ void shutdown_renderer()
     core::release(sampler_state);
 }
 
-void render3d(const model* model, const texture* tex, const math::matrix& world, const texture* blendtex)
+void render3d(const model* model, const math::matrix& world, const material& mat)
 {
+    ID3D11SamplerState* sampler{};
+    if(!mat.sampler)
+    {
+        sampler = default_sampler_state();
+    }else
+    {
+        sampler = mat.sampler;
+    }
     vertex_shader* vs = shaders::deferred()->vs;
     pixel_shader*  ps;
-    if(!blendtex)
+    if (!mat.blend)
     {
         ps = shaders::deferred()->ps;
-    }else
+    } else
     {
         ps = shaders::multitexture()->ps;
     }
@@ -77,12 +85,20 @@ void render3d(const model* model, const texture* tex, const math::matrix& world,
     vs->copy_all_buffers();
     vs->bind();
 
-    ps->set_shader_resource_view("textureSRV", tex->texture_view());
-    if(blendtex)
+    if (mat.diffuse)
     {
-        ps->set_shader_resource_view("textureSRVBlend", blendtex->texture_view());
+        ps->set_shader_resource_view("textureSRV", mat.diffuse);
+    } else
+    {
+        ps->set_shader_resource_view("textureSRV", assets::load_texture("./assets/textures/default.tga")->texture_view());
     }
-    ps->set_sampler_state("Sampler", tex->sampler_state());
+    if (mat.blend)
+    {
+        ps->set_shader_resource_view("textureSRVBlend", mat.blend);
+    }
+    ps->set_sampler_state("Sampler", sampler);
+
+    ps->set_float4("tintColor", mat.tint);
 
     //ps->set_float3("lightDirection", { 1.f, -1.f, 0.f });
     //ps->set_float3("cameraPos", app::instance()->camera()->position());
@@ -115,6 +131,9 @@ void render2d(const model* model, const texture* tex, const math::matrix& world)
 
     ps->set_sampler_state("SamplerType", tex->sampler_state());
     ps->set_shader_resource_view("shaderTexture", tex->texture_view());
+
+    // TODO: Temp
+    ps->set_float4("tintColor", { 1.f, 1.f, 1.f, 1.f });
 
     ps->copy_all_buffers();
     ps->bind();

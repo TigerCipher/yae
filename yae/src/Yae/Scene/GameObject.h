@@ -25,6 +25,7 @@
 
 #include "Yae/Common.h"
 #include "Yae/Graphics/Transform.h"
+#include "Yae/Graphics/Material.h"
 
 namespace yae
 {
@@ -66,6 +67,14 @@ public:
 
     constexpr transform& transformation() { return m_transform; }
 
+    constexpr const gfx::material& material() const { return m_material; }
+
+    game_object* set_material(const gfx::material& mat)
+    {
+        m_material = mat;
+        return this;
+    }
+
     //constexpr const math::vector& forward() const { return m_forward; }
 
 protected:
@@ -77,7 +86,8 @@ protected:
     std::vector<game_component*> m_components{};
     game_object*                 m_parent{};
 
-    transform m_transform{};
+    transform     m_transform{};
+    gfx::material m_material{};
 };
 
 } // namespace yae

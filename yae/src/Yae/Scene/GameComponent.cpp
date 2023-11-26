@@ -30,14 +30,9 @@ using namespace DirectX;
 
 namespace yae
 {
-model_component::model_component(const std::string_view filename, const char* tex_file, const char* blendtex)
+model_component::model_component(const std::string_view filename)
 {
     m_model = assets::load_model(filename.data());
-    m_texture = assets::load_texture(tex_file);
-    if(blendtex)
-    {
-        m_blendtex = assets::load_texture(blendtex);
-    }
 }
 
 model_component::~model_component()
@@ -50,7 +45,7 @@ model_component::~model_component()
 
 bool model_component::render()
 {
-    gfx::render3d(m_model, m_texture, m_owner->world_transformation(), m_blendtex);
+    gfx::render3d(m_model, m_owner->world_transformation(), m_owner->material());
     return true;
 }
 

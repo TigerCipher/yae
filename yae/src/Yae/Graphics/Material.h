@@ -15,36 +15,27 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 //
-//  File Name: Renderer.h
-//  Date File Created: 11/22/2023
+//  File Name: Material.h
+//  Date File Created: 11/25/2023
 //  Author: Matt
 //
 //  ------------------------------------------------------------------------------
 
 #pragma once
 
-#include "Model.h"
+#include "Yae/Common.h"
 #include "Texture.h"
-#include "Yae/Scene/GameComponent.h"
-#include "Yae/Scene/GameObject.h"
 
 namespace yae::gfx
 {
 
-void init_renderer();
-void shutdown_renderer();
-void render3d(const model* model, const math::matrix& world, const material& mat);
-void render2d(const model* model, const texture* tex, const math::matrix& world);
-
-void render_directional_light();
-
-void render_pointlight(const math::vec3& pos, const math::matrix& world, const math::vec3& light_color, f32 radius, f32 intensity,
-                       f32 falloff);
-
-void add_pointlight(game_object* obj, pointlight_component* light);
-
-void render_all_pointlights();
-
-ID3D11SamplerState* default_sampler_state();
+struct material
+{
+    ID3D11ShaderResourceView* diffuse{};
+    ID3D11ShaderResourceView* blend{};
+    math::vec4                tint{ 1.f, 1.f, 1.f, 1.f };
+    f32                       specular_power{ 32.f }; // TODO: Currently useless
+    ID3D11SamplerState*       sampler{};
+};
 
 } // namespace yae::gfx

@@ -92,19 +92,32 @@ public:
         //m_cam.add(new camera_component{})->add(new move_component{})->add(new freelook_component{});
         //m_cam.set_position(0.f, 1.f, -12.f);
         //m_root.add(m_cam);
-        m_cube.add(new model_component{ gfx::geometry::create_box(3.f, 3.f, 1.f), "./assets/textures/bricks.tga", "./assets/textures/dirt.tga" });
+        gfx::material dirty_bricks{};
+        dirty_bricks.diffuse = assets::load_texture("./assets/textures/bricks.tga")->texture_view();
+        dirty_bricks.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
+
+        gfx::material dirty_stone{};
+        dirty_stone.diffuse = assets::load_texture("./assets/textures/stone01.tga")->texture_view();
+        dirty_stone.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
+
+        gfx::material bricks{};
+        bricks.diffuse = assets::load_texture("./assets/textures/bricks.tga")->texture_view();
+        bricks.tint    = { 0.6f, 0.f, 0.3f, 1.f };
+
+        m_cube.add(new model_component{ gfx::geometry::create_box(3.f, 3.f, 1.f) })->set_material(dirty_bricks);
         m_cube.set_position(3.f, 9.f, 3.f);
 
-        m_cube2.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f), "./assets/textures/default.tga" });
-        m_ball1.add(new model_component{ gfx::geometry::create_sphere(1.5f, 36, 36), "./assets/textures/bricks.tga" });
+        m_cube2.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f) });
+        m_ball1.add(new model_component{ gfx::geometry::create_sphere(1.5f, 36, 36) });
         m_ball1.add(m_cube2);
         m_cube2.set_position(3.f, 1.f, 0.f);
         m_cube2.rotate(45.f, axis::x);
+        m_ball1.set_material(bricks);
 
         m_ball1.set_position(-3.f, 5.f, -3.f);
 
         //m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{gfx::geometry::create_plane(32, 32)});
-        m_plane.add(new model_component{ "./assets/models/plane.txt", "./assets/textures/stone01.tga", "./assets/textures/dirt.tga" });
+        m_plane.add(new model_component{ "./assets/models/plane.txt" })->set_material(dirty_stone);
         //m_plane.rotate(90.f, axis::x);
         m_plane.set_position(0.f, -1.f, 0.f);
         m_plane.set_scale(10.f, 1.f, 10.f);
