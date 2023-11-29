@@ -38,7 +38,7 @@ std::vector<std::pair<game_object*, pointlight_component*>> pointlights{};
 ID3D11SamplerState* sampler_state{};
 
 math::vec4 ambient{ 0.05f, 0.05f, 0.05f, 1.f };
-math::vec4 dir_light_color{ 1.f, 1.f, 1.f, 1.f };
+math::vec4 dir_light_color{ .4f, .4f, .4f, .4f };
 math::vec3 light_direction{ 1.f, -0.4f, 1.f };
 } // anonymous namespace
 

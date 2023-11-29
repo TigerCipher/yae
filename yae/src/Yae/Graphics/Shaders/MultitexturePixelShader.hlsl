@@ -45,7 +45,7 @@ PixelOutput main(PixelInput input)
     float3 bumpNormal = (bump.x * input.tangent) + (bump.y * input.binormal) + (bump.z * input.normal);
     bumpNormal = normalize(bumpNormal);
 
-    float3 lightDir = normalize(-lightDirection);
+    float3 lightDir = -lightDirection;
     float lightIntensity = saturate(dot(bumpNormal, lightDir));
 
     color += dirLightColor * lightIntensity * diff;

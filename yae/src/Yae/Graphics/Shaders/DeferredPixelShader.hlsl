@@ -42,14 +42,14 @@ PixelOutput main(PixelInput input)
     float3 bumpNormal = (bump.x * input.tangent) + (bump.y * input.binormal) + (bump.z * input.normal);
     bumpNormal = normalize(bumpNormal);
 
-    float3 lightDir = normalize(-lightDirection);
+    float3 lightDir = -lightDirection;
     float lightIntensity = saturate(dot(bumpNormal, lightDir));
 
     color += dirLightColor * lightIntensity * diff;
 
     if (lightIntensity > 0.0f)
     {
-        float3 reflectDir = reflect(-lightDir, bumpNormal);
+        float3 reflectDir = reflect(normalize(-lightDir), bumpNormal);
         float spec = pow(saturate(dot(input.viewDirection, reflectDir)), 32.0f);
         float4 specularColor = dirLightColor * spec * diff;
         color += specularColor;

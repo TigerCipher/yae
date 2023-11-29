@@ -116,7 +116,7 @@ public:
 
         gfx::material dirty_stone{};
         dirty_stone.diffuse = assets::load_texture("./assets/textures/stone01.tga")->texture_view();
-        dirty_stone.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
+        //dirty_stone.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
         dirty_stone.normal  = assets::load_texture("./assets/textures/normal01.tga")->texture_view();
 
         gfx::material bricks{};
@@ -127,8 +127,8 @@ public:
         //m_cube.add(new model_component{ gfx::geometry::create_box(3.f, 3.f, 1.f) })->set_material(dirty_bricks);
         m_cube.add(new model_component{"./assets/models/cube.txt"})->set_material(dirty_stone);
         m_cube.set_scale(3.f, 3.f, 1.f);
-        m_cube.set_position(73.f, 3.f, 73.f);
-        m_cube.rotate(180.f, axis::z);
+        m_cube.set_position(73.f, 6.f, 73.f);
+        //m_cube.rotate(180.f, axis::z);
 
         game_object* sphere = new game_object{};
         sphere->add(new model_component{"./assets/models/sphere.txt"})->set_material(dirty_bricks);
@@ -141,6 +141,7 @@ public:
         m_ball1.add(m_cube2);
         m_cube2.set_position(3.f, 1.f, 0.f);
         m_cube2.rotate(45.f, axis::x);
+        m_cube2.set_material(dirty_stone);
         m_ball1.set_material(bricks);
 
         m_ball1.set_position(-3.f, 5.f, -3.f);
@@ -181,7 +182,7 @@ public:
                 f32   b         = dist(gen);
                 new_light->add(new pointlight_component{
                     {r, g, b},
-                    30.f, 5.5f, 22.f
+                    30.f, 25.5f, 22.f
                 });
                 new_light->set_position((f32) x, 1.f, (f32) z);
                 m_lights.add(new_light);

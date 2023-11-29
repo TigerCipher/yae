@@ -16,5 +16,7 @@ float4 main(PixelInput input) : SV_TARGET
     float3 pos = positionGB.Load(sampleIndices).xyz;
     float4 diff = diffuseGB.Load(sampleIndices);
 
+    //return float4(normal, 1.0);
+    //return float4(pos, 1.0);
     return diff;
 }
