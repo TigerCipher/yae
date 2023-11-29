@@ -6,6 +6,12 @@ cbuffer MatrixData : register(b0)
     matrix projectionMatrix;
 }
 
+cbuffer Data : register(b1)
+{
+    float3 cameraPos;
+    float padding;
+}
+
 struct VertexInput
 {
     float3 position : SV_POSITION;
@@ -20,9 +26,10 @@ struct PixelInput
     float4 position : SV_POSITION;
     float3 normal : NORMAL;
     float3 worldPos : POSITIONWS;
-    float2 uv : TEXCOORD;
+    float2 uv : TEXCOORD0;
     float3 tangent : TANGENT;
     float3 binormal : BINORMAL;
+    float3 viewDirection : TEXCOORD1;
 };
 
 PixelInput main(VertexInput input)
@@ -40,6 +47,8 @@ PixelInput main(VertexInput input)
 
     output.binormal = mul(input.binormal, (float3x3) worldMatrix);
     output.binormal = normalize(output.binormal);
+
+    output.viewDirection = normalize(cameraPos - output.worldPos);
 
     return output;
 }

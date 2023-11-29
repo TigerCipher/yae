@@ -37,8 +37,9 @@ std::vector<std::pair<game_object*, pointlight_component*>> pointlights{};
 
 ID3D11SamplerState* sampler_state{};
 
-math::vec4 ambient{0.95f, 0.95f, 0.95f, 1.f};
-math::vec3 light_direction{1.f, 0.f, -1.f};
+math::vec4 ambient{ 0.05f, 0.05f, 0.05f, 1.f };
+math::vec4 dir_light_color{ 1.f, 1.f, 1.f, 1.f };
+math::vec3 light_direction{ 1.f, -0.4f, 1.f };
 } // anonymous namespace
 
 
@@ -61,10 +62,10 @@ void shutdown_renderer()
 void render3d(const model* model, const math::matrix& world, const material& mat)
 {
     ID3D11SamplerState* sampler{};
-    if(!mat.sampler)
+    if (!mat.sampler)
     {
         sampler = default_sampler_state();
-    }else
+    } else
     {
         sampler = mat.sampler;
     }
@@ -84,6 +85,7 @@ void render3d(const model* model, const math::matrix& world, const material& mat
     vs->set_matrix("worldMatrix", w);
     vs->set_matrix("projectionMatrix", p);
     vs->set_matrix("viewMatrix", v);
+    vs->set_float3("cameraPos", app::instance()->camera()->position());
 
     vs->copy_all_buffers();
     vs->bind();
@@ -100,12 +102,13 @@ void render3d(const model* model, const math::matrix& world, const material& mat
         ps->set_shader_resource_view("textureSRVBlend", mat.blend);
     }
 
-    if(mat.normal)
+    if (mat.normal)
     {
         ps->set_shader_resource_view("textureSRVBump", mat.normal);
-    }else
+    } else
     {
-        ps->set_shader_resource_view("textureSRVBump", assets::load_texture("./assets/textures/default_normal.tga")->texture_view());
+        ps->set_shader_resource_view("textureSRVBump",
+                                     assets::load_texture("./assets/textures/default_normal.tga")->texture_view());
     }
 
     ps->set_sampler_state("Sampler", sampler);
@@ -113,6 +116,8 @@ void render3d(const model* model, const math::matrix& world, const material& mat
     ps->set_float4("tintColor", mat.tint);
     ps->set_float4("ambientColor", ambient);
     ps->set_float3("lightDirection", light_direction);
+    ps->set_float4("dirLightColor", dir_light_color);
+
 
     //ps->set_float3("lightDirection", { 1.f, -1.f, 0.f });
     //ps->set_float3("cameraPos", app::instance()->camera()->position());
@@ -156,29 +161,25 @@ void render2d(const model* model, const texture* tex, const math::matrix& world)
     core::get_device_context()->DrawIndexed(model->index_count(), 0, 0);
 }
 
-void render_directional_light()
+void render_base_to_screen()
 {
-    vertex_shader* vs = shaders::directional_light()->vs;
-    pixel_shader*  ps = shaders::directional_light()->ps;
+    vertex_shader* vs = shaders::toscreen()->vs;
+    pixel_shader*  ps = shaders::toscreen()->ps;
 
     vs->bind();
+
 
     ps->set_shader_resource_view("positionGB", core::position_gbuffer());
     ps->set_shader_resource_view("normalGB", core::normal_gbuffer());
     ps->set_shader_resource_view("diffuseGB", core::diffuse_gbuffer());
     ps->set_sampler_state("Sampler", sampler_state);
 
-    ps->set_float3("ambientColor", { 0.05f, 0.05f, 0.05f });
-    ps->set_float3("lightColor", { .3f, .3f, .3f });
-    ps->set_float3("lightDirection", { 1.f, -0.4f, 1.f });
-    ps->set_float3("cameraPos", app::instance()->camera()->position());
-
     ps->copy_all_buffers();
     ps->bind();
 
     ID3D11Buffer* nothing{};
     constexpr u32 stride = sizeof(vertex_position_normal_texture);
-    u32           offset{};
+    constexpr u32 offset{};
     core::get_device_context()->IASetVertexBuffers(0, 1, &nothing, &stride, &offset);
     core::get_device_context()->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
     core::get_device_context()->Draw(3, 0);
@@ -213,6 +214,7 @@ void render_pointlight(const math::vec3& pos, const math::matrix& world, const m
     ps->set_float("radius", radius);
     ps->set_float("intensity", intensity);
     ps->set_float("falloff", falloff);
+    ps->set_float4("ambientColor", ambient);
 
     ps->copy_all_buffers();
     ps->bind();

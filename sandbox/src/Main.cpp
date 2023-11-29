@@ -116,18 +116,19 @@ public:
 
         gfx::material dirty_stone{};
         dirty_stone.diffuse = assets::load_texture("./assets/textures/stone01.tga")->texture_view();
-        //dirty_stone.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
+        dirty_stone.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
         dirty_stone.normal  = assets::load_texture("./assets/textures/normal01.tga")->texture_view();
 
         gfx::material bricks{};
         bricks.diffuse = assets::load_texture("./assets/textures/bricks.tga")->texture_view();
-        //bricks.tint    = { 0.6f, 0.f, 0.3f, 1.f };
+        bricks.tint    = { 0.6f, 0.f, 0.3f, 1.f };
         bricks.normal = assets::load_texture("./assets/textures/bricks_normal.tga")->texture_view();
 
         //m_cube.add(new model_component{ gfx::geometry::create_box(3.f, 3.f, 1.f) })->set_material(dirty_bricks);
         m_cube.add(new model_component{"./assets/models/cube.txt"})->set_material(dirty_stone);
         m_cube.set_scale(3.f, 3.f, 1.f);
         m_cube.set_position(73.f, 3.f, 73.f);
+        m_cube.rotate(180.f, axis::z);
 
         game_object* sphere = new game_object{};
         sphere->add(new model_component{"./assets/models/sphere.txt"})->set_material(dirty_bricks);
@@ -145,10 +146,10 @@ public:
         m_ball1.set_position(-3.f, 5.f, -3.f);
 
         //m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{gfx::geometry::create_plane(32, 32)});
-        m_plane.add(new model_component{ "./assets/models/plane2.txt" })->set_material(bricks);
-        m_plane.rotate(90.f, axis::x);
+        m_plane.add(new model_component{ "./assets/models/plane2.txt" })->set_material(dirty_stone);
+        //m_plane.rotate(90.f, axis::x);
         m_plane.set_position(0.f, -1.f, 0.f);
-        m_plane.set_scale(100.f, 100.f, 1.f);
+        m_plane.set_scale(100.f, 100.f, 100.f);
 
         m_light_sphere.add(new pointlight_component{
             {0.f, 1.f, 0.f},
@@ -180,7 +181,7 @@ public:
                 f32   b         = dist(gen);
                 new_light->add(new pointlight_component{
                     {r, g, b},
-                    25.f, 2.5f, 15.f
+                    30.f, 5.5f, 22.f
                 });
                 new_light->set_position((f32) x, 1.f, (f32) z);
                 m_lights.add(new_light);

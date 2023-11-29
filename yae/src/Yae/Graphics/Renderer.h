@@ -36,7 +36,7 @@ void shutdown_renderer();
 void render3d(const model* model, const math::matrix& world, const material& mat);
 void render2d(const model* model, const texture* tex, const math::matrix& world);
 
-void render_directional_light();
+void render_base_to_screen();
 
 void render_pointlight(const math::vec3& pos, const math::matrix& world, const math::vec3& light_color, f32 radius, f32 intensity,
                        f32 falloff);

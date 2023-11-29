@@ -130,7 +130,7 @@ bool application::render()
 
     gfx::core::clear_second_stage();
 
-    gfx::render_directional_light();
+    gfx::render_base_to_screen();
 
     gfx::render_all_pointlights();
 

@@ -214,8 +214,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="src\Yae\Graphics\Shaders\DirectionLightVertexShader.hlsl" />
-    <FxCompile Include="src\Yae\Graphics\Shaders\DirectionLightPixelShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\ToScreenVertexShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\ToScreenPixelShader.hlsl" />
     <FxCompile Include="src\Yae\Graphics\Shaders\DeferredVertexShader.hlsl" />
     <FxCompile Include="src\Yae\Graphics\Shaders\DeferredPixelShader.hlsl" />
     <FxCompile Include="src\Yae\Graphics\Shaders\LightVertexShader.hlsl" />

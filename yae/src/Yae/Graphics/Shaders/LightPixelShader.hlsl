@@ -11,6 +11,7 @@ cbuffer Data : register(b0)
     float radius;
     float intensity;
     float falloff;
+    float4 ambientColor;
 }
 
 struct PixelInput
@@ -47,9 +48,9 @@ float4 CalculatePointLight(float3 normal, float3 viewDir, float4 textureColor, f
     //float atten = 1.0f / (light.constantFactor + light.linearFactor * dist + light.quadraticFactor * dist * dist);
     float atten = CalculateAttenuation(dist);
 
-    float4 ambient = float4(0.15f, 0.15f, 0.15f, 1.0f) * textureColor * atten;
+    float4 ambient = ambientColor * textureColor * atten;
     float4 dif = float4(lightColor, 1.0f) * diff * textureColor * atten;
-    float4 specColor = float4(0.15f, 0.15f, 0.15f, 1.0f) * spec * textureColor * atten;
+    float4 specColor = float4(lightColor, 1.0f) * spec * textureColor * atten;
 
     return ambient + dif + specColor;
 }

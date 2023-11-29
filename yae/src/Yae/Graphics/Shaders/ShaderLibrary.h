@@ -44,7 +44,7 @@ shader_obj* texture_shader();
 
 shader_obj* deferred();
 
-shader_obj* directional_light();
+shader_obj* toscreen();
 
 shader_obj* lighting();
 

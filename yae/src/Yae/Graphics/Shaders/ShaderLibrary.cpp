@@ -93,13 +93,13 @@ bool init()
         return false;
     }
 
-    if (!dir.vs->load_from_file(firstbit + "DirectionLightVertexShader.cso"))
+    if (!dir.vs->load_from_file(firstbit + "ToScreenVertexShader.cso"))
     {
         shutdown();
         return false;
     }
 
-    if (!dir.ps->load_from_file(firstbit + "DirectionLightPixelShader.cso"))
+    if (!dir.ps->load_from_file(firstbit + "ToScreenPixelShader.cso"))
     {
         shutdown();
         return false;
@@ -155,7 +155,7 @@ shader_obj* deferred()
     return &dr;
 }
 
-shader_obj* directional_light()
+shader_obj* toscreen()
 {
     return &dir;
 }
