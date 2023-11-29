@@ -22,8 +22,7 @@
 //  ------------------------------------------------------------------------------
 #include "Logger.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "Yae/Core/Win32Header.h"
 
 namespace yae::logger::detail
 {

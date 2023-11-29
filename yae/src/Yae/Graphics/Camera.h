@@ -35,7 +35,7 @@ public:
     ~camera() = default;
 
     void rotate(f32 dx, f32 dy, f32 delta);
-    void move(f32 x, f32 y, f32 z, f32 delta);
+    void move(f32 x, f32 y, f32 z);
 
     math::matrix view();
 
@@ -51,13 +51,16 @@ public:
 private:
     f32        m_pitch{};
     f32        m_yaw{};
-    math::vec3 m_position{};
+    math::vec3 m_position{0.f, 0.f, -10.f};
 
-    f32 m_speed{ 10.f };
-    f32 m_sensitivity{ 10.f };
+    f32 m_speed{ 16.f };
+    f32 m_sensitivity{ 16.f };
 
     math::matrix m_view{};
     bool         m_recalculate{ true };
 };
+
+void create_default_view_matrix();
+const math::matrix& default_view_matrix();
 
 } // namespace yae::gfx

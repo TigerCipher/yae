@@ -25,17 +25,15 @@
 
 #include "Yae/Common.h"
 
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif
-#include <Windows.h>
+#include "Win32Header.h"
 
 #include "Yae/Scene/GameObject.h"
 #include "Yae/Graphics/Model.h"
 #include "Yae/Graphics/Texture.h"
+#include "Yae/Graphics/BitmapFont.h"
 #include "Yae/Graphics/Shaders/Shader.h"
 #include "Yae/Graphics/Camera.h"
+#include "Yae/Util/FpsHelper.h"
 #include "Game.h"
 #include "Timer.h"
 
@@ -59,11 +57,13 @@ public:
     bool frame();
 
 private:
-    bool render() const;
+    bool render();
+    void update_fps();
 
-    game*        m_game{};
-    gfx::camera* m_camera{};
-    //game_object* m_camera{};
-    timer m_timer{};
+    game*            m_game{};
+    timer            m_timer{};
+    gfx::camera*     m_camera{};
+    fps_counter      m_fps{};
+    gfx::text_string m_fps_string{};
 };
 } // namespace yae

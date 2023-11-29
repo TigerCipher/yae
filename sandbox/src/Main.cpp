@@ -21,7 +21,12 @@
 //
 // ------------------------------------------------------------------------------
 
+#include "Yae/Graphics/Geometry.h"
+
+
 #include <Yae/Entrypoint.h>
+
+#include <random>
 
 const char* game_name    = "sandbox";
 const char* game_version = "1.0.0";
@@ -51,21 +56,37 @@ bool on_key_typed(u16 code, void* sender, void* listener, void* userdata)
     return false;
 }
 
+
+class shared_test
+{
+public:
+    shared_test(u32 id) : m_id(id) {}
+    ~shared_test() { LOG_DEBUG("Shared test destructor, id: {}", m_id); }
+
+private:
+    u32 m_id{};
+};
+
 } // anonymous namespace
 
 class sandbox : public game
 {
 private:
-    gfx::shader*       m_texture_shader{};
-    gfx::light_shader* m_lights_shader{};
-    gfx::base_light    m_light{};
-    gfx::point_light   m_point_lights[4]{};
-    game_object        ball{};
-    game_object        ball2{};
-    game_object        box{};
-    game_object        m_plane{};
-    game_object        ball3{};
-    game_object        m_box2{};
+    game_object m_root{};
+    game_object m_cube{};
+    game_object m_cube2{};
+    game_object m_ball1{};
+
+    game_object m_quad{};
+    game_object m_plane{};
+    game_object m_cam{};
+
+    game_object m_lights{};
+    game_object m_light_sphere{};
+
+    //gfx::bitmap_font m_font{ };
+    gfx::text_string       m_text{};
+    ref<shared_test> m_t{};
 
 public:
     ~sandbox() override = default;
@@ -73,146 +94,139 @@ public:
     {
         events::register_listener(events::app_quit, nullptr, on_app_quit);
         events::register_listener(events::key_pressed, nullptr, on_key_typed);
-        {
-            gfx::shader_layout layout{};
-            layout.add<math::vec3>("POSITION");
-            layout.add<math::vec2>("TEXCOORD");
-            layout.add<math::vec3>("NORMAL");
-            m_lights_shader = gfx::create_shader<gfx::light_shader>("Light", layout);
-            if (!m_lights_shader)
-            {
-                popup::show("Failed to initialize the lights shader", "Error", popup::style::error);
-                return false;
-            }
-        }
 
-        {
-            gfx::shader_layout layout{};
-            layout.add<math::vec3>("POSITION");
-            layout.add<math::vec2>("TEXCOORD");
-            m_texture_shader = gfx::create_shader<gfx::shader>("Texture", layout);
-            if (!m_texture_shader)
-            {
-                popup::show("Failed to initialize the texture shader", "Error", popup::style::error);
-                return false;
-            }
-        }
+        //m_font.load_font("./assets/fonts/Coolvetica");
+        m_text.init(gfx::fonts::coolvetica(), "Apple Monkey googly quack", 10, 500);
+
+        ref<shared_test> t = create_ref<shared_test>(0);
+
+        m_t = create_ref<shared_test>(1);
+        m_t = nullptr;
+
         m_camera->set_position(0.f, 1.f, -12.f);
-        m_camera->set_sensitivity(15.f);
-        //m_camera->set_rotation(30.f, 0.f, 0.f);
+        m_camera->set_sensitivity(25.f);
+        m_camera->set_speed(25.f);
+        //m_cam.add(new camera_component{})->add(new move_component{})->add(new freelook_component{});
+        //m_cam.set_position(0.f, 1.f, -12.f);
+        //m_root.add(m_cam);
+        gfx::material dirty_bricks{};
+        dirty_bricks.diffuse = assets::load_texture("./assets/textures/bricks.tga")->texture_view();
+        dirty_bricks.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
+        dirty_bricks.normal  = assets::load_texture("./assets/textures/bricks_normal.tga")->texture_view();
 
-        //m_camera->add(new move_component{})->add(new freelook_component{});
+        gfx::material dirty_stone{};
+        dirty_stone.diffuse = assets::load_texture("./assets/textures/stone01.tga")->texture_view();
+        //dirty_stone.blend   = assets::load_texture("./assets/textures/dirt.tga")->texture_view();
+        dirty_stone.normal  = assets::load_texture("./assets/textures/normal01.tga")->texture_view();
 
-        m_plane.add(new texture_component{ "./assets/textures/bricks.tga" })
-            ->add(new model_component{ "./assets/models/plane.txt" });
+        gfx::material bricks{};
+        bricks.diffuse = assets::load_texture("./assets/textures/bricks.tga")->texture_view();
+        bricks.tint    = { 0.6f, 0.f, 0.3f, 1.f };
+        bricks.normal = assets::load_texture("./assets/textures/bricks_normal.tga")->texture_view();
 
-        box.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
-            ->add(DBG_NEW model_component{ "./assets/models/cube.txt" });
-        box.set_position(2.f, 1.f, 0.f);
-        box.set_scale(0.3f);
-        box.rotate(15.f, axis::x);
-        ball.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
-            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
-        ball.add(box);
-        ball.set_position(-4.f, 0.f, 0.f);
-        ball.set_scale(1.5f);
+        //m_cube.add(new model_component{ gfx::geometry::create_box(3.f, 3.f, 1.f) })->set_material(dirty_bricks);
+        m_cube.add(new model_component{"./assets/models/cube.txt"})->set_material(dirty_stone);
+        m_cube.set_scale(3.f, 3.f, 1.f);
+        m_cube.set_position(73.f, 6.f, 73.f);
+        //m_cube.rotate(180.f, axis::z);
 
-        ball2.add(DBG_NEW texture_component{ "./assets/textures/default.tga" })
-            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
-        ball2.set_position(2.f, 0.f, 0.f);
-        ball2.set_scale(0.75f);
+        game_object* sphere = new game_object{};
+        sphere->add(new model_component{"./assets/models/sphere.txt"})->set_material(dirty_bricks);
+        sphere->set_position(3.f, 9.f, 6.f);
+        m_root.add(sphere);
 
-        ball3.add(DBG_NEW texture_component{ "./assets/textures/bricks.tga" })
-            ->add(DBG_NEW model_component{ "./assets/models/sphere.txt" });
-        ball3.set_position(2.f, 2.f, 0.f);
+        //m_cube2.add(new model_component{ gfx::geometry::create_box(1.f, 1.f, 1.f) });
+        m_cube2.add(new model_component{ "./assets/models/cube.txt" });
+        m_ball1.add(new model_component{ gfx::geometry::create_sphere(1.5f, 36, 36) });
+        m_ball1.add(m_cube2);
+        m_cube2.set_position(3.f, 1.f, 0.f);
+        m_cube2.rotate(45.f, axis::x);
+        m_cube2.set_material(dirty_stone);
+        m_ball1.set_material(bricks);
+
+        m_ball1.set_position(-3.f, 5.f, -3.f);
+
+        //m_plane.add(new texture_component{"./assets/textures/stone01.tga"})->add(new model_component{gfx::geometry::create_plane(32, 32)});
+        m_plane.add(new model_component{ "./assets/models/plane2.txt" })->set_material(dirty_stone);
+        //m_plane.rotate(90.f, axis::x);
+        m_plane.set_position(0.f, -1.f, 0.f);
+        m_plane.set_scale(100.f, 100.f, 100.f);
+
+        m_light_sphere.add(new pointlight_component{
+            {0.f, 1.f, 0.f},
+            10.f, 5.f, 4.f
+        });
+        m_light_sphere.set_position(3.f, 10.f, 3.f);
+        m_lights.add(m_light_sphere);
+
+        auto* light2 = new game_object{};
+        light2->add(new pointlight_component{
+            {1.f, 0.f, 0.f},
+            10.f, 5.f, 4.f
+        });
+        light2->set_position(-5.f, 2.f, 0.f);
+        m_lights.add(light2);
+
+        std::random_device                  rd{};
+        std::mt19937                        gen(rd());
+        std::uniform_real_distribution<f32> dist(0.2f, 1.0f);
+        u32                                 count = 0;
+        for (i32 x = -40; x < 50; x += 20)
+        {
+            for (i32 z = -40; z < 50; z += 20)
+            {
+                LOG_DEBUG("Adding light {}", ++count);
+                auto* new_light = new game_object{};
+                f32   r         = dist(gen);
+                f32   g         = dist(gen);
+                f32   b         = dist(gen);
+                new_light->add(new pointlight_component{
+                    {r, g, b},
+                    30.f, 25.5f, 22.f
+                });
+                new_light->set_position((f32) x, 1.f, (f32) z);
+                m_lights.add(new_light);
+            }
+        }
+
+        //m_root.add(m_light_sphere);
+        //m_quad.add(new bitmap_component{ 150, 150, "./assets/textures/default.tga" });
+        //m_quad.set_position(-1920.f / 2.f, -1080.f / 2.f, 0);
 
 
-        m_box2.add(new texture_component{ "./assets/textures/default.tga" })
-            ->add(new model_component{ "./assets/models/cube.txt" });
-        m_box2.set_position(0.f, 2.f, -2.f);
-        m_box2.set_rotation(0.f, 45.f, 0.f);
+        m_root.add(m_cube);
+        m_root.add(m_ball1);
+        m_root.add(m_plane);
 
-        m_light.ambient_color  = { 0.15f, 0.15f, 0.15f, 1.f };
-        m_light.diffuse_color  = { 1.f, 1.f, 1.f, 1.f };
-        m_light.direction      = { 1.f, 0.f, 1.f };
-        m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
-        m_light.specular_power = 32.f;
-
-
-        gfx::point_light light1{};
-        light1.position         = { -3.f, 1.f, 3.f };
-        light1.diffuse_color    = { 1.f, 0.f, 0.f, 1.f };
-        light1.constant_factor  = 3.f;
-        light1.linear_factor    = 0.09f;
-        light1.quadradic_factor = 0.032f;
-
-        gfx::point_light light2{};
-        light2.position         = { 3.f, 1.f, 3.f };
-        light2.diffuse_color    = { 0.f, 1.f, 0.f, 1.f };
-        light2.constant_factor  = 1.f;
-        light2.linear_factor    = 0.09f;
-        light2.quadradic_factor = 0.032f;
-
-        gfx::point_light light3{};
-        light3.position         = { -3.f, 1.f, -3.f };
-        light3.diffuse_color    = { 0.f, 0.f, 1.f, 1.f };
-        light3.constant_factor  = 2.f;
-        light3.linear_factor    = 0.09f;
-        light3.quadradic_factor = 0.032f;
-
-        gfx::point_light light4{};
-        light4.position         = { 3.f, 1.f, -3.f };
-        light4.diffuse_color    = { 1.f, 1.f, 0.f, 1.f }; // set alpha = 0 to make this light not get applied
-        light4.constant_factor  = 2.f;
-        light4.linear_factor    = 0.09f;
-        light4.quadradic_factor = 0.032f;
-
-        m_point_lights[0] = light1;
-        m_point_lights[1] = light2;
-        m_point_lights[2] = light3;
-        m_point_lights[3] = light4;
-
-        //m_lights_shader->set_camera(m_camera); // by default, shader will now set the camera initially when init is called
-
-        m_lights_shader->set_point_lights(m_point_lights);
-        m_lights_shader->set_light(&m_light);
         return true;
     }
 
-    void update(f32 delta) override
+    void process_input(f32 delta)
     {
-        if (input::key_released('B'))
-        {
-            LOG_DEBUG("Frame time: {}", delta);
-        }
-        const f32 rotation = -15.f * delta;
-
         if (input::key_down('W'))
         {
-            m_camera->move(0, 0, 1, delta);
+            m_camera->move(0, 0, delta);
         }
         if (input::key_down('A'))
         {
-            m_camera->move(-1, 0, 0, delta);
+            m_camera->move(-delta, 0, 0);
         }
         if (input::key_down('S'))
         {
-            m_camera->move(0, 0, -1, delta);
+            m_camera->move(0, 0, -delta);
         }
         if (input::key_down('D'))
         {
-            m_camera->move(1, 0, 0, delta);
+            m_camera->move(delta, 0, 0);
         }
-
         if (input::button_pressed(input::button::left))
         {
-            input::lock_cursor(true, true);
+            input::lock_cursor(true);
         } else if (input::button_pressed(input::button::right))
         {
             input::lock_cursor(false);
         }
-
-        if(input::is_cursor_locked())
+        if (input::is_cursor_locked())
         {
             i32 x, y;
             input::get_mouse_position(&x, &y);
@@ -222,78 +236,52 @@ public:
             m_camera->rotate(delta_pos.x, delta_pos.y, delta);
             input::center_cursor();
         }
+    }
 
-        //math::vec3 rot = m_camera->rotation();
-        //rot.y -= 15.f * delta;
-        //if(rot.y < 0.f)
-        //{
-        //    rot.y += 360.f;
-        //}
-        //m_camera->set_rotation(rot);
+    void update(f32 delta) override
+    {
+        process_input(delta);
+        if (input::key_released('B'))
+        {
+            LOG_DEBUG("Frame time: {}", delta);
+        }
+        const f32 rotation = -15.f * delta;
 
-        ball.rotate(rotation, axis::y);
-        box.rotate(rotation, axis::x);
-        ball2.rotate(rotation, axis::x);
-        m_box2.rotate(rotation, XMVector4Normalize(m_box2.transformation().right()));
-        //m_box2.rotate(rotation, axis::y);
-        //m_box2.rotate(rotation, axis::x);
+        //m_cube2.rotate(rotation, axis::y);
+        m_ball1.transformation().rotate(rotation, axis::y, true);
 
-        m_plane.update(delta);
-        ball.update(delta);
-        ball2.update(delta);
-        ball3.update(delta);
-        m_box2.update(delta);
+        //m_quad.rotate(rotation, axis::z);
+
+        m_root.update(delta);
+        //m_quad.update(delta);
+        //m_lights.update(delta);
     }
 
     bool render() override
     {
-        m_light.specular_power = 32.f;
-        m_light.specular_color = { 1.f, 1.f, 1.f, 1.f };
-
-        if (!m_plane.render(m_lights_shader))
+        if (!m_root.render())
         {
             return false;
         }
-
-
-        if (!ball.render(m_lights_shader))
-        {
-            return false;
-        }
-
-        if (!ball3.render(m_lights_shader))
-        {
-            return false;
-        }
-
-        if (!m_box2.render(m_lights_shader))
-        {
-            return false;
-        }
-
-
-        m_light.specular_power = 20.f;
-        m_light.specular_color = { 0.8f, 0.2f, 0.2f, 1.f };
-
-        if (!ball2.render(m_lights_shader))
-        {
-            return false;
-        }
-
         return true;
     }
 
-    void shutdown() override
+    bool render2d() override
     {
-        gfx::core::shutdown(m_lights_shader);
-        gfx::core::shutdown(m_texture_shader);
+        //m_quad.render();
+
+        //m_text.draw();
+        return true;
     }
+
+
+    void shutdown() override {}
 };
 
 
 game* create_game()
 {
-    return DBG_NEW sandbox{};
+    return new sandbox{};
 }
 
 void pre_init()

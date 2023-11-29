@@ -78,12 +78,6 @@
     <ClInclude Include="src\Yae\Graphics\Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Yae\Graphics\Shaders\LightShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Yae\Graphics\Shaders\ConstantBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Yae\Scene\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -103,6 +97,36 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Yae\Graphics\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Graphics\Geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Scene\CameraComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Util\StringUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Core\Win32Header.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Graphics\Shaders\ShaderLibrary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Graphics\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Graphics\BitmapFont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Util\FpsHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Util\AssetManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Yae\Graphics\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -143,9 +167,6 @@
     <ClCompile Include="src\Yae\Util\Popup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Yae\Graphics\Shaders\LightShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Yae\Scene\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -167,5 +188,40 @@
     <ClCompile Include="src\Yae\Graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Yae\Graphics\Geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Yae\Scene\CameraComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Yae\Util\StringUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Yae\Graphics\Shaders\ShaderLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Yae\Graphics\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Yae\Graphics\BitmapFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Yae\Util\FpsHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Yae\Util\AssetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\Yae\Graphics\Shaders\ToScreenVertexShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\ToScreenPixelShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\DeferredVertexShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\DeferredPixelShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\LightVertexShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\LightPixelShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\FontVertexShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\FontPixelShader.hlsl" />
+    <FxCompile Include="src\Yae\Graphics\Shaders\MultitexturePixelShader.hlsl" />
   </ItemGroup>
 </Project>

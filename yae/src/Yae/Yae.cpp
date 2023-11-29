@@ -26,7 +26,7 @@ namespace yae
 {
 void init(const std::string& game_name, const std::string& version)
 {
-    g_settings = DBG_NEW settings(game_name, version);
+    g_settings = new settings(game_name, version);
 }
 void shutdown()
 {

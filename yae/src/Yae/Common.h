@@ -27,6 +27,7 @@
 #define STRINGIFY_MACRO(x) #x
 #define BIT(x)             (1 << (x))
 
+
 #ifdef _DEBUG
     #define DBG_NEW new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #else
@@ -76,5 +77,6 @@ concept is_subclass = std::is_base_of_v<Base, Derived>;
 #include "Types.h"
 #include "Util/Logger.h"
 #include "Util/MathUtil.h"
+#include "Util/StringUtil.h"
 #include "Util/Popup.h"
 #include "Globals.h"

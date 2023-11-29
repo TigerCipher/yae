@@ -23,6 +23,7 @@
 
 #pragma once
 #include "GameComponent.h"
+#include "Yae/Core/Input.h"
 
 namespace yae
 {
@@ -31,24 +32,34 @@ namespace yae
 class move_component : public game_component
 {
 public:
-    move_component(f32 speed = 10.f) : m_speed{speed} {}
+    move_component(f32 speed = 10.f, u16 forward = 'W', u16 left = 'A', u16 back = 'S', u16 right = 'D',
+                   u16 up = input::key::space, u16 down = 'C') :
+        m_speed(speed), m_forward(forward), m_left(left), m_back(back), m_right(right), m_up(up), m_down(down)
+    {}
     ~move_component() override = default;
 
     void update(f32 delta) override;
 
 private:
     f32 m_speed{};
+    u16 m_forward{ input::key::w };
+    u16 m_left{ input::key::a };
+    u16 m_back{ input::key::s };
+    u16 m_right{ input::key::d };
+    u16 m_up{ input::key::space };
+    u16 m_down{ input::key::c };
 };
 
 class freelook_component : public game_component
 {
 public:
-    freelook_component(f32 sensitivity = 10.f) : m_sensitivity{sensitivity} {}
+    freelook_component(f32 sensitivity = 10.f) : m_sensitivity{ sensitivity } {}
     ~freelook_component() override = default;
 
     void update(f32 delta) override;
+
 private:
     f32 m_sensitivity{};
 };
 
-}
+} // namespace yae

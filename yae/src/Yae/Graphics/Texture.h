@@ -31,17 +31,15 @@ namespace yae::gfx
 class texture
 {
 public:
-    texture()  = default;
-    ~texture()
-    {
-        shutdown();
-    }
+    texture() = default;
+    texture(const char* filename);
+    ~texture() { shutdown(); }
 
     bool init(const char* filename);
     void shutdown();
 
     constexpr ID3D11ShaderResourceView* texture_view() const { return m_texture_view; }
-
+    constexpr ID3D11SamplerState* sampler_state() const { return m_sampler_state; }
     constexpr u32 width() const { return m_width; }
     constexpr u32 height() const { return m_height; }
 
@@ -60,6 +58,7 @@ private:
     std::vector<u8>           m_data{};
     ID3D11Texture2D*          m_texture{};
     ID3D11ShaderResourceView* m_texture_view{};
+    ID3D11SamplerState*       m_sampler_state{};
     u32                       m_width{};
     u32                       m_height{};
 };

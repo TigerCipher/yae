@@ -56,6 +56,7 @@ game_object* game_object::add(game_component* component)
 {
     m_components.push_back(component);
     component->set_owner(this);
+    component->add_to_engine();
     return this;
 }
 
@@ -95,12 +96,11 @@ void game_object::remove(game_object* child)
 //    }
 //}
 
-bool game_object::render(gfx::shader* shader)
+bool game_object::render()
 {
-    shader->set_world(world_transformation());
     for (const auto comp : m_components)
     {
-        if (!comp->render(shader))
+        if (!comp->render())
         {
             return false;
         }
@@ -108,7 +108,7 @@ bool game_object::render(gfx::shader* shader)
 
     for (const auto child : m_children)
     {
-        if (!child->render(shader))
+        if (!child->render())
         {
             return false;
         }
@@ -116,7 +116,7 @@ bool game_object::render(gfx::shader* shader)
 
     for (const auto child : m_children_unmanaged)
     {
-        if (!child->render(shader))
+        if (!child->render())
         {
             return false;
         }

@@ -23,37 +23,53 @@
 
 #include "GameComponent.h"
 
+#include "Yae/Graphics/Renderer.h"
+#include "Yae/Graphics/Geometry.h"
+
 using namespace DirectX;
 
 namespace yae
 {
 model_component::model_component(const std::string_view filename)
 {
-    if (!m_model.init(filename))
-    {
-        LOG_ERROR("Failed to load model file {} from component", filename);
-        // TODO: Throw exception?
-    }
+    m_model = assets::load_model(filename.data());
 }
 
-bool model_component::render(gfx::shader* shader)
+bool model_component::render()
 {
-    return m_model.render(shader);
-}
-
-
-texture_component::texture_component(const char* filename)
-{
-    if (!m_texture.init(filename))
-    {
-        LOG_ERROR("Failed to load texture file {} from component", filename);
-    }
-}
-
-bool texture_component::render(gfx::shader* shader)
-{
-    shader->set_texture(m_texture.texture_view());
+    gfx::render3d(m_model.get(), m_owner->world_transformation(), m_owner->material());
     return true;
+}
+
+bitmap_component::bitmap_component(u32 width, u32 height, const char* filename)
+{
+    m_texture = assets::load_texture(filename);
+    if (!m_texture)
+    {
+        LOG_ERROR("Failed to load texture file {} from bitmap component", filename);
+        return;
+    }
+    m_model = gfx::geometry::create_quad(width, height);
+}
+
+
+bool bitmap_component::render()
+{
+    gfx::render2d(m_model.get(), m_texture.get(), m_owner->world_transformation());
+    return true;
+}
+
+
+bool pointlight_component::render()
+{
+    // rendering now handled by renderer.cpp
+    //gfx::render_pointlight(m_owner->position(), m_owner->world_transformation(), m_light_color, m_radius, m_intensity, m_falloff);
+    return true;
+}
+
+void pointlight_component::add_to_engine()
+{
+    gfx::add_pointlight(m_owner, this);
 }
 
 } // namespace yae

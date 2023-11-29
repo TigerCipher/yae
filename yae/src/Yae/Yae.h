@@ -34,6 +34,7 @@
 
 // Util
 #include "Util/PathUtil.h"
+#include "Util/AssetManager.h"
 
 // Graphics
 #include "Graphics/D3D11Common.h"
@@ -42,7 +43,7 @@
 #include "Graphics/Model.h"
 #include "Graphics/Vertex.h"
 #include "Graphics/Shaders/Shader.h"
-#include "Graphics/Shaders/LightShader.h"
+#include "Graphics/BitmapFont.h"
 
 // Scene
 #include "Scene/GameObject.h"

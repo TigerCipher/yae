@@ -22,8 +22,7 @@
 //  ------------------------------------------------------------------------------
 #include "Timer.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "Win32Header.h"
 
 namespace yae
 {

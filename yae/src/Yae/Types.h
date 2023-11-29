@@ -37,10 +37,10 @@ using i16 = int16_t;
 using i32 = int32_t;
 using i64 = int64_t;
 
-constexpr u8  invalid_id_u8  = 0xffui8;
-constexpr u16 invalid_id_u16 = 0xffffui16;
-constexpr u32 invalid_id_u32 = 0xffff'ffffui32;
-constexpr u64 invalid_id_u64 = 0xffff'ffff'ffff'ffffui64;
+constexpr u8  invalid_u8  = 0xffui8;
+constexpr u16 invalid_u16 = 0xffffui16;
+constexpr u32 invalid_u32 = 0xffff'ffffui32;
+constexpr u64 invalid_u64 = 0xffff'ffff'ffff'ffffui64;
 
 using f32 = float;
 using f64 = double;

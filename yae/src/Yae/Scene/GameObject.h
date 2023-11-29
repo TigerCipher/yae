@@ -25,7 +25,7 @@
 
 #include "Yae/Common.h"
 #include "Yae/Graphics/Transform.h"
-#include "Yae/Graphics/Shaders/Shader.h"
+#include "Yae/Graphics/Material.h"
 
 namespace yae
 {
@@ -45,7 +45,7 @@ public:
     void         remove(game_object* child);
     //void         remove_unmanged(game_object* child);
 
-    bool render(gfx::shader* shader);
+    bool render();
     void update(f32 delta);
 
     void set_position(const math::vec3& pos) { m_transform.set_position(pos); }
@@ -56,18 +56,24 @@ public:
     void set_scale(f32 x, f32 y, f32 z) { m_transform.set_scale(x, y, z); }
     void set_scale(f32 scale) { m_transform.set_scale(scale); }
 
-    void rotate(f32 angle, axis axis) { m_transform.rotate(angle, axis); }
-    void rotate(f32 angle, const math::vector& axis) { m_transform.rotate(angle, axis); }
-    void rotate(const math::vector& quaternion) { m_transform.rotate(quaternion); }
+    void rotate(f32 angle, axis axis, bool worldspace = false) { m_transform.rotate(angle, axis, worldspace); }
+    void rotate(f32 angle, const math::vector& axis, bool worldspace = false) { m_transform.rotate(angle, axis, worldspace); }
     void set_rotation(f32 x, f32 y, f32 z) { m_transform.set_rotation(x, y, z); }
 
 
     constexpr const math::matrix& world_transformation() const { return m_transform.transformation(); }
-    constexpr const math::matrix& view() const { return m_transform.view(); }
     constexpr const math::vec3&   position() const { return m_transform.position(); }
     constexpr const math::vec3&   scale() const { return m_transform.scale(); }
 
     constexpr transform& transformation() { return m_transform; }
+
+    constexpr const gfx::material& material() const { return m_material; }
+
+    game_object* set_material(const gfx::material& mat)
+    {
+        m_material = mat;
+        return this;
+    }
 
     //constexpr const math::vector& forward() const { return m_forward; }
 
@@ -80,7 +86,8 @@ protected:
     std::vector<game_component*> m_components{};
     game_object*                 m_parent{};
 
-    transform m_transform{};
+    transform     m_transform{};
+    gfx::material m_material{};
 };
 
 } // namespace yae

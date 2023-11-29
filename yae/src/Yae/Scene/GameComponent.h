@@ -24,10 +24,10 @@
 #pragma once
 
 #include "Yae/Common.h"
-#include "Yae/Graphics/Shaders/Shader.h"
 #include "GameObject.h"
 #include "Yae/Graphics/Model.h"
 #include "Yae/Graphics/Texture.h"
+#include "Yae/Util/AssetManager.h"
 
 namespace yae
 {
@@ -38,10 +38,13 @@ public:
     game_component()          = default;
     virtual ~game_component() = default;
 
-    void set_owner(game_object* owner) { m_owner = owner; }
+    void                   set_owner(game_object* owner) { m_owner = owner; }
+    constexpr game_object* owner() const { return m_owner; }
 
     virtual void update(f32 delta) {}
-    virtual bool render(gfx::shader* shader) { return true; }
+    virtual bool render() { return true; }
+
+    virtual void add_to_engine() {}
 
 protected:
     game_object* m_owner{};
@@ -50,23 +53,50 @@ protected:
 class model_component : public game_component
 {
 public:
-    model_component(const std::string_view filename);
+    model_component(const std::string_view model);
+    model_component(gfx::model* model) : m_model{ model } {}
+    model_component(const ref<gfx::model>& model) : m_model{ model } {}
     ~model_component() override = default;
-    bool render(gfx::shader* shader) override;
+    bool render() override;
 
 private:
-    gfx::model m_model{};
+    ref<gfx::model> m_model{};
 };
 
-class texture_component : public game_component
+
+class bitmap_component : public game_component
 {
 public:
-    texture_component(const char* filename);
-    ~texture_component() override = default;
+    bitmap_component(u32 width, u32 height, const char* filename);
+    ~bitmap_component() override = default;
+    bool render() override;
 
-    bool render(gfx::shader* shader) override;
 private:
-    gfx::texture m_texture{};
+    ref<gfx::model>   m_model{};
+    ref<gfx::texture> m_texture{};
+};
+
+class pointlight_component : public game_component
+{
+public:
+    pointlight_component(const math::vec3& light_color, f32 radius, f32 intensity, f32 falloff) :
+        m_light_color(light_color), m_radius(radius), m_intensity(intensity), m_falloff(falloff)
+    {}
+    ~pointlight_component() override = default;
+    bool render() override;
+
+    void add_to_engine() override;
+
+    math::vec3 light_color() const { return m_light_color; }
+    f32        radius() const { return m_radius; }
+    f32        intensity() const { return m_intensity; }
+    f32        falloff() const { return m_falloff; }
+
+private:
+    math::vec3 m_light_color{};
+    f32        m_radius{};
+    f32        m_intensity{};
+    f32        m_falloff{};
 };
 
 } // namespace yae

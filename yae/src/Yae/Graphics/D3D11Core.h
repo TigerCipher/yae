@@ -25,6 +25,11 @@
 
 #include "D3D11Common.h"
 
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "dxguid.lib")
+
 namespace yae::gfx::core
 {
 
@@ -52,11 +57,18 @@ constexpr void shutdown(T*& resource)
 bool init(i32 width, i32 height, HWND hwnd, bool fullscreen, f32 screen_depth, f32 screen_near);
 void shutdown();
 
+
+void clear_first_stage();
+void clear_second_stage();
 void begin_scene(f32 r, f32 g, f32 b, f32 a);
 void end_scene();
 
 ID3D11Device*        get_device();
 ID3D11DeviceContext* get_device_context();
+
+ID3D11ShaderResourceView* position_gbuffer();
+ID3D11ShaderResourceView* normal_gbuffer();
+ID3D11ShaderResourceView* diffuse_gbuffer();
 
 math::matrix get_projection_matrix();
 math::matrix get_world_matrix();
@@ -68,5 +80,11 @@ void get_video_card_info(char* card_name, i32& memory);
 
 void set_back_buffer_render_target();
 void reset_viewport();
+
+void enable_zbuffer();
+void disable_zbuffer();
+
+void enable_alpha_blending();
+void disable_alpha_blending();
 
 } // namespace yae::gfx::core

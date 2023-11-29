@@ -186,7 +186,7 @@ bool init(game* game)
     init_windows(screen_width, screen_height);
 
     LOG_INFO("Creating application");
-    app = DBG_NEW application{ game };
+    app = new application{ game };
 
     result = app->init(screen_width, screen_height, hwnd);
 
@@ -210,6 +210,7 @@ void shutdown()
         app = nullptr;
     }
 
+    gfx::core::shutdown();
     shutdown_windows();
     events::shutdown();
     LOG_INFO("YAE system shutdown");

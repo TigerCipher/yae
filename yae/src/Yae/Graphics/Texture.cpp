@@ -29,6 +29,11 @@
 namespace yae::gfx
 {
 
+texture::texture(const char* filename)
+{
+    init(filename);
+}
+
 bool texture::init(const char* filename)
 {
     if (!load_targa_32bit(filename))
@@ -65,6 +70,24 @@ bool texture::init(const char* filename)
 
     core::get_device_context()->GenerateMips(m_texture_view);
 
+    // Sampler state
+    D3D11_SAMPLER_DESC sampler_desc;
+    sampler_desc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    sampler_desc.AddressU       = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampler_desc.AddressV       = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampler_desc.AddressW       = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampler_desc.MipLODBias     = 0.f;
+    sampler_desc.MaxAnisotropy  = 1;
+    sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    sampler_desc.BorderColor[0] = 0.f;
+    sampler_desc.BorderColor[1] = 0.f;
+    sampler_desc.BorderColor[2] = 0.f;
+    sampler_desc.BorderColor[3] = 0.f;
+    sampler_desc.MinLOD         = 0.f;
+    sampler_desc.MaxLOD         = D3D11_FLOAT32_MAX;
+
+    DX_CALL(core::get_device()->CreateSamplerState(&sampler_desc, &m_sampler_state));
+
     return true;
 }
 
@@ -72,6 +95,7 @@ void texture::shutdown()
 {
     core::release(m_texture_view);
     core::release(m_texture);
+    core::release(m_sampler_state);
 }
 
 bool texture::load_targa_32bit(const char* filename)

@@ -24,7 +24,6 @@
 #pragma once
 
 #include "Yae/Common.h"
-#include "Yae/Scene/GameObject.h"
 #include "Yae/Graphics/Camera.h"
 
 namespace yae
